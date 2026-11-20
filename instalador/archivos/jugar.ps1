@@ -26,6 +26,17 @@ try {
         Start-Sleep -Seconds 15 # que Steam termine de iniciar sesion
     }
 
+    # Sin consola. Es un ajuste global de Reloaded-II: se fija en cada lanzamiento por si otra instalacion
+    # de Reloaded-II lo cambio.
+    $ajustes = Join-Path $env:APPDATA 'Reloaded-Mod-Loader-II\ReloadedII.json'
+    if (Test-Path $ajustes) {
+        $texto = Get-Content $ajustes -Raw
+        if ($texto -match '"ShowConsole"\s*:\s*true') {
+            $texto = $texto -replace '"ShowConsole"\s*:\s*true', '"ShowConsole": false'
+            [IO.File]::WriteAllText($ajustes, $texto, (New-Object Text.UTF8Encoding $false))
+        }
+    }
+
     Start-Process $reloaded -ArgumentList '--launch', "`"$juego`"" -WorkingDirectory (Split-Path $reloaded)
 }
 catch {

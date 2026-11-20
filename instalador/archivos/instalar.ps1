@@ -100,6 +100,7 @@ if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCO
 robocopy (Join-Path $origen 'Reloaded-II\User') (Join-Path $reloaded 'User') /E /XC /XN /XO /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { Fallar "Error copiando la configuracion (robocopy $LASTEXITCODE)." }
 Copy-Item (Join-Path $origen 'jugar.ps1') $Destino -Force
+Copy-Item (Join-Path $origen 'icono.ico') $Destino -Force
 
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
 Get-ChildItem $Destino -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
@@ -114,18 +115,18 @@ function Reemplazar($texto) {
         Replace('{{CARPETA_JUEGO}}', ((Split-Path $juego) -replace '\\', '\\'))
 }
 
+# Modo portable: esta copia de Reloaded-II usa sus propias carpetas (Apps, Mods, User) aunque haya otra
+# instalacion de Reloaded-II en la PC. Al lanzar el juego, Reloaded apunta la configuracion global a esta copia.
+Set-Content -Path (Join-Path $reloaded 'portable.txt') -Value 'Modo portable de Reloaded-II (MR2 Rancho de Kokemones).'
+
+# La configuracion global solo se crea si no existe: si ya hay otra instalacion de Reloaded-II no se toca
+# (el lanzador ajusta lo necesario cada vez que se juega).
 $ajustes = Join-Path $env:APPDATA 'Reloaded-Mod-Loader-II\ReloadedII.json'
 New-Item -ItemType Directory -Force (Split-Path $ajustes) | Out-Null
-if (Test-Path $ajustes) {
-    $anterior = Get-Content $ajustes -Raw
-    if ($anterior -notmatch [regex]::Escape(($reloaded -replace '\\', '\\'))) {
-        $copia = "$ajustes.antes-de-mr2-rancho-de-kokemones"
-        Copy-Item $ajustes $copia -Force
-        Aviso "Ya tenias Reloaded-II configurado en otro lugar; tu configuracion anterior quedo en: $copia"
-    }
+if (-not (Test-Path $ajustes)) {
+    $plantilla = Get-Content (Join-Path $origen 'plantillas\ReloadedII.json') -Raw
+    [IO.File]::WriteAllText($ajustes, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
 }
-$plantilla = Get-Content (Join-Path $origen 'plantillas\ReloadedII.json') -Raw
-[IO.File]::WriteAllText($ajustes, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
 
 $app = Join-Path $reloaded 'Apps\mf2.exe\AppConfig.json'
 New-Item -ItemType Directory -Force (Split-Path $app) | Out-Null
@@ -142,7 +143,7 @@ if (-not $SinAccesoDirecto) {
         $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
         $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
         $lnk.WorkingDirectory = $Destino
-        $lnk.IconLocation = "$juego,0"
+        $lnk.IconLocation = "$(Join-Path $Destino 'icono.ico'),0"
         $lnk.Description = 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)'
         $lnk.Save()
     }
