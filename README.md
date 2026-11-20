@@ -5,11 +5,11 @@ Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), listos pa
 ## Descargar e instalar
 
 1. Instalá **Monster Rancher 1 & 2 DX** desde Steam.
-2. Descargá **`MR2-Rancho.zip`** desde la [última versión](../../releases/latest).
+2. Descargá **`MR2-Rancho-de-Kokemones.zip`** desde la [última versión](../../releases/latest).
 3. Descomprimilo y hacé doble clic en **`Instalar.bat`**.
    - Busca el juego en Steam solo (si no lo encuentra, te pide que elijas `MF2.exe`).
    - Si falta .NET 9, lo descarga de Microsoft e instala.
-4. Jugá con el acceso directo **"Monster Rancher 2 (mods)"** del escritorio.
+4. Jugá con el acceso directo **"MR2 Rancho de Kokemones"** del escritorio.
 
 > **La primera vez** puede tardar varios minutos en abrir (se extraen los datos del juego) y no se ve nada mientras tanto. Esperá y no lo abras dos veces.
 >

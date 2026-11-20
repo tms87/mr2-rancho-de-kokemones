@@ -1,5 +1,5 @@
 @echo off
-title Monster Rancher 2 - Rancho: instalador
+title MR2 Rancho de Kokemones: instalador
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0archivos\instalar.ps1"
 echo.
 pause

@@ -1,4 +1,4 @@
-# Instalador de "Monster Rancher 2 - Rancho" (mods para Monster Rancher 1&2 DX de Steam).
+# Instalador de "MR2 Rancho de Kokemones" (mods para Monster Rancher 1&2 DX de Steam).
 # Lo ejecuta Instalar.bat. Copia Reloaded-II con los mods, lo configura y crea el acceso directo.
 param(
     [string]$Destino = (Join-Path $env:LOCALAPPDATA 'MR2-Rancho'),
@@ -13,7 +13,7 @@ function Ok($t) { Write-Host "   OK  $t" -ForegroundColor Green }
 function Aviso($t) { Write-Host "   !   $t" -ForegroundColor Yellow }
 function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red; exit 1 }
 
-Write-Host 'Monster Rancher 2 - Rancho: instalador' -ForegroundColor White
+Write-Host 'MR2 Rancho de Kokemones: instalador' -ForegroundColor White
 
 # ------------------------------------------------------------------
 Titulo '1. Buscando el juego en Steam'
@@ -138,17 +138,19 @@ if (-not $SinAccesoDirecto) {
     Titulo '5. Creando acceso directo'
     $shell = New-Object -ComObject WScript.Shell
     foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
-        $lnk = $shell.CreateShortcut((Join-Path $carpeta 'Monster Rancher 2 (mods).lnk'))
+        # Acceso directo de la version 1.0.0 (tenia otro nombre).
+        Remove-Item -LiteralPath (Join-Path $carpeta 'Monster Rancher 2 (mods).lnk') -ErrorAction SilentlyContinue
+        $lnk = $shell.CreateShortcut((Join-Path $carpeta 'MR2 Rancho de Kokemones.lnk'))
         $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
         $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
         $lnk.WorkingDirectory = $Destino
         $lnk.IconLocation = "$juego,0"
-        $lnk.Description = 'Monster Rancher 2 DX con los mods del rancho'
+        $lnk.Description = 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)'
         $lnk.Save()
     }
-    Ok 'Acceso directo "Monster Rancher 2 (mods)" en el escritorio y en el menu Inicio.'
+    Ok 'Acceso directo "MR2 Rancho de Kokemones" en el escritorio y en el menu Inicio.'
 }
 
 Write-Host ''
-Write-Host 'Listo. Para jugar usa el acceso directo "Monster Rancher 2 (mods)".' -ForegroundColor Green
+Write-Host 'Listo. Para jugar usa el acceso directo "MR2 Rancho de Kokemones".' -ForegroundColor Green
 Write-Host 'La primera vez tarda un poco mas: se preparan los datos del juego.' -ForegroundColor Green

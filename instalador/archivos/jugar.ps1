@@ -1,9 +1,9 @@
-# Lanzador de "Monster Rancher 2 - Rancho": abre Steam si hace falta y arranca el juego con los mods.
+# Lanzador de "MR2 Rancho de Kokemones": abre Steam si hace falta y arranca el juego con los mods.
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 
 function Error-Ventana($texto) {
-    [System.Windows.Forms.MessageBox]::Show($texto, 'Monster Rancher 2 (mods)', 'OK', 'Error') | Out-Null
+    [System.Windows.Forms.MessageBox]::Show($texto, 'MR2 Rancho de Kokemones', 'OK', 'Error') | Out-Null
     exit 1
 }
 
