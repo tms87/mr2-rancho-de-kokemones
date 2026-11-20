@@ -279,7 +279,7 @@ public class Mod : ModBase
                         continue;
                     }
 
-                    if (!_config.AllowMoreMonsters && IsMoreMonsters(m))
+                    if (!_config.IncludeMoreMonsters && IsMoreMonsters(m))
                     {
                         if (_config.VerboseLog) Log($"{m.File}: especie de More Monsters, se saltea (opción desactivada).");
                         continue;

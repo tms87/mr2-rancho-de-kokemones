@@ -20,10 +20,10 @@ public class Config : Configurable<Config>
 
     [Category("1. Ligas")]
     [DisplayName("Permitir especies de More Monsters")]
-    [Description("Las especies de More Monsters como rivales todavía no están probadas (podrían cerrar el juego).\n" +
-                 "Desactivado: los monstruos de la lista con esas especies se saltean.")]
-    [DefaultValue(false)]
-    public bool AllowMoreMonsters { get; set; }
+    [Description("Los monstruos de la lista con especies de More Monsters pueden salir como rivales\n" +
+                 "(More Monsters se encarga de su modelo en la batalla). Desactivado: se saltean.")]
+    [DefaultValue(true)]
+    public bool IncludeMoreMonsters { get; set; } = true;
 
     [Category("2. Exportar")]
     [DisplayName("Exportar al guardar")]
