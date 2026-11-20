@@ -34,7 +34,7 @@ IMPORTANTE
 - Si algo falla, manda los registros de esta carpeta:
   %APPDATA%\Reloaded-Mod-Loader-II\Logs
 - La configuracion de los mods se puede cambiar abriendo
-  %LOCALAPPDATA%\MR2-Rancho\Reloaded-II\Reloaded-II.exe
+  %LOCALAPPDATA%\MR2-Rancho-de-Kokemones\Reloaded-II\Reloaded-II.exe
 
 CREDITOS
 --------

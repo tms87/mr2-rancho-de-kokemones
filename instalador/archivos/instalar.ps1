@@ -1,7 +1,7 @@
 # Instalador de "MR2 Rancho de Kokemones" (mods para Monster Rancher 1&2 DX de Steam).
 # Lo ejecuta Instalar.bat. Copia Reloaded-II con los mods, lo configura y crea el acceso directo.
 param(
-    [string]$Destino = (Join-Path $env:LOCALAPPDATA 'MR2-Rancho'),
+    [string]$Destino = (Join-Path $env:LOCALAPPDATA 'MR2-Rancho-de-Kokemones'),
     [switch]$SinAccesoDirecto
 )
 
@@ -119,7 +119,7 @@ New-Item -ItemType Directory -Force (Split-Path $ajustes) | Out-Null
 if (Test-Path $ajustes) {
     $anterior = Get-Content $ajustes -Raw
     if ($anterior -notmatch [regex]::Escape(($reloaded -replace '\\', '\\'))) {
-        $copia = "$ajustes.antes-de-mr2-rancho"
+        $copia = "$ajustes.antes-de-mr2-rancho-de-kokemones"
         Copy-Item $ajustes $copia -Force
         Aviso "Ya tenias Reloaded-II configurado en otro lugar; tu configuracion anterior quedo en: $copia"
     }
@@ -138,8 +138,6 @@ if (-not $SinAccesoDirecto) {
     Titulo '5. Creando acceso directo'
     $shell = New-Object -ComObject WScript.Shell
     foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
-        # Acceso directo de la version 1.0.0 (tenia otro nombre).
-        Remove-Item -LiteralPath (Join-Path $carpeta 'Monster Rancher 2 (mods).lnk') -ErrorAction SilentlyContinue
         $lnk = $shell.CreateShortcut((Join-Path $carpeta 'MR2 Rancho de Kokemones.lnk'))
         $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
         $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
