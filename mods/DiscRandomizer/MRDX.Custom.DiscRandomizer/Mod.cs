@@ -77,7 +77,11 @@ public class Mod : ModBase
     private readonly IModLoader? _loader;
     private MoreMonstersInfo? _mm;
 
-    private sealed record MoreMonstersInfo(bool Active, HashSet<int> SongIds, HashSet<(int Main, int Sub)> Breeds);
+    // Models: for each More Monsters species (main/sub), the model combination the game must load
+    // (columns 6 and 7 of its tables). Many reuse another breed's model or one of their own new models;
+    // loading the main/sub combination directly crashes the game (e.g. Fire Gear 10/1 → model 10/26).
+    private sealed record MoreMonstersInfo(bool Active, HashSet<int> SongIds, HashSet<(int Main, int Sub)> Breeds,
+        Dictionary<(int Main, int Sub), (int Main, int Sub)> Models);
 
     private int _songId;
     // Raza pendiente de aplicar. Caduca a los 60 s por si el jugador sale del santuario sin crear nada,
@@ -219,8 +223,17 @@ public class Mod : ModBase
             return null;
         }
 
+        // Prueba: especie fija para todos los discos.
+        var force = (_config.TestForceBreed ?? "").Split('/');
+        if (force.Length == 2 && int.TryParse(force[0], out var fm) && int.TryParse(force[1], out var fs))
+        {
+            var forced = pool.SelectMany(g => g).FirstOrDefault(b => (int)b.GenusMain == fm && (int)b.GenusSub == fs);
+            if (forced != null) { Log($"PRUEBA: especie forzada {BreedLabel(forced)}.", Color.Orange); return forced; }
+            Log($"PRUEBA: la especie {fm}/{fs} no está en el sorteo; se ignora.", Color.Orange);
+        }
+
         // Dos pasos: primero la raza principal (todas igual de probables), luego la sub-raza.
-        var h = Mix((ulong)(uint)_config.Seed << 32 | (uint)songId);
+        var h =Mix((ulong)(uint)_config.Seed << 32 | (uint)songId);
         var mains = pool[(int)(h % (ulong)pool.Count)];
         var h2 = Mix(h ^ 0x9E3779B97F4A7C15UL);
         return mains[(int)(h2 % (ulong)mains.Count)];
@@ -290,6 +303,7 @@ public class Mod : ModBase
 
         var songs = new HashSet<int>();
         var breeds = new HashSet<(int, int)>();
+        var models = new Dictionary<(int Main, int Sub), (int Main, int Sub)>();
         var active = false;
         try
         {
@@ -306,11 +320,16 @@ public class Mod : ModBase
                 foreach (var file in Directory.Exists(dir) ? Directory.GetFiles(dir, "*.csv") : [])
                 foreach (var line in File.ReadAllLines(file))
                 {
-                    // Columnas: songID, variante, nombre, raza principal, sub-raza, ...
+                    // Columnas: songID, variante, nombre, raza principal, sub-raza, modelo principal, modelo sub, ...
                     var c = line.Split('\t');
                     if (c.Length < 5) continue;
                     if (int.TryParse(c[0], out var song)) songs.Add(song);
-                    if (int.TryParse(c[3], out var main) && int.TryParse(c[4], out var sub)) breeds.Add((main, sub));
+                    if (!int.TryParse(c[3], out var main) || !int.TryParse(c[4], out var sub)) continue;
+                    breeds.Add((main, sub));
+                    // Modelo de la variante 0 (la que fija ResetMoreMonstersVariant).
+                    if (c.Length >= 7 && int.TryParse(c[5], out var modelMain) && int.TryParse(c[6], out var modelSub) &&
+                        (c[1].Trim() == "0" || !models.ContainsKey((main, sub))))
+                        models[(main, sub)] = (modelMain, modelSub);
                 }
 
                 Log($"More Monsters detectado: {breeds.Count} especies y {songs.Count} discos propios.");
@@ -321,7 +340,7 @@ public class Mod : ModBase
             Log($"No se pudieron leer los datos de More Monsters: {e.Message}", Color.Orange);
         }
 
-        return _mm = new MoreMonstersInfo(active, songs, breeds);
+        return _mm = new MoreMonstersInfo(active, songs, breeds, models);
     }
 
     private bool IsMoreMonstersBreed(MonsterBreed b) =>
@@ -344,8 +363,16 @@ public class Mod : ModBase
     private nuint OnUnlockedCheck(nuint self, int unk1, int unk2)
     {
         RestoreHiddenSong();
-        var ret = _hookUnlocked!.OriginalFunction(self, unk1, unk2);
         var b = _active;
+        // The game checks the combination written by OnWriteSdata, which for More Monsters species is the
+        // MODEL's (Fire Gear 10/1 uses model 10/26 → it would check Arrowhead/Joker). The real breed is checked instead.
+        if (b != null && !ReferenceEquals(b, NoBreedChange))
+        {
+            unk1 = (int)b.GenusMain;
+            unk2 = (int)b.GenusSub;
+        }
+
+        var ret = _hookUnlocked!.OriginalFunction(self, unk1, unk2);
         if (b == null || ReferenceEquals(b, NoBreedChange)) return ret;
 
         // Comprobado en el juego: unk1/unk2 son la raza principal/sub que ya escribió OnWriteSdata,
@@ -376,9 +403,15 @@ public class Mod : ModBase
 
         try
         {
+            // Modelo a cargar: el de la raza, o el que indica More Monsters para sus especies.
+            var model = ((int)b.GenusMain, (int)b.GenusSub);
+            if (MoreMonsters().Models.TryGetValue(model, out var mmModel)) model = mmModel;
+            if (_config.VerboseLog && model != ((int)b.GenusMain, (int)b.GenusSub))
+                Log($"Modelo para la animación: {model.Item1}/{model.Item2} (según More Monsters).");
+
             var breedLoc = *(nuint*)(self + 0x44);
-            *(byte*)(breedLoc + 0x48) = (byte)b.GenusMain;
-            *(byte*)(breedLoc + 0x49) = (byte)b.GenusSub;
+            *(byte*)(breedLoc + 0x48) = (byte)model.Item1;
+            *(byte*)(breedLoc + 0x49) = (byte)model.Item2;
             ResetMoreMonstersVariant(b); // antes de que se cargue el modelo en la animación
         }
         catch (Exception e)

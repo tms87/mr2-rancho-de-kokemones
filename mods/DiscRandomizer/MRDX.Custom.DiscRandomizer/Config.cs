@@ -41,6 +41,12 @@ public class Config : Configurable<Config>
     [DefaultValue(false)]
     public bool TestOnlyBonus { get; set; }
 
+    [Category("3. Avanzado")]
+    [DisplayName("PRUEBA: forzar especie")]
+    [Description("Todos los discos dan esta especie, escrita como \"principal/sub\" con números (ej. 10/1). Solo para probar; dejar vacío.")]
+    [DefaultValue("")]
+    public string TestForceBreed { get; set; } = "";
+
     // ---------------- Variación en cada creación ----------------
 
     [Category("2. Variación en cada creación")]

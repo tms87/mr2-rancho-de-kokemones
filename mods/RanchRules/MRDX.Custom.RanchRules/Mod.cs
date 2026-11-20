@@ -54,6 +54,12 @@ public class Mod : ModBase
     private readonly Stopwatch _pendingClock = new();
     private bool _pending;
 
+    // Partida nueva: la fecha retrocede sin que se haya cargado una partida. Se confirma unos segundos después
+    // (si en ese tiempo se carga una partida, era una carga y no una partida nueva).
+    private readonly Stopwatch _dateWentBack = new();
+    private const int NewGameConfirmMs = 5000;
+    private const long StartWeek = 0; // contador de semanas al empezar una partida (medido en el juego)
+
     public Mod(ModContext context)
     {
         _logger = context.Logger;
@@ -85,7 +91,13 @@ public class Mod : ModBase
         _game = game;
         game.OnWeekChange += c =>
         {
+            // 0xFFFFFFFF = el juego todavía no tiene fecha (transiciones de pantalla): se ignora.
+            if (c.NewWeek == uint.MaxValue) return;
+            var anterior = _week;
             _week = c.NewWeek;
+            // Partida nueva: toda partida empieza en la semana 0 (año 1000, mes 4, semana 1) y ninguna partida guardada
+            // puede estar en esa fecha. Los retrocesos chicos al cargar (p. ej. 899 -> 898) no llegan a 0.
+            if (_week == StartWeek && anterior > StartWeek) _dateWentBack.Restart();
             UpdateMessage();
         };
         save.OnLoad += OnLoad;
@@ -246,6 +258,7 @@ public class Mod : ModBase
 
     private void OnLoad(ISaveFileEntry file)
     {
+        _dateWentBack.Reset(); // era una carga, no una partida nueva
         _slot = file.Slot;
         _shrine = ShrineState.Load(ShrinePath(_slot));
         _blocked = false;
@@ -291,6 +304,19 @@ public class Mod : ModBase
     {
         var ret = _hookFrame!.OriginalFunction();
         _saves?.OnFrame();
+
+        // La fecha retrocedió hace unos segundos y no se cargó ninguna partida: es una partida nueva.
+        if (_dateWentBack.IsRunning && _dateWentBack.ElapsedMilliseconds > NewGameConfirmMs)
+        {
+            _dateWentBack.Reset();
+            _shrine = new ShrineState();
+            _blocked = false;
+            _pending = false;
+            Log($"Partida nueva: el santuario vuelve a tener {_config.ShrinePerYear} invocaciones ({DateText}).",
+                Color.LightGreen);
+            UpdateMessage();
+        }
+
         return ret;
     }
 
