@@ -1,0 +1,25 @@
+{
+    "ModId": "MRDX.Custom.AutoBattle",
+    "ModName": "Batallas automáticas",
+    "ModAuthor": "",
+    "ModVersion": "1.0.0",
+    "ModDescription": "En los torneos y batallas del juego el monstruo pelea solo con su propia inteligencia: aunque elijas controlarlo, la batalla es automática. El modo VS no cambia.",
+    "ModDll": "MRDX.Custom.AutoBattle.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

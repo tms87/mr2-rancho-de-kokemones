@@ -9,6 +9,7 @@ Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), listos pa
 3. Descomprimilo y hacé doble clic en **`Instalar.bat`**.
    - Busca el juego en Steam solo (si no lo encuentra, te pide que elijas `MF2.exe`).
    - Si falta .NET 9, lo descarga de Microsoft e instala.
+   - Si faltan las librerías Visual C++ que usa el juego, las instala (desde Steam o de Microsoft).
 4. Jugá con el acceso directo **"MR2 Rancho de Kokemones"** del escritorio.
 
 > **La primera vez** puede tardar varios minutos en abrir (se extraen los datos del juego) y no se ve nada mientras tanto. Esperá y no lo abras dos veces.
@@ -26,6 +27,7 @@ Para actualizar, descargá la versión nueva y ejecutá su `Instalar.bat`: las p
 | **Discos aleatorios** | Cada disco del santuario da una raza al azar, siempre la misma para ese disco (semilla compartida: el mismo disco da lo mismo a todos). Stats, crecimiento, vida y naturaleza varían en cada creación. Incluye las especies de More Monsters, y sus discos "More Monsters" también se sortean. Las razas bloqueadas se rechazan como en el original. |
 | **Reglas del rancho** | El santuario crea como máximo **5 monstruos por año** y avisa cuántos quedan. **Modo ironman:** guardes donde guardes, se guarda en la ranura 15 (autoguardado). Cada año nuevo se copia el autoguardado de enero en las ranuras 1 a 14, rotando. |
 | **Tolerancia a Nuts Oil y Magic Banana** | Pierden efecto si se usan semanas seguidas (se recupera al dejarlos) y cada uno tiene una chance creciente de acortar la vida del monstruo. |
+| **Batallas automáticas** | En los torneos y batallas del juego tu monstruo pelea solo, con su propia inteligencia: a la pregunta de antes de la batalla, cualquier respuesta lleva al modo automático. El modo VS no cambia. |
 
 Además el paquete incluye **More Monsters** (más de 240 especies nuevas).
 
@@ -33,7 +35,7 @@ Si algo falla, los registros están en `%APPDATA%\Reloaded-Mod-Loader-II\Logs`.
 
 ## Contenido del repositorio
 
-- `mods/` — código de los tres mods propios (C#, .NET 9, x86, para Reloaded-II).
+- `mods/` — código de los cuatro mods propios (C#, .NET 9, x86, para Reloaded-II).
 - `instalador/` — `Instalar.bat`, el instalador (`instalar.ps1`), el lanzador sin consola (`jugar.ps1`) y las plantillas de configuración de Reloaded-II.
 
 ### Compilar los mods

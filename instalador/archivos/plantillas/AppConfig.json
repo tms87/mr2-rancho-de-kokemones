@@ -10,7 +10,8 @@
     "MRDX.Custom.DiscRandomizer",
     "MRDX.Game.MoreMonsters",
     "MRDX.Custom.ItemTolerance",
-    "MRDX.Custom.RanchRules"
+    "MRDX.Custom.RanchRules",
+    "MRDX.Custom.AutoBattle"
   ],
   "WorkingDirectory": "{{CARPETA_JUEGO}}",
   "PluginData": {},
@@ -19,7 +20,8 @@
     "MRDX.Custom.DiscRandomizer",
     "MRDX.Game.MoreMonsters",
     "MRDX.Custom.ItemTolerance",
-    "MRDX.Custom.RanchRules"
+    "MRDX.Custom.RanchRules",
+    "MRDX.Custom.AutoBattle"
   ],
   "PreserveDisabledModOrder": true,
   "DontInject": false,

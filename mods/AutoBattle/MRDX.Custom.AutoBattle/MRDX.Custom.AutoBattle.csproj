@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x86</PlatformTarget>
+    <!-- Carpeta lista para copiar a Reloaded-II\Mods -->
+    <OutputPath>..\build\MRDX.Custom.AutoBattle</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="ModConfig.json" CopyToOutputDirectory="Always" />
+    <None Update="Preview.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Reloaded.Hooks" Version="4.3.0" />
+    <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- DLL publicada por MRDX Base Mod (1.2.2). Debe coincidir con la versión instalada en Reloaded-II;
+         no se copia a la salida: la aporta el Base Mod en tiempo de ejecución. -->
+    <Reference Include="MRDX.Base.Mod.Interfaces">
+      <HintPath>..\lib\MRDX.Base.Mod.Interfaces.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

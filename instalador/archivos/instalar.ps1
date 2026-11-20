@@ -87,6 +87,45 @@ foreach ($r in $faltan) {
 if ($faltan.Count -eq 0) { Ok '.NET 9 ya esta instalado.' }
 
 # ------------------------------------------------------------------
+Titulo '2b. Comprobando Visual C++ (lo necesita el juego)'
+# ------------------------------------------------------------------
+# Steam instala estas librerias la primera vez que se abre el juego DESDE Steam; si el juego nunca se abrio
+# desde Steam faltan (p. ej. "MSVCR100.dll was not found", que pide el sqlite3.dll del juego).
+# Se usa primero el instalador que Steam ya dejo en disco (Steamworks Shared\_CommonRedist) y si no, el de Microsoft.
+$sys32 = if ([Environment]::Is64BitOperatingSystem) { Join-Path $env:WINDIR 'SysWOW64' } else { Join-Path $env:WINDIR 'System32' }
+$vcpp = @(
+    @{ Nombre = 'Visual C++ 2010 (32 bits)'; Dlls = @('msvcr100.dll'); Local = 'vcredist\2010\vcredist_x86.exe'
+       Args = @('/q', '/norestart'); Url = 'https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe' },
+    @{ Nombre = 'Visual C++ 2015-2022 (32 bits)'; Dlls = @('vcruntime140.dll', 'msvcp140.dll'); Local = 'vcredist\2022\VC_redist.x86.exe'
+       Args = @('/install', '/quiet', '/norestart'); Url = 'https://aka.ms/vs/17/release/vc_redist.x86.exe' }
+)
+foreach ($v in $vcpp) {
+    if (-not ($v.Dlls | Where-Object { -not (Test-Path (Join-Path $sys32 $_)) })) { Ok "$($v.Nombre) ya esta instalado."; continue }
+
+    Aviso "Falta $($v.Nombre). Se instala ahora (Windows puede pedir permiso)."
+    $instalador = $null
+    foreach ($b in ($bibliotecas | Select-Object -Unique)) {
+        $c = Join-Path $b "steamapps\common\Steamworks Shared\_CommonRedist\$($v.Local)"
+        if (Test-Path $c) { $instalador = $c; break }
+    }
+    try {
+        if (-not $instalador) {
+            $instalador = Join-Path $env:TEMP ([IO.Path]::GetFileName($v.Url))
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            $ProgressPreference = 'SilentlyContinue'
+            Invoke-WebRequest -Uri $v.Url -OutFile $instalador -UseBasicParsing
+        }
+        $proc = Start-Process $instalador -ArgumentList $v.Args -Verb RunAs -Wait -PassThru
+        if ($proc.ExitCode -notin 0, 3010, 1638, 5100) { throw "codigo $($proc.ExitCode)" }
+        Ok "$($v.Nombre) instalado."
+    }
+    catch {
+        Aviso "No se pudo instalar $($v.Nombre) ($($_.Exception.Message))."
+        Aviso 'Solucion: abri el juego UNA vez desde Steam (Steam instala lo que falta) y despues usa el acceso directo.'
+    }
+}
+
+# ------------------------------------------------------------------
 Titulo '3. Copiando Reloaded-II y los mods'
 # ------------------------------------------------------------------
 $reloaded = Join-Path $Destino 'Reloaded-II'
