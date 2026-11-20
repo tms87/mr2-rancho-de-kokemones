@@ -1,0 +1,47 @@
+MONSTER RANCHER 2 - RANCHO (mods para Monster Rancher 1&2 DX de Steam)
+=======================================================================
+
+INSTALAR
+--------
+1. Instala "Monster Rancher 1 & 2 DX" desde Steam.
+2. Descomprimi esta carpeta donde quieras (por ejemplo, en Descargas).
+3. Doble clic en "Instalar.bat".
+   - Busca el juego solo. Si no lo encuentra, te pide que elijas MF2.exe.
+   - Si falta .NET 9, lo descarga de Microsoft e instala (Windows puede pedir permiso).
+4. Listo: juga con el acceso directo "Monster Rancher 2 (mods)" del escritorio.
+   LA PRIMERA VEZ puede tardar varios minutos en abrir (se extraen los datos del juego,
+   unos 360 MB) y no se ve nada mientras tanto: espera, no lo abras dos veces.
+
+Despues de instalar, la carpeta descomprimida se puede borrar.
+Para actualizar a una version nueva del paquete, ejecuta su Instalar.bat: tus partidas y
+datos se conservan.
+
+QUE CAMBIA EN EL JUEGO
+----------------------
+- Discos aleatorios: cada disco del santuario da una raza al azar (siempre la misma para
+  ese disco, igual para todos los que usen este paquete). Los stats, crecimiento, vida y
+  naturaleza varian en cada creacion. Incluye las especies nuevas de More Monsters; sus
+  discos "More Monsters" tambien son aleatorios.
+- Santuario: 5 monstruos por año. Al entrar te dice cuantos quedan.
+- Nuts Oil y Magic Banana: pierden efecto si se usan seguido y pueden acortar la vida.
+- Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
+  Cada año nuevo se hace una copia en las ranuras 1 a 14, rotando.
+  (Para ver las copias, carga la ranura correspondiente.)
+
+IMPORTANTE
+----------
+- Steam tiene que estar abierto (el acceso directo lo abre si hace falta).
+- Si algo falla, manda los registros de esta carpeta:
+  %APPDATA%\Reloaded-Mod-Loader-II\Logs
+- La configuracion de los mods se puede cambiar abriendo
+  %LOCALAPPDATA%\MR2-Rancho\Reloaded-II\Reloaded-II.exe
+
+CREDITOS
+--------
+- Reloaded-II, de Sewer56 (licencia GPLv3): https://github.com/Reloaded-Project/Reloaded-II
+- MRDX Base Mod, Extract Data Bin y More Monsters (ArchbishopDave y colaboradores), de la
+  comunidad de Monster Rancher: https://github.com/ranchercommunity/mrdx_reloaded
+  Gracias a la comunidad por su trabajo: este paquete solo los incluye para facilitar la
+  instalacion entre amigos.
+- Mods "Discos aleatorios", "Reglas del rancho" y "Tolerancia a Nuts Oil y Magic Banana":
+  hechos para este paquete.

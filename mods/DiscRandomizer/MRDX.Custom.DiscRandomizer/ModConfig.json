@@ -1,0 +1,25 @@
+{
+    "ModId": "MRDX.Custom.DiscRandomizer",
+    "ModName": "Discos aleatorios",
+    "ModAuthor": "",
+    "ModVersion": "1.3.0",
+    "ModDescription": "Cada disco da una raza aleatoria (fija por semilla) y los stats, crecimiento, vida y naturaleza varían en cada creación.",
+    "ModDll": "MRDX.Custom.DiscRandomizer.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

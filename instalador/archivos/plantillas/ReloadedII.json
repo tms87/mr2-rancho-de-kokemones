@@ -1,0 +1,34 @@
+{
+  "LoaderPath32": "{{RELOADED}}\\Loader\\x86\\Reloaded.Mod.Loader.dll",
+  "LoaderPath64": "{{RELOADED}}\\Loader\\x64\\Reloaded.Mod.Loader.dll",
+  "LauncherPath": "{{RELOADED}}\\Reloaded-II.exe",
+  "Bootstrapper32Path": "{{RELOADED}}\\Loader\\x86\\Bootstrapper\\Reloaded.Mod.Loader.Bootstrapper.dll",
+  "Bootstrapper64Path": "{{RELOADED}}\\Loader\\x64\\Bootstrapper\\Reloaded.Mod.Loader.Bootstrapper.dll",
+  "ApplicationConfigDirectory": "{{RELOADED}}\\Apps",
+  "ModUserConfigDirectory": "{{RELOADED}}\\User\\Mods",
+  "MiscConfigDirectory": "{{RELOADED}}\\User\\Misc",
+  "PluginConfigDirectory": "{{RELOADED}}\\Plugins",
+  "ModConfigDirectory": "{{RELOADED}}\\Mods",
+  "EnabledPlugins": [],
+  "LanguageFile": "{{RELOADED}}\\Assets\\Languages\\en-GB.xaml",
+  "ThemeFile": "{{RELOADED}}\\Theme\\Default.xaml",
+  "FirstLaunch": false,
+  "ShowConsole": false,
+  "LogFileCompressTimeHours": 6,
+  "LogFileDeleteHours": 336,
+  "CrashDumpDeleteHours": 24,
+  "NuGetFeeds": [
+    {
+      "Name": "Official Repository",
+      "URL": "https://packages.sewer56.moe/v3/index.json",
+      "Description": "Package repository of Sewer56, the developer of Reloaded. Contains personal and popular community packages."
+    }
+  ],
+  "ForceModPrereleases": false,
+  "ReloadedProcessListRefreshInterval": 1000,
+  "LoaderSetupTimeout": 30000,
+  "LoaderSetupSleeptime": 32,
+  "ProcessRefreshInterval": 200,
+  "SkipWineLaunchWarning": false,
+  "DisableDInput": false
+}

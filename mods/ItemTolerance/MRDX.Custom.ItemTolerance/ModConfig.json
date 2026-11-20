@@ -1,0 +1,25 @@
+{
+    "ModId": "MRDX.Custom.ItemTolerance",
+    "ModName": "Tolerancia a Nuts Oil y Magic Banana",
+    "ModAuthor": "",
+    "ModVersion": "1.0.0",
+    "ModDescription": "La Nuts Oil y la Magic Banana pierden efecto si se usan seguidas y pueden acortar la vida del monstruo.",
+    "ModDll": "MRDX.Custom.ItemTolerance.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

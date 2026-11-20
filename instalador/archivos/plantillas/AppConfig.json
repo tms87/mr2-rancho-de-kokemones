@@ -1,0 +1,27 @@
+{
+  "AppId": "mf2.exe",
+  "AppName": "MonsterRancher 1\u00262 DX",
+  "AppLocation": "{{JUEGO}}",
+  "AppArguments": "",
+  "AppIcon": "Icon.png",
+  "AutoInject": false,
+  "EnabledMods": [
+    "MRDX.Base.Mod",
+    "MRDX.Custom.DiscRandomizer",
+    "MRDX.Game.MoreMonsters",
+    "MRDX.Custom.ItemTolerance",
+    "MRDX.Custom.RanchRules"
+  ],
+  "WorkingDirectory": "{{CARPETA_JUEGO}}",
+  "PluginData": {},
+  "SortedMods": [
+    "MRDX.Base.Mod",
+    "MRDX.Custom.DiscRandomizer",
+    "MRDX.Game.MoreMonsters",
+    "MRDX.Custom.ItemTolerance",
+    "MRDX.Custom.RanchRules"
+  ],
+  "PreserveDisabledModOrder": true,
+  "DontInject": false,
+  "IsMsStore": false
+}
