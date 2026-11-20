@@ -1,0 +1,31 @@
+{
+  "nombre": "Epsilon",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Henger",
+  "razaSub": "Henger",
+  "vida": 290,
+  "poder": 375,
+  "inteligencia": 311,
+  "habilidad": 369,
+  "velocidad": 357,
+  "defensa": 242,
+  "naturaleza": 70,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    8,
+    10,
+    15
+  ],
+  "velocidadArena": 2,
+  "agallas": 16,
+  "especiales": 3
+}

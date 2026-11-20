@@ -1,0 +1,30 @@
+{
+  "nombre": "Nicolle",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Mew",
+  "razaSub": "Mew",
+  "vida": 251,
+  "poder": 166,
+  "inteligencia": 185,
+  "habilidad": 333,
+  "velocidad": 340,
+  "defensa": 95,
+  "naturaleza": -20,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    8,
+    10
+  ],
+  "velocidadArena": 1,
+  "agallas": 15,
+  "especiales": 259
+}

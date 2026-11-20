@@ -1,0 +1,32 @@
+{
+  "nombre": "Kitty",
+  "liga": "A",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Pixie",
+  "razaSub": "Kato",
+  "vida": 286,
+  "poder": 278,
+  "inteligencia": 627,
+  "habilidad": 501,
+  "velocidad": 519,
+  "defensa": 225,
+  "naturaleza": -50,
+  "miedo": 80,
+  "malcriado": 80,
+  "tecnicas": [
+    1,
+    4,
+    7,
+    10,
+    12,
+    13,
+    18,
+    21,
+    22
+  ],
+  "velocidadArena": 3,
+  "agallas": 11,
+  "especiales": 131
+}

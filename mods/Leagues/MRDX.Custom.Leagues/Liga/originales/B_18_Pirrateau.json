@@ -1,0 +1,30 @@
+{
+  "nombre": "Pirrateau",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Niton",
+  "razaSub": "Niton",
+  "vida": 188,
+  "poder": 229,
+  "inteligencia": 182,
+  "habilidad": 171,
+  "velocidad": 165,
+  "defensa": 564,
+  "naturaleza": 45,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    4,
+    7,
+    10,
+    11
+  ],
+  "velocidadArena": 1,
+  "agallas": 10,
+  "especiales": 67
+}

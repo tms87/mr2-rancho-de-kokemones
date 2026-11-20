@@ -1,0 +1,29 @@
+{
+  "nombre": "Recknen",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Gaboo",
+  "razaSub": "Jell",
+  "vida": 260,
+  "poder": 255,
+  "inteligencia": 177,
+  "habilidad": 170,
+  "velocidad": 290,
+  "defensa": 95,
+  "naturaleza": 20,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    4,
+    7,
+    9
+  ],
+  "velocidadArena": 1,
+  "agallas": 14,
+  "especiales": 19
+}

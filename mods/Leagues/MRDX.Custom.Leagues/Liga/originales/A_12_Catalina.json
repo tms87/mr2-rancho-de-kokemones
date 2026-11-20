@@ -1,0 +1,31 @@
+{
+  "nombre": "Catalina",
+  "liga": "A",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Suezo",
+  "razaSub": "Pixie",
+  "vida": 346,
+  "poder": 338,
+  "inteligencia": 571,
+  "habilidad": 515,
+  "velocidad": 205,
+  "defensa": 157,
+  "naturaleza": -50,
+  "miedo": 80,
+  "malcriado": 80,
+  "tecnicas": [
+    1,
+    2,
+    3,
+    5,
+    8,
+    9,
+    10,
+    11
+  ],
+  "velocidadArena": 2,
+  "agallas": 10,
+  "especiales": 131
+}

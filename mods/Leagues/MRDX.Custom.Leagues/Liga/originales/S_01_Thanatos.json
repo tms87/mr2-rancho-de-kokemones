@@ -1,0 +1,28 @@
+{
+  "nombre": "Thanatos",
+  "liga": "S",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Joker",
+  "razaSub": "Joker",
+  "vida": 505,
+  "poder": 431,
+  "inteligencia": 727,
+  "habilidad": 710,
+  "velocidad": 404,
+  "defensa": 271,
+  "naturaleza": -90,
+  "miedo": 90,
+  "malcriado": 90,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 1027
+}

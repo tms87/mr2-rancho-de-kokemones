@@ -1,0 +1,27 @@
+{
+  "nombre": "Milliam",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Pixie",
+  "razaSub": "Pixie",
+  "vida": 66,
+  "poder": 89,
+  "inteligencia": 285,
+  "habilidad": 222,
+  "velocidad": 236,
+  "defensa": 70,
+  "naturaleza": -45,
+  "miedo": 40,
+  "malcriado": 40,
+  "tecnicas": [
+    0,
+    3,
+    14,
+    21
+  ],
+  "velocidadArena": 4,
+  "agallas": 7,
+  "especiales": 131
+}

@@ -1,0 +1,33 @@
+{
+  "nombre": "Sharkin",
+  "liga": "A",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Naga",
+  "razaSub": "Gali",
+  "vida": 404,
+  "poder": 481,
+  "inteligencia": 527,
+  "habilidad": 542,
+  "velocidad": 199,
+  "defensa": 288,
+  "naturaleza": 50,
+  "miedo": 80,
+  "malcriado": 80,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    9,
+    10,
+    11
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 3
+}

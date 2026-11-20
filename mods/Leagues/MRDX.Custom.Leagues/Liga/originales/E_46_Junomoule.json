@@ -1,0 +1,25 @@
+{
+  "nombre": "Junomoule",
+  "liga": "E",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "Tiger",
+  "vida": 152,
+  "poder": 135,
+  "inteligencia": 127,
+  "habilidad": 161,
+  "velocidad": 158,
+  "defensa": 138,
+  "naturaleza": 65,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    4
+  ],
+  "velocidadArena": 2,
+  "agallas": 11,
+  "especiales": 7
+}

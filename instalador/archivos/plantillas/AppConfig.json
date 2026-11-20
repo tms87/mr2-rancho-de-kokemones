@@ -11,7 +11,8 @@
     "MRDX.Game.MoreMonsters",
     "MRDX.Custom.ItemTolerance",
     "MRDX.Custom.RanchRules",
-    "MRDX.Custom.AutoBattle"
+    "MRDX.Custom.AutoBattle",
+    "MRDX.Custom.Leagues"
   ],
   "WorkingDirectory": "{{CARPETA_JUEGO}}",
   "PluginData": {},
@@ -21,7 +22,8 @@
     "MRDX.Game.MoreMonsters",
     "MRDX.Custom.ItemTolerance",
     "MRDX.Custom.RanchRules",
-    "MRDX.Custom.AutoBattle"
+    "MRDX.Custom.AutoBattle",
+    "MRDX.Custom.Leagues"
   ],
   "PreserveDisabledModOrder": true,
   "DontInject": false,

@@ -1,0 +1,31 @@
+{
+  "nombre": "Dewless",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Monol",
+  "razaSub": "Golem",
+  "vida": 205,
+  "poder": 334,
+  "inteligencia": 326,
+  "habilidad": 255,
+  "velocidad": 25,
+  "defensa": 490,
+  "naturaleza": 20,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    6,
+    7,
+    8,
+    12,
+    13,
+    14,
+    16
+  ],
+  "velocidadArena": 0,
+  "agallas": 18,
+  "especiales": 67
+}

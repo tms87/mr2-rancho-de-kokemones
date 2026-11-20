@@ -1,0 +1,26 @@
+{
+    "ModId": "MRDX.Custom.Leagues",
+    "ModName": "Rivales Kokemon",
+    "ModAuthor": "",
+    "ModVersion": "0.2.1",
+    "ModDescription": "Los rivales de los torneos de liga (E a S) salen sorteados cada semana de una lista de monstruos por liga: los originales más los que se agreguen (por ejemplo, los de tus amigos). Al guardar, exporta tu monstruo a un archivo para compartirlo. FIMBA, los 4 grandes y los torneos especiales no cambian.",
+    "ModDll": "MRDX.Custom.Leagues.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "reloaded.universal.redirector",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

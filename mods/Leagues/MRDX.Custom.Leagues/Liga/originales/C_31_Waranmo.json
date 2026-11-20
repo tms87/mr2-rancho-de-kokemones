@@ -1,0 +1,28 @@
+{
+  "nombre": "Waranmo",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Ape",
+  "razaSub": "Plant",
+  "vida": 355,
+  "poder": 308,
+  "inteligencia": 135,
+  "habilidad": 195,
+  "velocidad": 178,
+  "defensa": 199,
+  "naturaleza": 40,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    3,
+    5,
+    11
+  ],
+  "velocidadArena": 0,
+  "agallas": 14,
+  "especiales": 3
+}

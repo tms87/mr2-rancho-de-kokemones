@@ -1,0 +1,26 @@
+{
+  "nombre": "Harrimaoh",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Hopper",
+  "razaSub": "Hopper",
+  "vida": 110,
+  "poder": 145,
+  "inteligencia": 165,
+  "habilidad": 272,
+  "velocidad": 177,
+  "defensa": 89,
+  "naturaleza": -25,
+  "miedo": 40,
+  "malcriado": 40,
+  "tecnicas": [
+    0,
+    1,
+    6
+  ],
+  "velocidadArena": 4,
+  "agallas": 8,
+  "especiales": 13
+}

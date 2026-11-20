@@ -1,0 +1,33 @@
+{
+  "nombre": "Ordorf",
+  "liga": "S",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Gaboo",
+  "razaSub": "Joker",
+  "vida": 751,
+  "poder": 723,
+  "inteligencia": 251,
+  "habilidad": 364,
+  "velocidad": 701,
+  "defensa": 279,
+  "naturaleza": -80,
+  "miedo": 90,
+  "malcriado": 90,
+  "tecnicas": [
+    0,
+    2,
+    4,
+    6,
+    7,
+    9,
+    11,
+    12,
+    13,
+    16
+  ],
+  "velocidadArena": 1,
+  "agallas": 14,
+  "especiales": 1043
+}

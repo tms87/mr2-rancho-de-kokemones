@@ -28,6 +28,7 @@ Para actualizar, descargá la versión nueva y ejecutá su `Instalar.bat`: las p
 | **Reglas del rancho** | El santuario crea como máximo **5 monstruos por año** y avisa cuántos quedan. **Modo ironman:** guardes donde guardes, se guarda en la ranura 15 (autoguardado). Cada año nuevo se copia el autoguardado de enero en las ranuras 1 a 14, rotando. |
 | **Tolerancia a Nuts Oil y Magic Banana** | Pierden efecto si se usan semanas seguidas (se recupera al dejarlos) y cada uno tiene una chance creciente de acortar la vida del monstruo. |
 | **Batallas automáticas** | En los torneos y batallas del juego tu monstruo pelea solo, con su propia inteligencia: a la pregunta de antes de la batalla, cualquier respuesta lleva al modo automático. El modo VS no cambia. |
+| **Rivales Kokemon** | Cada semana, los rivales de los torneos de liga (E a S) salen sorteados de una lista por liga: los 50 originales más monstruos de jugadores. El sorteo es el mismo para todos en la misma semana. Al guardar, tu monstruo y los del congelador se exportan a archivos para compartirlos y sumarlos a la lista (el instalador deja en el escritorio el acceso directo "Rivales Kokemon - Exportados" a esa carpeta). FIMBA, los 4 grandes y los torneos especiales no cambian. |
 
 Además el paquete incluye **More Monsters** (más de 240 especies nuevas).
 
@@ -35,7 +36,7 @@ Si algo falla, los registros están en `%APPDATA%\Reloaded-Mod-Loader-II\Logs`.
 
 ## Contenido del repositorio
 
-- `mods/` — código de los cuatro mods propios (C#, .NET 9, x86, para Reloaded-II).
+- `mods/` — código de los cinco mods propios (C#, .NET 9, x86, para Reloaded-II). La lista de rivales de las ligas está en `mods/Leagues/MRDX.Custom.Leagues/Liga/` (un `.json` por monstruo; ver su `LEEME.txt`).
 - `instalador/` — `Instalar.bat`, el instalador (`instalar.ps1`), el lanzador sin consola (`jugar.ps1`) y las plantillas de configuración de Reloaded-II.
 
 ### Compilar los mods

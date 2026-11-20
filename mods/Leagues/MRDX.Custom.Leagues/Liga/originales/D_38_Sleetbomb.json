@@ -1,0 +1,25 @@
+{
+  "nombre": "Sleetbomb",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Baku",
+  "razaSub": "Baku",
+  "vida": 275,
+  "poder": 223,
+  "inteligencia": 47,
+  "habilidad": 99,
+  "velocidad": 49,
+  "defensa": 182,
+  "naturaleza": 70,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    1
+  ],
+  "velocidadArena": 0,
+  "agallas": 16,
+  "especiales": 3
+}

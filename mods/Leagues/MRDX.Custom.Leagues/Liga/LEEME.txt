@@ -1,0 +1,24 @@
+LISTA DE LAS LIGAS DE TORNEOS
+=============================
+
+Cada archivo .json de esta carpeta (y sus subcarpetas) es un rival que puede salir sorteado
+en los torneos de su liga. Cada semana del juego, los torneos de liga (E a S) se llenan con
+rivales al azar de la liga correspondiente.
+
+- originales\  Los 50 rivales del juego original.
+- jugadores\   Monstruos de jugadores (exportados desde el juego).
+
+AGREGAR UN MONSTRUO
+- Al guardar la partida, el mod exporta tu monstruo y los del congelador a
+  Reloaded-II\User\Mods\MRDX.Custom.Leagues\Exportados
+- Copia el archivo a esta carpeta (para todos los que usen el paquete) o a
+  Reloaded-II\User\Mods\MRDX.Custom.Leagues\Liga (solo para vos).
+
+QUITAR UN MONSTRUO
+- Borra su archivo o cambia "activo": true por "activo": false.
+
+LIGA
+- "liga": "S", "A", "B", "C", "D" o "E". Los exportados traen la del rango que alcanzaron.
+- Si se deja vacia ("liga": ""), se ubica segun la suma de stats.
+
+Los torneos FIMBA, los 4 grandes y los torneos especiales no usan esta lista.

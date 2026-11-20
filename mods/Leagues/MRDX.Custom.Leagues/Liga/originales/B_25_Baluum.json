@@ -1,0 +1,32 @@
+{
+  "nombre": "Baluum",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Baku",
+  "razaSub": "Tiger",
+  "vida": 420,
+  "poder": 456,
+  "inteligencia": 345,
+  "habilidad": 291,
+  "velocidad": 144,
+  "defensa": 190,
+  "naturaleza": 75,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    9,
+    10,
+    13
+  ],
+  "velocidadArena": 1,
+  "agallas": 13,
+  "especiales": 3
+}

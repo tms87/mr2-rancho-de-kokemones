@@ -1,0 +1,29 @@
+{
+  "nombre": "Zamber",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Zuum",
+  "razaSub": "Golem",
+  "vida": 262,
+  "poder": 275,
+  "inteligencia": 184,
+  "habilidad": 266,
+  "velocidad": 190,
+  "defensa": 309,
+  "naturaleza": 30,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    12
+  ],
+  "velocidadArena": 1,
+  "agallas": 15,
+  "especiales": 3
+}

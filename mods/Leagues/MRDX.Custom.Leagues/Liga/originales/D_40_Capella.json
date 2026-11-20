@@ -1,0 +1,26 @@
+{
+  "nombre": "Capella",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Jell",
+  "razaSub": "Naga",
+  "vida": 123,
+  "poder": 165,
+  "inteligencia": 158,
+  "habilidad": 195,
+  "velocidad": 111,
+  "defensa": 217,
+  "naturaleza": -54,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    4,
+    7
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 3
+}

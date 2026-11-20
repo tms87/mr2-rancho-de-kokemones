@@ -1,0 +1,27 @@
+{
+  "nombre": "Palmer",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Plant",
+  "razaSub": "Plant",
+  "vida": 215,
+  "poder": 31,
+  "inteligencia": 168,
+  "habilidad": 169,
+  "velocidad": 113,
+  "defensa": 40,
+  "naturaleza": 60,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    4,
+    7,
+    10
+  ],
+  "velocidadArena": 1,
+  "agallas": 8,
+  "especiales": 3
+}

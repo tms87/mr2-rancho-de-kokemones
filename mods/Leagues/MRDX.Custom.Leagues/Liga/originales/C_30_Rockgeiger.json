@@ -1,0 +1,28 @@
+{
+  "nombre": "Rockgeiger",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Golem",
+  "razaSub": "Golem",
+  "vida": 201,
+  "poder": 442,
+  "inteligencia": 129,
+  "habilidad": 66,
+  "velocidad": 51,
+  "defensa": 314,
+  "naturaleza": 35,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    1,
+    3,
+    6,
+    7,
+    19
+  ],
+  "velocidadArena": 0,
+  "agallas": 18,
+  "especiales": 67
+}

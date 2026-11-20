@@ -1,0 +1,32 @@
+{
+  "nombre": "Aspin",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Hopper",
+  "razaSub": "Pixie",
+  "vida": 270,
+  "poder": 246,
+  "inteligencia": 369,
+  "habilidad": 491,
+  "velocidad": 312,
+  "defensa": 189,
+  "naturaleza": -40,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    4,
+    6,
+    7,
+    9,
+    11,
+    12
+  ],
+  "velocidadArena": 4,
+  "agallas": 8,
+  "especiales": 139
+}

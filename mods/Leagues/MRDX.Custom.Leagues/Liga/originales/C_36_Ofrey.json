@@ -1,0 +1,29 @@
+{
+  "nombre": "Ofrey",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Ghost",
+  "razaSub": "Ghost",
+  "vida": 111,
+  "poder": 75,
+  "inteligencia": 293,
+  "habilidad": 321,
+  "velocidad": 369,
+  "defensa": 44,
+  "naturaleza": -5,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    4,
+    5,
+    8,
+    10
+  ],
+  "velocidadArena": 3,
+  "agallas": 7,
+  "especiales": 3
+}

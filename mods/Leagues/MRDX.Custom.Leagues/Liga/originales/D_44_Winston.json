@@ -1,0 +1,27 @@
+{
+  "nombre": "Winston",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Tiger",
+  "razaSub": "Jell",
+  "vida": 86,
+  "poder": 104,
+  "inteligencia": 225,
+  "habilidad": 258,
+  "velocidad": 211,
+  "defensa": 82,
+  "naturaleza": 35,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    2,
+    5,
+    7
+  ],
+  "velocidadArena": 3,
+  "agallas": 11,
+  "especiales": 267
+}

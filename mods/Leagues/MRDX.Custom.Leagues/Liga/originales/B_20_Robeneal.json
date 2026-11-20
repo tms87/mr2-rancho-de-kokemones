@@ -1,0 +1,31 @@
+{
+  "nombre": "Robeneal",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Worm",
+  "razaSub": "Monol",
+  "vida": 398,
+  "poder": 312,
+  "inteligencia": 366,
+  "habilidad": 295,
+  "velocidad": 145,
+  "defensa": 270,
+  "naturaleza": -25,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    3,
+    4,
+    8,
+    10,
+    11,
+    12,
+    13
+  ],
+  "velocidadArena": 1,
+  "agallas": 16,
+  "especiales": 3
+}

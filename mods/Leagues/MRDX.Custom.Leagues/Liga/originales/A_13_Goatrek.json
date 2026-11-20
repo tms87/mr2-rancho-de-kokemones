@@ -1,0 +1,33 @@
+{
+  "nombre": "Goatrek",
+  "liga": "A",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Zilla",
+  "razaSub": "Zilla",
+  "vida": 485,
+  "poder": 611,
+  "inteligencia": 219,
+  "habilidad": 174,
+  "velocidad": 206,
+  "defensa": 321,
+  "naturaleza": 35,
+  "miedo": 80,
+  "malcriado": 80,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10,
+    12
+  ],
+  "velocidadArena": 0,
+  "agallas": 18,
+  "especiales": 7
+}

@@ -1,0 +1,26 @@
+{
+  "nombre": "Oakleyman",
+  "liga": "E",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Gaboo",
+  "razaSub": "Gaboo",
+  "vida": 199,
+  "poder": 158,
+  "inteligencia": 23,
+  "habilidad": 55,
+  "velocidad": 147,
+  "defensa": 81,
+  "naturaleza": 25,
+  "miedo": 20,
+  "malcriado": 20,
+  "tecnicas": [
+    0,
+    7,
+    9
+  ],
+  "velocidadArena": 1,
+  "agallas": 14,
+  "especiales": 19
+}

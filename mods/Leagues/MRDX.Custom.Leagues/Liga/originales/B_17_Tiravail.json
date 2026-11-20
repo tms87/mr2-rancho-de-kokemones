@@ -1,0 +1,30 @@
+{
+  "nombre": "Tiravail",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Plant",
+  "razaSub": "Suezo",
+  "vida": 320,
+  "poder": 149,
+  "inteligencia": 345,
+  "habilidad": 237,
+  "velocidad": 166,
+  "defensa": 115,
+  "naturaleza": -45,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    4,
+    5,
+    7,
+    8,
+    9,
+    10
+  ],
+  "velocidadArena": 1,
+  "agallas": 10,
+  "especiales": 3
+}

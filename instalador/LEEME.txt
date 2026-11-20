@@ -27,6 +27,11 @@ QUE CAMBIA EN EL JUEGO
 - Nuts Oil y Magic Banana: pierden efecto si se usan seguido y pueden acortar la vida.
 - Batallas automaticas: en los torneos tu monstruo pelea solo. Aunque elijas controlarlo,
   la batalla es automatica. El modo VS no cambia.
+- Rivales Kokemon: cada semana, los rivales de los torneos de liga (E a S) salen sorteados
+  de una lista por liga (los originales mas monstruos de jugadores), iguales para todos.
+  Al guardar, tu monstruo y los del congelador se exportan a la carpeta que abre el
+  acceso directo "Rivales Kokemon - Exportados" del escritorio.
+  Manda esos archivos para sumarlos a la lista. FIMBA y los torneos especiales no cambian.
 - Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
   Cada año nuevo se hace una copia en las ranuras 1 a 14, rotando.
   (Para ver las copias, carga la ranura correspondiente.)
@@ -46,6 +51,6 @@ CREDITOS
   comunidad de Monster Rancher: https://github.com/ranchercommunity/mrdx_reloaded
   Gracias a la comunidad por su trabajo: este paquete solo los incluye para facilitar la
   instalacion entre amigos.
-- Mods "Discos aleatorios", "Reglas del rancho", "Tolerancia a Nuts Oil y Magic Banana" y
-  "Batallas automaticas":
+- Mods "Discos aleatorios", "Reglas del rancho", "Tolerancia a Nuts Oil y Magic Banana",
+  "Batallas automaticas" y "Rivales Kokemon":
   hechos para este paquete.

@@ -1,0 +1,26 @@
+{
+  "nombre": "Indiana",
+  "liga": "A",
+  "activo": true,
+  "origen": "exportado (rancho)",
+  "autor": "",
+  "razaPrincipal": "Worm",
+  "razaSub": "Plant",
+  "vida": 458,
+  "poder": 716,
+  "inteligencia": 332,
+  "habilidad": 464,
+  "velocidad": 104,
+  "defensa": 205,
+  "naturaleza": 100,
+  "miedo": 72,
+  "malcriado": 98,
+  "tecnicas": [
+    0,
+    6,
+    13
+  ],
+  "velocidadArena": 1,
+  "agallas": 12,
+  "especiales": 67
+}

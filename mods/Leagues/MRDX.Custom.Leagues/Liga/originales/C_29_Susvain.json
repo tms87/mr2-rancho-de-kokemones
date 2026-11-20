@@ -1,0 +1,27 @@
+{
+  "nombre": "Susvain",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Naga",
+  "razaSub": "Zuum",
+  "vida": 199,
+  "poder": 295,
+  "inteligencia": 43,
+  "habilidad": 366,
+  "velocidad": 117,
+  "defensa": 175,
+  "naturaleza": -30,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    4
+  ],
+  "velocidadArena": 2,
+  "agallas": 12,
+  "especiales": 3
+}

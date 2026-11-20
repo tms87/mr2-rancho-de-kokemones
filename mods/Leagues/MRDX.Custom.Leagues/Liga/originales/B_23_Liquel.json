@@ -1,0 +1,30 @@
+{
+  "nombre": "Liquel",
+  "liga": "B",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Hare",
+  "razaSub": "Gali",
+  "vida": 225,
+  "poder": 405,
+  "inteligencia": 213,
+  "habilidad": 366,
+  "velocidad": 310,
+  "defensa": 144,
+  "naturaleza": 75,
+  "miedo": 70,
+  "malcriado": 70,
+  "tecnicas": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    8,
+    12
+  ],
+  "velocidadArena": 2,
+  "agallas": 16,
+  "especiales": 15
+}

@@ -1,0 +1,31 @@
+{
+  "nombre": "Gunburn",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Suezo",
+  "razaSub": "Hare",
+  "vida": 165,
+  "poder": 245,
+  "inteligencia": 338,
+  "habilidad": 324,
+  "velocidad": 245,
+  "defensa": 119,
+  "naturaleza": 25,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    1,
+    3,
+    4,
+    5,
+    7,
+    8,
+    9
+  ],
+  "velocidadArena": 1,
+  "agallas": 13,
+  "especiales": 131
+}

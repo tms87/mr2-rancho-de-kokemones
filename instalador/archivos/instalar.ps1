@@ -175,9 +175,17 @@ Ok 'Reloaded-II configurado (sin consola).'
 
 # ------------------------------------------------------------------
 if (-not $SinAccesoDirecto) {
-    Titulo '5. Creando acceso directo'
+    Titulo '5. Creando accesos directos'
     $shell = New-Object -ComObject WScript.Shell
+    # Carpeta donde "Rivales Kokemon" exporta tus monstruos al guardar (se crea ya, para que el acceso funcione).
+    $exportados = Join-Path $reloaded 'User\Mods\MRDX.Custom.Leagues\Exportados'
+    New-Item -ItemType Directory -Force $exportados | Out-Null
     foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
+        $lnk = $shell.CreateShortcut((Join-Path $carpeta 'Rivales Kokemon - Exportados.lnk'))
+        $lnk.TargetPath = $exportados
+        $lnk.Description = 'Monstruos exportados al guardar (para compartirlos)'
+        $lnk.Save()
+
         $lnk = $shell.CreateShortcut((Join-Path $carpeta 'MR2 Rancho de Kokemones.lnk'))
         $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
         $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
@@ -186,7 +194,7 @@ if (-not $SinAccesoDirecto) {
         $lnk.Description = 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)'
         $lnk.Save()
     }
-    Ok 'Acceso directo "MR2 Rancho de Kokemones" en el escritorio y en el menu Inicio.'
+    Ok 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.'
 }
 
 Write-Host ''

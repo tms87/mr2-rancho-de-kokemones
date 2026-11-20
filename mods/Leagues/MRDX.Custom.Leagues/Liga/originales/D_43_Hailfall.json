@@ -1,0 +1,26 @@
+{
+  "nombre": "Hailfall",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Arrowhead",
+  "razaSub": "Arrowhead",
+  "vida": 136,
+  "poder": 150,
+  "inteligencia": 103,
+  "habilidad": 98,
+  "velocidad": 74,
+  "defensa": 278,
+  "naturaleza": -10,
+  "miedo": 40,
+  "malcriado": 40,
+  "tecnicas": [
+    0,
+    6,
+    10
+  ],
+  "velocidadArena": 1,
+  "agallas": 17,
+  "especiales": 67
+}

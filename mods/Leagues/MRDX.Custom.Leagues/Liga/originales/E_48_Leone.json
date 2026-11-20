@@ -1,0 +1,25 @@
+{
+  "nombre": "Leone",
+  "liga": "E",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Tiger",
+  "razaSub": "Hare",
+  "vida": 88,
+  "poder": 103,
+  "inteligencia": 127,
+  "habilidad": 152,
+  "velocidad": 144,
+  "defensa": 77,
+  "naturaleza": 55,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    0,
+    2
+  ],
+  "velocidadArena": 3,
+  "agallas": 11,
+  "especiales": 267
+}

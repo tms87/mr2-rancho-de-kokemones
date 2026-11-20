@@ -1,0 +1,27 @@
+{
+  "nombre": "Sakura Art",
+  "liga": "D",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "Pixie",
+  "vida": 161,
+  "poder": 188,
+  "inteligencia": 194,
+  "habilidad": 215,
+  "velocidad": 167,
+  "defensa": 202,
+  "naturaleza": -20,
+  "miedo": 40,
+  "malcriado": 40,
+  "tecnicas": [
+    0,
+    4,
+    5,
+    6
+  ],
+  "velocidadArena": 3,
+  "agallas": 9,
+  "especiales": 7
+}

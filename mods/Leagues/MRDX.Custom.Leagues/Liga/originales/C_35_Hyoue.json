@@ -1,0 +1,28 @@
+{
+  "nombre": "Hyoue",
+  "liga": "C",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Kato",
+  "razaSub": "Kato",
+  "vida": 127,
+  "poder": 128,
+  "inteligencia": 399,
+  "habilidad": 144,
+  "velocidad": 375,
+  "defensa": 101,
+  "naturaleza": -55,
+  "miedo": 50,
+  "malcriado": 50,
+  "tecnicas": [
+    0,
+    3,
+    6,
+    11,
+    14
+  ],
+  "velocidadArena": 1,
+  "agallas": 17,
+  "especiales": 2051
+}

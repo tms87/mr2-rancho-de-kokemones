@@ -1,0 +1,25 @@
+{
+  "nombre": "Nats",
+  "liga": "E",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Hare",
+  "razaSub": "Hare",
+  "vida": 57,
+  "poder": 139,
+  "inteligencia": 57,
+  "habilidad": 104,
+  "velocidad": 141,
+  "defensa": 47,
+  "naturaleza": 45,
+  "miedo": 30,
+  "malcriado": 30,
+  "tecnicas": [
+    12,
+    16
+  ],
+  "velocidadArena": 2,
+  "agallas": 15,
+  "especiales": 7
+}

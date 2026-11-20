@@ -1,0 +1,25 @@
+{
+  "nombre": "Harikicks",
+  "liga": "E",
+  "activo": true,
+  "origen": "original",
+  "autor": "",
+  "razaPrincipal": "Zuum",
+  "razaSub": "Suezo",
+  "vida": 156,
+  "poder": 107,
+  "inteligencia": 94,
+  "habilidad": 149,
+  "velocidad": 138,
+  "defensa": 133,
+  "naturaleza": -60,
+  "miedo": 20,
+  "malcriado": 20,
+  "tecnicas": [
+    0,
+    4
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 131
+}
