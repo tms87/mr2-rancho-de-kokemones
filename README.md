@@ -2,6 +2,8 @@
 
 Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), listos para instalar.
 
+**¿Venís a jugar?** Leé la [guía para jugadores](GUIA_JUGADORES.md): qué cambia en el juego y cómo instalarlo.
+
 ## Descargar e instalar
 
 1. Instalá **Monster Rancher 1 & 2 DX** desde Steam.
