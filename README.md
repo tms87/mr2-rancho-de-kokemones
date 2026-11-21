@@ -44,6 +44,9 @@ Si algo falla, los registros están en `%APPDATA%\Reloaded-Mod-Loader-II\Logs`.
 
 ### Cambiar rivales o torneos
 
+La forma fácil: **`Editor Kokemon.bat`** (en la raíz del repositorio) abre una app con cuatro pestañas: **Rivales** (sumar monstruos de la carpeta de exportados, con la liga sugerida por stats y aviso de nombres repetidos), **Torneos** (crear y editar torneos con formulario), **Banners** (sacar el fondo magenta o verde de una imagen hecha por IA y dejarla en 480×192) y **Subir a GitHub** (commit y push a `main` solo del contenido). Necesita el .NET SDK 9 y Git.
+
+A mano: 
 Subir los cambios a `main` alcanza: los jugadores los reciben la próxima vez que abren el juego. Un rival nuevo es un `.json` en `mods/Leagues/MRDX.Custom.Leagues/Liga/jugadores/`; un torneo nuevo, una entrada en `torneos.json`. Si los datos usan algo que el mod instalado no conoce, subir `paqueteMinimo` en `actualizacion.json` y publicar una versión.
 
 ### Publicar una versión
