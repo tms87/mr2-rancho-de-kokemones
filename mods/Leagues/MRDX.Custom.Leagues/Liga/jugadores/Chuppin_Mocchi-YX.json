@@ -1,0 +1,26 @@
+{
+  "nombre": "Chuppin",
+  "liga": "D",
+  "activo": true,
+  "origen": "exportado (congelador 13)",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "YX",
+  "vida": 116,
+  "poder": 152,
+  "inteligencia": 130,
+  "habilidad": 172,
+  "velocidad": 174,
+  "defensa": 178,
+  "naturaleza": 20,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6,
+    8
+  ],
+  "velocidadArena": 2,
+  "agallas": 11,
+  "especiales": 7
+}

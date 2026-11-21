@@ -1,0 +1,25 @@
+{
+  "nombre": "Pizarron",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 19)",
+  "autor": "",
+  "razaPrincipal": "Monol",
+  "razaSub": "XY",
+  "vida": 128,
+  "poder": 118,
+  "inteligencia": 138,
+  "habilidad": 109,
+  "velocidad": 41,
+  "defensa": 157,
+  "naturaleza": 75,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 1,
+  "agallas": 18,
+  "especiales": 67
+}

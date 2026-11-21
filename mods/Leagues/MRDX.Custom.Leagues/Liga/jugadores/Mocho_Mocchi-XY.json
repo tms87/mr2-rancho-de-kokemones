@@ -1,0 +1,26 @@
+{
+  "nombre": "Mocho",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 5)",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "XY",
+  "vida": 113,
+  "poder": 112,
+  "inteligencia": 146,
+  "habilidad": 184,
+  "velocidad": 122,
+  "defensa": 185,
+  "naturaleza": -45,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6,
+    8
+  ],
+  "velocidadArena": 2,
+  "agallas": 14,
+  "especiales": 263
+}

@@ -1,0 +1,26 @@
+{
+  "nombre": "Caripela",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 7)",
+  "autor": "",
+  "razaPrincipal": "Arrowhead",
+  "razaSub": "Count",
+  "vida": 113,
+  "poder": 113,
+  "inteligencia": 127,
+  "habilidad": 187,
+  "velocidad": 79,
+  "defensa": 158,
+  "naturaleza": -65,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    2,
+    12
+  ],
+  "velocidadArena": 1,
+  "agallas": 15,
+  "especiales": 1091
+}

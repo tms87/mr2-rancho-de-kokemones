@@ -1,0 +1,26 @@
+{
+  "nombre": "Donald",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 7)",
+  "autor": "",
+  "razaPrincipal": "Ape",
+  "razaSub": "Count",
+  "vida": 179,
+  "poder": 154,
+  "inteligencia": 73,
+  "habilidad": 128,
+  "velocidad": 163,
+  "defensa": 127,
+  "naturaleza": 25,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6,
+    12
+  ],
+  "velocidadArena": 1,
+  "agallas": 17,
+  "especiales": 7
+}

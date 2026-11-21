@@ -1,0 +1,30 @@
+{
+  "nombre": "Money",
+  "liga": "B",
+  "activo": true,
+  "origen": "exportado (congelador 1)",
+  "autor": "",
+  "razaPrincipal": "Tiger",
+  "razaSub": "Count",
+  "vida": 224,
+  "poder": 228,
+  "inteligencia": 307,
+  "habilidad": 388,
+  "velocidad": 251,
+  "defensa": 101,
+  "naturaleza": 100,
+  "miedo": 48,
+  "malcriado": 93,
+  "tecnicas": [
+    0,
+    1,
+    6,
+    7,
+    8,
+    14,
+    19
+  ],
+  "velocidadArena": 3,
+  "agallas": 9,
+  "especiales": 779
+}

@@ -52,6 +52,7 @@ public class Mod : ModBase
 
     private bool _blocked;
     private readonly Stopwatch _pendingClock = new();
+    private TournamentAccess? _tournamentAccess;
     private bool _pending;
 
     // Partida nueva: la fecha retrocede sin que se haya cargado una partida. Se confirma unos segundos después
@@ -113,6 +114,10 @@ public class Mod : ModBase
         hooks.AddHook<H_EarlyShrine>(OnEarlyShrine).ContinueWith(r => _hookEarlyShrine = r.Result);
         hooks.AddHook<H_ShrineMonsterUnlockedChecker>(OnUnlockedCheck).ContinueWith(r => _hookUnlocked = r.Result);
         hooks.AddHook<H_MysteryStatUpdate>(OnStatUpdate).ContinueWith(r => _hookStatUpdate = r.Result);
+
+        if (context.Hooks != null)
+            _tournamentAccess = new TournamentAccess(context.Hooks,
+                () => (_config.BlockLowerRankTournaments, _config.LowerRanksAllowed), m => Log(m));
 
         Log("Cargado.", Color.LightGreen);
     }

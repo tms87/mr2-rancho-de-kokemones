@@ -1,0 +1,25 @@
+{
+  "nombre": "Gabito",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 20)",
+  "autor": "",
+  "razaPrincipal": "Gaboo",
+  "razaSub": "Tiger",
+  "vida": 158,
+  "poder": 118,
+  "inteligencia": 71,
+  "habilidad": 105,
+  "velocidad": 153,
+  "defensa": 68,
+  "naturaleza": 60,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 12,
+  "especiales": 19
+}

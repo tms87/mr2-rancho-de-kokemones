@@ -1,0 +1,25 @@
+{
+  "nombre": "Colo",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 16)",
+  "autor": "",
+  "razaPrincipal": "Naga",
+  "razaSub": "Plant",
+  "vida": 170,
+  "poder": 114,
+  "inteligencia": 112,
+  "habilidad": 161,
+  "velocidad": 92,
+  "defensa": 73,
+  "naturaleza": 20,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 10,
+  "especiales": 3
+}

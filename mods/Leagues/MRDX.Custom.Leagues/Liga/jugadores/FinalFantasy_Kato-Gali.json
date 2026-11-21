@@ -1,0 +1,28 @@
+{
+  "nombre": "FinalFantasy",
+  "liga": "C",
+  "activo": true,
+  "origen": "exportado (congelador 5)",
+  "autor": "",
+  "razaPrincipal": "Kato",
+  "razaSub": "Gali",
+  "vida": 184,
+  "poder": 192,
+  "inteligencia": 228,
+  "habilidad": 152,
+  "velocidad": 440,
+  "defensa": 170,
+  "naturaleza": 80,
+  "miedo": 71,
+  "malcriado": 100,
+  "tecnicas": [
+    0,
+    6,
+    8,
+    14,
+    19
+  ],
+  "velocidadArena": 1,
+  "agallas": 17,
+  "especiales": 2051
+}

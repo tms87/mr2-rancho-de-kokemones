@@ -1,0 +1,28 @@
+{
+  "nombre": "ExploraDora",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 16)",
+  "autor": "",
+  "razaPrincipal": "Pixie",
+  "razaSub": "XZ",
+  "vida": 126,
+  "poder": 142,
+  "inteligencia": 181,
+  "habilidad": 152,
+  "velocidad": 139,
+  "defensa": 107,
+  "naturaleza": 55,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    3,
+    5,
+    14,
+    21
+  ],
+  "velocidadArena": 4,
+  "agallas": 7,
+  "especiales": 771
+}

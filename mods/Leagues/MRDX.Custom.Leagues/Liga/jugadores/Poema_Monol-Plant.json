@@ -1,0 +1,25 @@
+{
+  "nombre": "Poema",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 12)",
+  "autor": "",
+  "razaPrincipal": "Monol",
+  "razaSub": "Plant",
+  "vida": 111,
+  "poder": 102,
+  "inteligencia": 131,
+  "habilidad": 97,
+  "velocidad": 54,
+  "defensa": 127,
+  "naturaleza": 45,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 0,
+  "agallas": 14,
+  "especiales": 195
+}

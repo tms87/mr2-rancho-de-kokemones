@@ -1,0 +1,25 @@
+{
+  "nombre": "Gelatinoso",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 19)",
+  "autor": "",
+  "razaPrincipal": "Zuum",
+  "razaSub": "Jell",
+  "vida": 127,
+  "poder": 141,
+  "inteligencia": 103,
+  "habilidad": 142,
+  "velocidad": 104,
+  "defensa": 147,
+  "naturaleza": 0,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 3
+}

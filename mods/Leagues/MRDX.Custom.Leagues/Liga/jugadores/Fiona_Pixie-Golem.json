@@ -1,0 +1,25 @@
+{
+  "nombre": "Fiona",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 11)",
+  "autor": "",
+  "razaPrincipal": "Pixie",
+  "razaSub": "Golem",
+  "vida": 97,
+  "poder": 122,
+  "inteligencia": 147,
+  "habilidad": 133,
+  "velocidad": 117,
+  "defensa": 125,
+  "naturaleza": 15,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    3
+  ],
+  "velocidadArena": 2,
+  "agallas": 11,
+  "especiales": 131
+}

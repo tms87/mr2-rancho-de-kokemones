@@ -18,17 +18,18 @@ Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), listos pa
 >
 > Si Windows muestra "Windows protegió su PC" al abrir `Instalar.bat`: *Más información* → *Ejecutar de todas formas*.
 
-Para actualizar, descargá la versión nueva y ejecutá su `Instalar.bat`: las partidas y los datos de los mods se conservan.
+**Actualizaciones automáticas:** el acceso directo revisa GitHub cada vez que se abre el juego. Si hay una versión publicada más nueva, la baja e instala; si cambiaron rivales, torneos o imágenes en la rama `main`, baja solo esos archivos. Sin internet arranca igual. Las partidas, la configuración de los mods y los exportados no se tocan.
 
 ## Qué cambia en el juego
 
 | Mod | Qué hace |
 |---|---|
 | **Discos aleatorios** | Cada disco del santuario da una raza al azar, siempre la misma para ese disco (semilla compartida: el mismo disco da lo mismo a todos). Stats, crecimiento, vida y naturaleza varían en cada creación. Incluye las especies de More Monsters, y sus discos "More Monsters" también se sortean. Las razas bloqueadas se rechazan como en el original. |
-| **Reglas del rancho** | El santuario crea como máximo **5 monstruos por año** y avisa cuántos quedan. **Modo ironman:** guardes donde guardes, se guarda en la ranura 15 (autoguardado). Cada año nuevo se copia el autoguardado de enero en las ranuras 1 a 14, rotando. |
+| **Reglas del rancho** | No se puede entrar a **torneos de rango inferior** al del monstruo (los libres, F, siempre; se pueden permitir N rangos abajo). El santuario crea como máximo **5 monstruos por año** y avisa cuántos quedan. **Modo ironman:** guardes donde guardes, se guarda en la ranura 15 (autoguardado). Cada año nuevo se copia el autoguardado de enero en las ranuras 1 a 14, rotando. |
 | **Tolerancia a Nuts Oil y Magic Banana** | Pierden efecto si se usan semanas seguidas (se recupera al dejarlos) y cada uno tiene una chance creciente de acortar la vida del monstruo. |
 | **Batallas automáticas** | En los torneos y batallas del juego tu monstruo pelea solo, con su propia inteligencia: a la pregunta de antes de la batalla, cualquier respuesta lleva al modo automático. El modo VS no cambia. |
 | **Rivales Kokemon** | Cada semana, los rivales de los torneos de liga (E a S) salen sorteados de una lista por liga: los 50 originales más monstruos de jugadores (también de especies de More Monsters). El sorteo es el mismo para todos en la misma semana. Al guardar, tu monstruo y los del congelador se exportan a archivos para compartirlos y sumarlos a la lista (el instalador deja en el escritorio el acceso directo "Rivales Kokemon - Exportados" a esa carpeta). FIMBA, los 4 grandes y los torneos especiales no cambian. |
+| **Liga Kokemon** | Calendario distinto cada año: los torneos chicos de A a E salen sorteados (cuántos y cuándo) de un pozo con los originales y torneos nuevos (Rookie Cup en 3 ediciones, 25 torneos nuevos con nombre, premio y bonus propios). En diciembre, semana 2, la **Champions Cup** de cada rango con rivales elegidos y bonus sorpresa. El calendario se actualiza mes a mes y muestra 7 meses hacia adelante. Los torneos se definen en `mods/LigaKokemon/MRDX.Custom.LigaKokemon/torneos.json`. |
 
 Además el paquete incluye **More Monsters** (más de 240 especies nuevas).
 
@@ -36,8 +37,21 @@ Si algo falla, los registros están en `%APPDATA%\Reloaded-Mod-Loader-II\Logs`.
 
 ## Contenido del repositorio
 
-- `mods/` — código de los cinco mods propios (C#, .NET 9, x86, para Reloaded-II). La lista de rivales de las ligas está en `mods/Leagues/MRDX.Custom.Leagues/Liga/` (un `.json` por monstruo; ver su `LEEME.txt`).
-- `instalador/` — `Instalar.bat`, el instalador (`instalar.ps1`), el lanzador sin consola (`jugar.ps1`) y las plantillas de configuración de Reloaded-II.
+- `mods/` — código de los seis mods propios (C#, .NET 9, x86, para Reloaded-II). La lista de rivales de las ligas está en `mods/Leagues/MRDX.Custom.Leagues/Liga/` (un `.json` por monstruo; ver su `LEEME.txt`).
+- `instalador/` — `Instalar.bat`, el instalador (`instalar.ps1`), el lanzador con actualización automática (`jugar.ps1`), la versión del paquete (`version.txt`) y las plantillas de configuración de Reloaded-II.
+- `actualizacion.json` — qué datos baja el lanzador desde `main` sin publicar una versión (rivales, torneos, imágenes) y qué versión mínima del paquete necesitan.
+- `herramientas/publicar.ps1` — compila los mods, arma el zip y (con `-Publicar`) crea la versión en GitHub.
+
+### Cambiar rivales o torneos
+
+Subir los cambios a `main` alcanza: los jugadores los reciben la próxima vez que abren el juego. Un rival nuevo es un `.json` en `mods/Leagues/MRDX.Custom.Leagues/Liga/jugadores/`; un torneo nuevo, una entrada en `torneos.json`. Si los datos usan algo que el mod instalado no conoce, subir `paqueteMinimo` en `actualizacion.json` y publicar una versión.
+
+### Publicar una versión
+
+```powershell
+powershell -ExecutionPolicy Bypass -File herramientaspublicar.ps1 -Version 1.3.0 -Publicar
+```
+Toma como base el zip de la última versión publicada (Reloaded-II y los mods de la comunidad no están en el repositorio) y reemplaza los mods propios, el instalador y el lanzador.
 
 ### Compilar los mods
 

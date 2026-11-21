@@ -1,0 +1,26 @@
+{
+  "nombre": "Pepe",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 20)",
+  "autor": "",
+  "razaPrincipal": "Henger",
+  "razaSub": "Gali",
+  "vida": 130,
+  "poder": 90,
+  "inteligencia": 180,
+  "habilidad": 150,
+  "velocidad": 120,
+  "defensa": 110,
+  "naturaleza": -30,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    3,
+    22
+  ],
+  "velocidadArena": 2,
+  "agallas": 16,
+  "especiales": 7
+}

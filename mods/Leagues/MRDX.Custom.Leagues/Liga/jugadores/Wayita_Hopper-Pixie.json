@@ -1,0 +1,25 @@
+{
+  "nombre": "Wayita",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 14)",
+  "autor": "",
+  "razaPrincipal": "Hopper",
+  "razaSub": "Pixie",
+  "vida": 68,
+  "poder": 95,
+  "inteligencia": 160,
+  "habilidad": 173,
+  "velocidad": 127,
+  "defensa": 59,
+  "naturaleza": -40,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 4,
+  "agallas": 8,
+  "especiales": 11
+}

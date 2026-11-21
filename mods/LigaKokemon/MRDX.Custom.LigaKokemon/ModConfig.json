@@ -1,0 +1,26 @@
+{
+    "ModId": "MRDX.Custom.LigaKokemon",
+    "ModName": "Liga Kokemon",
+    "ModAuthor": "",
+    "ModVersion": "1.0.0",
+    "ModDescription": "Torneos nuevos y calendario de torneos personalizado (definidos en torneos.json).",
+    "ModDll": "MRDX.Custom.LigaKokemon.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "reloaded.universal.redirector",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

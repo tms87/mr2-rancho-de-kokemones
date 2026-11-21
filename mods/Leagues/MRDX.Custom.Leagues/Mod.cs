@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using MRDX.Base.Mod.Interfaces;
 using MRDX.Custom.Leagues.Configuration;
 using MRDX.Custom.Leagues.Template;
@@ -129,19 +130,25 @@ public class Mod : ModBase
     private void Draw(long week)
     {
         if (_original == null || _redirector == null) return;
-        if (week == _drawnWeek) return;
+        // Same week: nothing to do, unless "Liga Kokemon" changed its tables (a new month can change the tournaments).
+        var ligaStamp = LigaTablesStamp();
+        if (week == _drawnWeek && ligaStamp == _drawnLigaStamp) return;
         _drawnWeek = week;
-
-        if (!_config.Enabled)
-        {
-            SetRedirect(false);
-            return;
-        }
+        _drawnLigaStamp = ligaStamp;
 
         try
         {
+            // Tournament tables from "Liga Kokemon" (new tournaments), if it is active.
+            var (data, ligaTables) = WithLigaKokemonTables(_original);
+
+            if (!_config.Enabled)
+            {
+                if (!ligaTables) SetRedirect(false);
+                else ServeGenerated(data);
+                return;
+            }
+
             var pool = LoadPool();
-            var data = (byte[])_original.Clone();
             var summary = new List<string>();
 
             foreach (var (league, (first, count)) in LeagueSlots)
@@ -174,17 +181,14 @@ public class Mod : ModBase
                 var bySlotStrength = slots.OrderByDescending(s => originals[s].StatTotal).ToList();
                 var byPickStrength = picked.OrderByDescending(p => p.StatTotal).ToList();
                 for (var i = 0; i < count; i++)
-                    byPickStrength[i].ToRecord().CopyTo(data, RecordsOffset + bySlotStrength[i] * RecordSize);
+                    byPickStrength[i].ToRecord().CopyTo(data, RecordOffset(data, bySlotStrength[i]));
 
                 summary.Add($"{league}: {string.Join(", ", byPickStrength.Select(p => p.Name))}");
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(_generated)!);
-            var tmp = _generated + ".tmp";
-            File.WriteAllBytes(tmp, data);
-            File.Copy(tmp, _generated, true);
-            File.Delete(tmp);
-            SetRedirect(true);
+            if (ligaTables) ApplyFixedParticipants(data, pool, summary);
+
+            ServeGenerated(data);
 
             Log($"Rivales de la semana {week} ({pool.Count} monstruos en las ligas).");
             if (_config.VerboseLog)
@@ -193,6 +197,122 @@ public class Mod : ModBase
         catch (Exception e)
         {
             Log($"No se pudieron sortear los rivales: {e.Message}", Color.Red);
+        }
+    }
+
+    private void ServeGenerated(byte[] data)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(_generated)!);
+        var tmp = _generated + ".tmp";
+        File.WriteAllBytes(tmp, data);
+        File.Copy(tmp, _generated, true);
+        File.Delete(tmp);
+        SetRedirect(true);
+    }
+
+    // taikai_en.flk is a container: u32 count (6), u32 0, then 6 section offsets (u32). Sections:
+    // 0 = tournaments (btl_form.obj), 1 = prizes (btl_gold.obj), 2 = brackets, 3 = random draw,
+    // 4 = rivals (table of offsets u32, relative to the section, + 60-byte records), 5 = names.
+    private const int SectionCount = 6, SectionTable = 8, RivalsSection = 4;
+    private const string LigaKokemonId = "MRDX.Custom.LigaKokemon";
+    private const int MsgBlock = 0x4000, NextBlock = 0x8000; // fixed blocks of taikai_en.flk after the sections
+
+    private static int SectionOffset(byte[] data, int s) => BitConverter.ToInt32(data, SectionTable + s * 4);
+
+    /// <summary>Position of rival record "slot" (as in the original, the dummy at slot 0 starts at 0xA8C).</summary>
+    private static int RecordOffset(byte[] data, int slot)
+    {
+        var sec = SectionOffset(data, RivalsSection);
+        return sec + BitConverter.ToInt32(data, sec + slot * 4);
+    }
+
+    /// <summary>
+    ///     If "Liga Kokemon" is active and generated its tables, rebuilds the container with them (the tournament
+    ///     section can change size, so the offsets of the following sections are recomputed).
+    /// </summary>
+    private (byte[] Data, bool Changed) WithLigaKokemonTables(byte[] original)
+    {
+        try
+        {
+            if (_loader == null || !_loader.GetActiveMods().Any(m => m.Generic.ModId == LigaKokemonId)) return ((byte[])original.Clone(), false);
+            var dir = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado");
+            var replace = new Dictionary<int, string> { [0] = "btl_form.obj", [1] = "btl_gold.obj" };
+            var parts = new byte[SectionCount][];
+            var changed = false;
+            // After the 6 sections, the file has blocks at fixed positions: the battle messages (msg_btl, with the
+            // tournament names the announcer says) at 0x4000 and more data at 0x8000. The sections can change size,
+            // so they are rebuilt and then the blocks are put back at their positions.
+            var itemsEnd = MsgBlock;
+            while (itemsEnd > 0 && original[itemsEnd - 1] == 0) itemsEnd--;
+            for (var s = 0; s < SectionCount; s++)
+            {
+                var start = SectionOffset(original, s);
+                var end = s + 1 < SectionCount ? SectionOffset(original, s + 1) : itemsEnd;
+                parts[s] = original[start..end];
+                if (replace.TryGetValue(s, out var name) && File.Exists(Path.Combine(dir, name)))
+                {
+                    parts[s] = File.ReadAllBytes(Path.Combine(dir, name));
+                    changed = true;
+                }
+            }
+
+            // Battle messages of Liga Kokemon (names of the new tournaments for the announcer).
+            var msgPath = Path.Combine(dir, "msg_btl_en.obj");
+            var msg = original[MsgBlock..NextBlock];
+            if (File.Exists(msgPath))
+            {
+                var m = File.ReadAllBytes(msgPath);
+                if (m.Length <= NextBlock - MsgBlock)
+                {
+                    msg = m.Concat(new byte[NextBlock - MsgBlock - m.Length]).ToArray();
+                    changed = true;
+                }
+            }
+
+            if (!changed) return ((byte[])original.Clone(), false);
+
+            var o = new List<byte>(original[..SectionOffset(original, 0)]);
+            for (var s = 0; s < SectionCount; s++)
+            {
+                while (o.Count % 4 != 0 && s > 0) o.Add(0);
+                var at = o.Count;
+                var b = BitConverter.GetBytes(at);
+                for (var k = 0; k < 4; k++) o[SectionTable + s * 4 + k] = b[k];
+                o.AddRange(parts[s]);
+            }
+
+            if (o.Count > MsgBlock) throw new InvalidDataException("las tablas de torneos no entran antes de los mensajes");
+            o.AddRange(new byte[MsgBlock - o.Count]);
+            o.AddRange(msg);
+            o.AddRange(original[NextBlock..]);
+
+            if (_config.VerboseLog && _drawnWeekLoggedLiga++ == 0)
+                Log("Torneos de Liga Kokemon incluidos en el archivo de torneos.");
+            return (o.ToArray(), true);
+        }
+        catch (Exception e)
+        {
+            Log($"No se pudieron incluir los torneos de Liga Kokemon: {e.Message}", Color.Orange);
+            return ((byte[])original.Clone(), false);
+        }
+    }
+
+    private int _drawnWeekLoggedLiga;
+    private DateTime _drawnLigaStamp;
+
+    private DateTime LigaTablesStamp()
+    {
+        try
+        {
+            if (_loader == null) return default;
+            var dir = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado");
+            return new[] { "btl_form.obj", "btl_gold.obj", "participantes.json", "msg_btl_en.obj" }
+                .Select(n => Path.Combine(dir, n)).Where(File.Exists).Select(File.GetLastWriteTimeUtc)
+                .DefaultIfEmpty().Max();
+        }
+        catch
+        {
+            return default;
         }
     }
 
@@ -256,6 +376,58 @@ public class Mod : ModBase
     // ------------------------------------------------------------------
     // League list
     // ------------------------------------------------------------------
+
+    private sealed class FixedParticipant
+    {
+        [JsonPropertyName("hueco")] public int Slot { get; set; }
+        [JsonPropertyName("liga")] public string League { get; set; } = "";
+        [JsonPropertyName("puesto")] public int Place { get; set; }
+        [JsonPropertyName("nombre")] public string Name { get; set; } = "";
+    }
+
+    /// <summary>
+    ///     Fixed participants of the "Liga Kokemon" tournaments (generado\participantes.json): monsters of the league
+    ///     list, by name or file name, or the Nth strongest of a league. They go in rival slots no original
+    ///     tournament uses.
+    /// </summary>
+    private void ApplyFixedParticipants(byte[] data, List<LeagueMonster> pool, List<string> summary)
+    {
+        if (_loader == null) return;
+        var file = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado", "participantes.json");
+        if (!File.Exists(file)) return;
+        var entries = JsonSerializer.Deserialize<List<FixedParticipant>>(File.ReadAllText(file)) ?? [];
+        static string Key(string s) => Path.GetFileNameWithoutExtension(s.Trim()).ToLowerInvariant();
+        var placed = new List<string>();
+        foreach (var e in entries)
+        {
+            if (e.Slot is < 116 or > 135) continue; // only the free slots
+            LeagueMonster? m;
+            // Place > 0: the Nth strongest of the league; < 0: the Nth weakest (recomputed every week from the list).
+            if (e.Place != 0)
+            {
+                var league = pool.Where(p => p.League == e.League.ToUpperInvariant());
+                var ordered = e.Place > 0
+                    ? league.OrderByDescending(p => p.StatTotal).ThenBy(p => p.File, StringComparer.OrdinalIgnoreCase)
+                    : league.OrderBy(p => p.StatTotal).ThenBy(p => p.File, StringComparer.OrdinalIgnoreCase);
+                m = ordered.Skip(Math.Abs(e.Place) - 1).FirstOrDefault();
+            }
+            else
+                m = pool.FirstOrDefault(p => Key(p.File) == Key(e.Name) || Key(Path.GetFileName(p.File)) == Key(e.Name))
+                    ?? pool.FirstOrDefault(p => p.Name.Equals(e.Name.Trim(), StringComparison.OrdinalIgnoreCase));
+
+            var what = e.Place > 0 ? $"mejor {e.Place} de {e.League}" : e.Place < 0 ? $"peor {-e.Place} de {e.League}" : $"\"{e.Name}\"";
+            if (m == null)
+            {
+                Log($"Participante fijo {what}: no está en la lista de rivales.", Color.Orange);
+                continue;
+            }
+
+            m.ToRecord().CopyTo(data, RecordOffset(data, e.Slot));
+            placed.Add($"{what} = {m.Name}");
+        }
+
+        if (placed.Count > 0) summary.Add("Fijos: " + string.Join(", ", placed));
+    }
 
     private List<LeagueMonster> LoadPool()
     {
@@ -389,6 +561,8 @@ public class Mod : ModBase
             Export(_exeBase + FreezerOffset + (nuint)(i * FreezerSlotSize + FreezerMonsterStart), $"congelador {i + 1}", exported);
         if (exported.Count > 0)
             Log($"Exportados {exported.Count} monstruos a {_exportDir}: {string.Join(", ", exported)}");
+        if (UnknownChars.Count > 0)
+            Log($"Nombres con caracteres desconocidos (quedaron como ?): códigos {string.Join(" ", UnknownChars)}. Se puede corregir el nombre en el archivo exportado.", Color.Orange);
     }
 
     private unsafe void Export(nuint s, string where, List<string> exported)
@@ -443,19 +617,57 @@ public class Mod : ModBase
     /// </summary>
     private static unsafe string? ReadName(byte* p)
     {
-        var raw = new byte[26];
-        raw[24] = 0xFF;
-        for (var i = 0; i < 12; i++)
+        // Letters take 2 bytes (prefix + code); digits typed in the name screen take 1 byte: 0xA2 = '0' ... 0xAB = '9'
+        // (a monster called "99" is AB AB). Everything is converted to the 2-byte form of the decoder (B5 57 = '0').
+        var raw = Enumerable.Repeat((byte)0xFF, 26).ToArray();
+        var at = 0;
+        for (var i = 0; i < 24 && at < 24; )
         {
-            var hi = p[i * 2];
-            if (hi == 0xFF) { raw[i * 2] = 0xFF; break; }
-            raw[i * 2] = hi == 0xB0 ? (byte)0xB5 : hi;
-            raw[i * 2 + 1] = p[i * 2 + 1];
+            var hi = p[i];
+            if (hi == 0xFF) break;
+            if (hi is >= 0xA2 and <= 0xAB)
+            {
+                raw[at++] = 0xB5;
+                raw[at++] = (byte)(0x57 + hi - 0xA2);
+                i++;
+                continue;
+            }
+
+            raw[at++] = hi == 0xB0 ? (byte)0xB5 : hi;
+            raw[at++] = p[i + 1];
+            i += 2;
         }
 
-        var name = raw.AsShorts().AsString().Trim();
+        string name;
+        try
+        {
+            name = raw.AsShorts().AsString().Trim();
+        }
+        catch
+        {
+            // Some character the decoder does not know (symbols, accents): decoded one by one, unknown ones as "?".
+            var sb = new System.Text.StringBuilder();
+            for (var i = 0; i < 12 && raw[i * 2] != 0xFF; i++)
+            {
+                try
+                {
+                    sb.Append(new byte[] { raw[i * 2], raw[i * 2 + 1], 0xFF, 0xFF }.AsShorts().AsString());
+                }
+                catch
+                {
+                    sb.Append('?');
+                    UnknownChars.Add($"{raw[i * 2]:X2}{raw[i * 2 + 1]:X2}");
+                }
+            }
+
+            name = sb.ToString().Trim();
+        }
+
         return name.Length > 0 && !name.Contains('表') ? name : null;
     }
+
+    /// <summary>Character codes of names the decoder did not know (reported in the log after exporting).</summary>
+    private static readonly HashSet<string> UnknownChars = [];
 
     private static string FileSafe(string name)
     {

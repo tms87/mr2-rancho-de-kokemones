@@ -1,0 +1,26 @@
+{
+  "nombre": "Pocky",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 18)",
+  "autor": "",
+  "razaPrincipal": "Hopper",
+  "razaSub": "Count",
+  "vida": 75,
+  "poder": 117,
+  "inteligencia": 124,
+  "habilidad": 189,
+  "velocidad": 122,
+  "defensa": 65,
+  "naturaleza": -10,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    1,
+    6
+  ],
+  "velocidadArena": 3,
+  "agallas": 10,
+  "especiales": 267
+}

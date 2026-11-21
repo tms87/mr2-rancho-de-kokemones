@@ -1,0 +1,25 @@
+{
+  "nombre": "BoboRayado",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 9)",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "Kato",
+  "vida": 110,
+  "poder": 90,
+  "inteligencia": 158,
+  "habilidad": 155,
+  "velocidad": 134,
+  "defensa": 161,
+  "naturaleza": -30,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 7
+}

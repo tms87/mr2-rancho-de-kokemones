@@ -1,0 +1,25 @@
+{
+  "nombre": "Bob",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 13)",
+  "autor": "",
+  "razaPrincipal": "Plant",
+  "razaSub": "Count",
+  "vida": 165,
+  "poder": 74,
+  "inteligencia": 146,
+  "habilidad": 116,
+  "velocidad": 107,
+  "defensa": 96,
+  "naturaleza": -50,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 1,
+  "agallas": 9,
+  "especiales": 3
+}

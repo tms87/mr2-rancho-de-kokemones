@@ -1,0 +1,25 @@
+{
+  "nombre": "Ojoncito",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 8)",
+  "autor": "",
+  "razaPrincipal": "Suezo",
+  "razaSub": "Plant",
+  "vida": 125,
+  "poder": 91,
+  "inteligencia": 143,
+  "habilidad": 141,
+  "velocidad": 104,
+  "defensa": 90,
+  "naturaleza": 30,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 1,
+  "agallas": 10,
+  "especiales": 135
+}

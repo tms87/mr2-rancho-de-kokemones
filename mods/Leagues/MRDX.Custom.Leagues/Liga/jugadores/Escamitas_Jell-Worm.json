@@ -1,0 +1,25 @@
+{
+  "nombre": "Escamitas",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 1)",
+  "autor": "",
+  "razaPrincipal": "Jell",
+  "razaSub": "Worm",
+  "vida": 109,
+  "poder": 92,
+  "inteligencia": 140,
+  "habilidad": 130,
+  "velocidad": 101,
+  "defensa": 134,
+  "naturaleza": 20,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 14,
+  "especiales": 11
+}

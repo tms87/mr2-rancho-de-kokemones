@@ -1,0 +1,29 @@
+{
+  "nombre": "Orejas",
+  "liga": "B",
+  "activo": true,
+  "origen": "exportado (congelador 6)",
+  "autor": "",
+  "razaPrincipal": "Hare",
+  "razaSub": "Gali",
+  "vida": 213,
+  "poder": 356,
+  "inteligencia": 152,
+  "habilidad": 213,
+  "velocidad": 373,
+  "defensa": 192,
+  "naturaleza": 99,
+  "miedo": 14,
+  "malcriado": 100,
+  "tecnicas": [
+    0,
+    2,
+    6,
+    10,
+    12,
+    15
+  ],
+  "velocidadArena": 2,
+  "agallas": 16,
+  "especiales": 7
+}

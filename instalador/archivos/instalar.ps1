@@ -2,7 +2,9 @@
 # Lo ejecuta Instalar.bat. Copia Reloaded-II con los mods, lo configura y crea el acceso directo.
 param(
     [string]$Destino = (Join-Path $env:LOCALAPPDATA 'MR2-Rancho-de-Kokemones'),
-    [switch]$SinAccesoDirecto
+    [switch]$SinAccesoDirecto,
+    # Lo usa el lanzador al actualizar: ya sabe donde esta el juego (no busca ni pregunta).
+    [string]$RutaJuego
 )
 
 $ErrorActionPreference = 'Stop'
@@ -41,7 +43,9 @@ if (Test-Path $vdf) {
 }
 
 $juego = $null
+if ($RutaJuego -and (Test-Path $RutaJuego)) { $juego = (Resolve-Path $RutaJuego).Path }
 foreach ($b in ($bibliotecas | Select-Object -Unique)) {
+    if ($juego) { break }
     $candidato = Join-Path $b 'steamapps\common\mfdx\MF2\MF2.exe'
     if (Test-Path $candidato) { $juego = (Resolve-Path $candidato).Path; break }
 }
@@ -130,16 +134,23 @@ Titulo '3. Copiando Reloaded-II y los mods'
 # ------------------------------------------------------------------
 $reloaded = Join-Path $Destino 'Reloaded-II'
 $actualizacion = Test-Path (Join-Path $reloaded 'Reloaded-II.exe')
+
+# Con el juego abierto los mods estan en uso y no se pueden reemplazar (la copia quedaria esperando).
+while (Get-Process MF2 -ErrorAction SilentlyContinue) {
+    Aviso 'El juego esta abierto: cerralo para poder actualizar los mods. Se sigue solo al cerrarlo.'
+    Start-Sleep -Seconds 5
+}
 New-Item -ItemType Directory -Force $Destino | Out-Null
 
 # Programa y mods: se reemplazan siempre. Datos del jugador (User): solo se agregan los que no existen,
 # asi una actualizacion no pisa la configuracion ni el estado guardado de cada uno.
-robocopy (Join-Path $origen 'Reloaded-II') $reloaded /E /XD (Join-Path $origen 'Reloaded-II\User') /NFL /NDL /NJH /NJS /NP | Out-Null
-if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCODE)." }
-robocopy (Join-Path $origen 'Reloaded-II\User') (Join-Path $reloaded 'User') /E /XC /XN /XO /NFL /NDL /NJH /NJS /NP | Out-Null
+robocopy (Join-Path $origen 'Reloaded-II') $reloaded /E /XD (Join-Path $origen 'Reloaded-II\User') /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
+if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." }
+robocopy (Join-Path $origen 'Reloaded-II\User') (Join-Path $reloaded 'User') /E /XC /XN /XO /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { Fallar "Error copiando la configuracion (robocopy $LASTEXITCODE)." }
 Copy-Item (Join-Path $origen 'jugar.ps1') $Destino -Force
 Copy-Item (Join-Path $origen 'icono.ico') $Destino -Force
+Copy-Item (Join-Path $origen 'version.txt') $Destino -Force
 
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
 Get-ChildItem $Destino -Recurse -File | Unblock-File -ErrorAction SilentlyContinue

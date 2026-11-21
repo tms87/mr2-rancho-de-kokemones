@@ -35,9 +35,23 @@ public class Config : Configurable<Config>
     [DefaultValue(true)]
     public bool YearlyBackup { get; set; } = true;
 
+    // ---------------- Torneos ----------------
+
+    [Category("3. Torneos")]
+    [DisplayName("Bloquear torneos de rango inferior")]
+    [Description("Un monstruo no puede entrar a torneos de un rango más bajo que el suyo (los libres, F, siempre se pueden).")]
+    [DefaultValue(true)]
+    public bool BlockLowerRankTournaments { get; set; } = true;
+
+    [Category("3. Torneos")]
+    [DisplayName("Rangos inferiores permitidos")]
+    [Description("Cuántos rangos por debajo del suyo puede jugar: 0 = solo su rango (o más alto), 1 = uno abajo, etc.")]
+    [DefaultValue(0)]
+    public int LowerRanksAllowed { get; set; }
+
     // ---------------- Avanzado ----------------
 
-    [Category("3. Avanzado")]
+    [Category("4. Avanzado")]
     [DisplayName("Registro detallado")]
     [DefaultValue(true)]
     public bool VerboseLog { get; set; } = true;

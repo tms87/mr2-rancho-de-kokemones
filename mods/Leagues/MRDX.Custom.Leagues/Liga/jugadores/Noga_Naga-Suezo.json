@@ -1,0 +1,25 @@
+{
+  "nombre": "Noga",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 10)",
+  "autor": "",
+  "razaPrincipal": "Naga",
+  "razaSub": "Suezo",
+  "vida": 111,
+  "poder": 158,
+  "inteligencia": 129,
+  "habilidad": 141,
+  "velocidad": 81,
+  "defensa": 96,
+  "naturaleza": -40,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 13,
+  "especiales": 131
+}

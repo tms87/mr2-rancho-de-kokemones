@@ -1,0 +1,26 @@
+{
+  "nombre": "OtroBoboRaya",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 18)",
+  "autor": "",
+  "razaPrincipal": "Mocchi",
+  "razaSub": "Kato",
+  "vida": 202,
+  "poder": 10,
+  "inteligencia": 101,
+  "habilidad": 202,
+  "velocidad": 10,
+  "defensa": 101,
+  "naturaleza": -30,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6,
+    10
+  ],
+  "velocidadArena": 1,
+  "agallas": 11,
+  "especiales": 7
+}

@@ -1,0 +1,25 @@
+{
+  "nombre": "Pelao",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 15)",
+  "autor": "",
+  "razaPrincipal": "Gaboo",
+  "razaSub": "Tiger",
+  "vida": 155,
+  "poder": 122,
+  "inteligencia": 89,
+  "habilidad": 111,
+  "velocidad": 148,
+  "defensa": 49,
+  "naturaleza": 60,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 2,
+  "agallas": 12,
+  "especiales": 275
+}

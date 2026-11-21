@@ -12,7 +12,8 @@
     "MRDX.Custom.ItemTolerance",
     "MRDX.Custom.RanchRules",
     "MRDX.Custom.AutoBattle",
-    "MRDX.Custom.Leagues"
+    "MRDX.Custom.Leagues",
+    "MRDX.Custom.LigaKokemon"
   ],
   "WorkingDirectory": "{{CARPETA_JUEGO}}",
   "PluginData": {},
@@ -23,7 +24,8 @@
     "MRDX.Custom.ItemTolerance",
     "MRDX.Custom.RanchRules",
     "MRDX.Custom.AutoBattle",
-    "MRDX.Custom.Leagues"
+    "MRDX.Custom.Leagues",
+    "MRDX.Custom.LigaKokemon"
   ],
   "PreserveDisabledModOrder": true,
   "DontInject": false,

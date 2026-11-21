@@ -1,0 +1,26 @@
+{
+  "nombre": "Tornillo",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 9)",
+  "autor": "",
+  "razaPrincipal": "Henger",
+  "razaSub": "Monol",
+  "vida": 110,
+  "poder": 194,
+  "inteligencia": 120,
+  "habilidad": 162,
+  "velocidad": 136,
+  "defensa": 80,
+  "naturaleza": -60,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    3,
+    8
+  ],
+  "velocidadArena": 2,
+  "agallas": 16,
+  "especiales": 3
+}

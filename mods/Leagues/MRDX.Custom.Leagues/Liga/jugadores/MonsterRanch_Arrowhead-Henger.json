@@ -1,0 +1,27 @@
+{
+  "nombre": "MonsterRanch",
+  "liga": "C",
+  "activo": true,
+  "origen": "exportado (congelador 4)",
+  "autor": "",
+  "razaPrincipal": "Arrowhead",
+  "razaSub": "Henger",
+  "vida": 202,
+  "poder": 313,
+  "inteligencia": 173,
+  "habilidad": 357,
+  "velocidad": 154,
+  "defensa": 220,
+  "naturaleza": 90,
+  "miedo": 0,
+  "malcriado": 90,
+  "tecnicas": [
+    0,
+    6,
+    9,
+    12
+  ],
+  "velocidadArena": 1,
+  "agallas": 17,
+  "especiales": 67
+}

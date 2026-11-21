@@ -1,0 +1,25 @@
+{
+  "nombre": "Domino",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 6)",
+  "autor": "",
+  "razaPrincipal": "ColorPandora",
+  "razaSub": "Count",
+  "vida": 171,
+  "poder": 62,
+  "inteligencia": 105,
+  "habilidad": 100,
+  "velocidad": 100,
+  "defensa": 84,
+  "naturaleza": 55,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6
+  ],
+  "velocidadArena": 1,
+  "agallas": 12,
+  "especiales": 4107
+}

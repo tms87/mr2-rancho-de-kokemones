@@ -1,0 +1,28 @@
+{
+  "nombre": "Umbral",
+  "liga": "A",
+  "activo": true,
+  "origen": "exportado (rancho)",
+  "autor": "",
+  "razaPrincipal": "Tiger",
+  "razaSub": "Jell",
+  "vida": 153,
+  "poder": 184,
+  "inteligencia": 451,
+  "habilidad": 427,
+  "velocidad": 704,
+  "defensa": 150,
+  "naturaleza": 100,
+  "miedo": 81,
+  "malcriado": 99,
+  "tecnicas": [
+    0,
+    1,
+    6,
+    14,
+    19
+  ],
+  "velocidadArena": 3,
+  "agallas": 11,
+  "especiales": 267
+}

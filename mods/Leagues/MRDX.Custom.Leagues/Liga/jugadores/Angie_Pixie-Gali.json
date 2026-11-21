@@ -1,0 +1,27 @@
+{
+  "nombre": "Angie",
+  "liga": "E",
+  "activo": true,
+  "origen": "exportado (congelador 3)",
+  "autor": "",
+  "razaPrincipal": "Pixie",
+  "razaSub": "Gali",
+  "vida": 83,
+  "poder": 144,
+  "inteligencia": 223,
+  "habilidad": 201,
+  "velocidad": 117,
+  "defensa": 98,
+  "naturaleza": 79,
+  "miedo": 34,
+  "malcriado": 43,
+  "tecnicas": [
+    0,
+    3,
+    12,
+    14
+  ],
+  "velocidadArena": 3,
+  "agallas": 11,
+  "especiales": 163
+}

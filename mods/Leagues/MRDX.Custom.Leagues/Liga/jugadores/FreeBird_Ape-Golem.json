@@ -1,0 +1,27 @@
+{
+  "nombre": "FreeBird",
+  "liga": "D",
+  "activo": true,
+  "origen": "exportado (congelador 3)",
+  "autor": "",
+  "razaPrincipal": "Ape",
+  "razaSub": "Golem",
+  "vida": 173,
+  "poder": 207,
+  "inteligencia": 112,
+  "habilidad": 137,
+  "velocidad": 109,
+  "defensa": 254,
+  "naturaleza": 44,
+  "miedo": 4,
+  "malcriado": 100,
+  "tecnicas": [
+    0,
+    6,
+    13,
+    18
+  ],
+  "velocidadArena": 0,
+  "agallas": 18,
+  "especiales": 3
+}

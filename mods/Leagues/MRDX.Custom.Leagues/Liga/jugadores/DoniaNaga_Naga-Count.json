@@ -1,0 +1,26 @@
+{
+  "nombre": "DoniaNaga",
+  "liga": "D",
+  "activo": true,
+  "origen": "exportado (congelador 12)",
+  "autor": "",
+  "razaPrincipal": "Naga",
+  "razaSub": "Count",
+  "vida": 127,
+  "poder": 174,
+  "inteligencia": 192,
+  "habilidad": 160,
+  "velocidad": 147,
+  "defensa": 109,
+  "naturaleza": -30,
+  "miedo": 0,
+  "malcriado": 0,
+  "tecnicas": [
+    0,
+    6,
+    18
+  ],
+  "velocidadArena": 3,
+  "agallas": 8,
+  "especiales": 3
+}

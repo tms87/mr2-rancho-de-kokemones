@@ -14,8 +14,10 @@ INSTALAR
    unos 360 MB) y no se ve nada mientras tanto: espera, no lo abras dos veces.
 
 Despues de instalar, la carpeta descomprimida se puede borrar.
-Para actualizar a una version nueva del paquete, ejecuta su Instalar.bat: tus partidas y
-datos se conservan.
+
+ACTUALIZACIONES: el acceso directo se actualiza solo. Cada vez que abris el juego revisa en
+internet si hay una version nueva o rivales/torneos nuevos y los baja antes de arrancar (sin
+internet, arranca igual). Tus partidas, la configuracion y los exportados no se tocan.
 
 QUE CAMBIA EN EL JUEGO
 ----------------------
@@ -32,6 +34,13 @@ QUE CAMBIA EN EL JUEGO
   Al guardar, tu monstruo y los del congelador se exportan a la carpeta que abre el
   acceso directo "Rivales Kokemon - Exportados" del escritorio.
   Manda esos archivos para sumarlos a la lista. FIMBA y los torneos especiales no cambian.
+- Liga Kokemon: calendario de torneos distinto cada año. Los torneos chicos de A a E salen
+  sorteados (cuantos y en que semana) entre los originales y torneos nuevos: Rookie Cup en 3
+  ediciones y 25 torneos nuevos. En diciembre, semana 2, la Champions Cup de cada rango (S a E),
+  con los mejores rivales y un premio sorpresa. El calendario muestra 7 meses hacia adelante:
+  en julio ya se ve el enero siguiente. Oficiales, los 4 grandes, FIMBA y especiales no cambian.
+- Torneos de rango inferior: un monstruo no puede entrar a torneos de un rango mas bajo que el
+  suyo (los libres, F, siempre). Se puede permitir uno o mas rangos abajo en la configuracion.
 - Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
   Cada año nuevo se hace una copia en las ranuras 1 a 14, rotando.
   (Para ver las copias, carga la ranura correspondiente.)
@@ -52,5 +61,5 @@ CREDITOS
   Gracias a la comunidad por su trabajo: este paquete solo los incluye para facilitar la
   instalacion entre amigos.
 - Mods "Discos aleatorios", "Reglas del rancho", "Tolerancia a Nuts Oil y Magic Banana",
-  "Batallas automaticas" y "Rivales Kokemon":
+  "Batallas automaticas", "Rivales Kokemon" y "Liga Kokemon":
   hechos para este paquete.

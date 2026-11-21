@@ -1,0 +1,28 @@
+{
+  "nombre": "One",
+  "liga": "C",
+  "activo": true,
+  "origen": "exportado (congelador 2)",
+  "autor": "",
+  "razaPrincipal": "Plant",
+  "razaSub": "Golem",
+  "vida": 376,
+  "poder": 309,
+  "inteligencia": 167,
+  "habilidad": 212,
+  "velocidad": 109,
+  "defensa": 309,
+  "naturaleza": 100,
+  "miedo": 28,
+  "malcriado": 100,
+  "tecnicas": [
+    0,
+    1,
+    6,
+    7,
+    8
+  ],
+  "velocidadArena": 1,
+  "agallas": 12,
+  "especiales": 67
+}
