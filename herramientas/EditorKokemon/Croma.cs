@@ -13,15 +13,12 @@ public static class Croma
 {
     public static (Bitmap Resultado, string Fondo) Procesar(string archivo)
     {
-        using var img = new Bitmap(archivo);
-        int w = img.Width, h = img.Height, n = w * h;
-        var px = new int[n];
-        using (var copia = new Bitmap(img))
-        {
-            var d = copia.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            Marshal.Copy(d.Scan0, px, 0, n);
-            copia.UnlockBits(d);
-        }
+        var (px, w, h) = Leer(archivo);
+        var n = w * h;
+
+        // Si ya viene con transparencia real (esquinas transparentes), no hay fondo que sacar: solo se achica.
+        var alfaEsquinas = new[] { 0, w - 1, (h - 1) * w, h * w - 1 }.Average(i => (px[i] >>> 24) & 255);
+        if (alfaEsquinas < 128) return (Achicar(px, w, h), "transparente");
 
         // Color de fondo: promedio de las 4 esquinas.
         double kr = 0, kg = 0, kb = 0;
@@ -39,7 +36,8 @@ public static class Croma
         var verde = kg > kr && kg > kb;
         double Fuerza(double r, double g, double b) => verde ? g - Math.Max(r, b) : Math.Min(r, b) - g;
         var kFuerza = Fuerza(kr, kg, kb);
-        if (kFuerza < 120) throw new InvalidDataException("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)");
+        // Algunas IA dan un magenta "apagado" (p. ej. 213,45,133): alcanza con que se distinga bien del logo.
+        if (kFuerza < 50) throw new InvalidDataException("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)");
 
         var salida = new int[n];
         for (var i = 0; i < n; i++)
@@ -54,10 +52,54 @@ public static class Croma
             salida[i] = ((int)(a * 255) << 24) | (R << 16) | (G << 8) | B;
         }
 
+        return (Achicar(salida, w, h), verde ? "verde" : "magenta");
+    }
+
+    /// <summary>Lee cualquier imagen común (WebP aunque tenga extensión .png, PNG, JPG/JFIF, BMP, GIF) como ARGB.</summary>
+    private static (int[] Px, int W, int H) Leer(string archivo)
+    {
+        using var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Bgra32>(archivo);
+        var px = new int[img.Width * img.Height];
+        img.CopyPixelDataTo(System.Runtime.InteropServices.MemoryMarshal.AsBytes(px.AsSpan()));
+        return (px, img.Width, img.Height);
+    }
+
+    /// <summary>
+    ///     Lleva la imagen (ARGB) a 480x192. Si no viene en proporción 5:2 (p. ej. una imagen cuadrada), se recorta al
+    ///     logo y se encaja centrado sin deformarlo.
+    /// </summary>
+    private static Bitmap Achicar(int[] salida, int w, int h)
+    {
         using var limpia = new Bitmap(w, h, PixelFormat.Format32bppArgb);
         var d2 = limpia.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-        Marshal.Copy(salida, 0, d2.Scan0, n);
+        Marshal.Copy(salida, 0, d2.Scan0, w * h);
         limpia.UnlockBits(d2);
+
+        var origen = new Rectangle(0, 0, w, h);
+        var destino = new Rectangle(0, 0, 480, 192);
+        if (Math.Abs((double)w / h - 2.5) > 0.25)
+        {
+            // Caja del logo (píxeles bastante opacos) con un pequeño margen.
+            int x0 = w, y0 = h, x1 = -1, y1 = -1;
+            for (var y = 0; y < h; y++)
+            for (var x = 0; x < w; x++)
+                if (((salida[y * w + x] >>> 24) & 255) > 64)
+                {
+                    if (x < x0) x0 = x; if (x > x1) x1 = x;
+                    if (y < y0) y0 = y; if (y > y1) y1 = y;
+                }
+
+            if (x1 >= 0)
+            {
+                var m = Math.Max(4, (x1 - x0) / 40);
+                x0 = Math.Max(0, x0 - m); y0 = Math.Max(0, y0 - m);
+                x1 = Math.Min(w - 1, x1 + m); y1 = Math.Min(h - 1, y1 + m);
+                origen = Rectangle.FromLTRB(x0, y0, x1 + 1, y1 + 1);
+                var esc = Math.Min(480.0 / origen.Width, 192.0 / origen.Height);
+                int dw = (int)Math.Round(origen.Width * esc), dh = (int)Math.Round(origen.Height * esc);
+                destino = new Rectangle((480 - dw) / 2, (192 - dh) / 2, dw, dh);
+            }
+        }
 
         // A 480x192 (premultiplicado para que no aparezcan bordes grises).
         using var chica = new Bitmap(480, 192, PixelFormat.Format32bppPArgb);
@@ -69,12 +111,12 @@ public static class Croma
             gr.CompositingQuality = CompositingQuality.HighQuality;
             using var ia = new ImageAttributes();
             ia.SetWrapMode(WrapMode.TileFlipXY);
-            gr.DrawImage(limpia, new Rectangle(0, 0, 480, 192), 0, 0, w, h, GraphicsUnit.Pixel, ia);
+            gr.DrawImage(limpia, destino, origen.X, origen.Y, origen.Width, origen.Height, GraphicsUnit.Pixel, ia);
         }
 
         var final = new Bitmap(480, 192, PixelFormat.Format32bppArgb);
         using (var gr = Graphics.FromImage(final)) { gr.Clear(Color.Transparent); gr.DrawImage(chica, 0, 0); }
-        return (final, verde ? "verde" : "magenta");
+        return final;
     }
 
     /// <summary>Vista previa: el banner sobre varios fondos (para ver bordes y sombra).</summary>
