@@ -11,7 +11,7 @@ public sealed class Ventana : Form
     public Ventana(Repo repo)
     {
         _repo = repo;
-        Text = $"Editor Kokemon — {repo.Raiz}";
+        Text = $"Editor Kokemon (v2: WebP) — {repo.Raiz}";
         Width = 1180;
         Height = 760;
         StartPosition = FormStartPosition.CenterScreen;
@@ -634,6 +634,8 @@ public sealed class Ventana : Form
         catch (Exception e)
         {
             _bEstado.Text = "No se pudo procesar: " + e.Message;
+            Cursor = Cursors.Default;
+            MessageBox.Show($"No se pudo procesar {Path.GetFileName(d.FileName)}:\n\n{e.Message}", "Banners", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         finally { Cursor = Cursors.Default; }
     }

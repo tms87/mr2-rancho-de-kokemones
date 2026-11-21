@@ -36,8 +36,8 @@ public static class Croma
         var verde = kg > kr && kg > kb;
         double Fuerza(double r, double g, double b) => verde ? g - Math.Max(r, b) : Math.Min(r, b) - g;
         var kFuerza = Fuerza(kr, kg, kb);
-        // Algunas IA dan un magenta "apagado" (p. ej. 213,45,133): alcanza con que se distinga bien del logo.
-        if (kFuerza < 50) throw new InvalidDataException("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)");
+        // Algunas IA dan un magenta "apagado" (p. ej. 213,45,133 o 205,74,122): alcanza con que se distinga del logo.
+        if (kFuerza < 30) throw new InvalidDataException("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)");
 
         var salida = new int[n];
         for (var i = 0; i < n; i++)
@@ -79,15 +79,19 @@ public static class Croma
         var destino = new Rectangle(0, 0, 480, 192);
         if (Math.Abs((double)w / h - 2.5) > 0.25)
         {
-            // Caja del logo (píxeles bastante opacos) con un pequeño margen.
-            int x0 = w, y0 = h, x1 = -1, y1 = -1;
+            // Caja del logo con un pequeño margen: filas y columnas con una cantidad mínima de píxeles bastante
+            // opacos (así un resto suelto del fondo o un brillo tenue no agranda el recorte).
+            var porCol = new int[w];
+            var porFila = new int[h];
             for (var y = 0; y < h; y++)
             for (var x = 0; x < w; x++)
-                if (((salida[y * w + x] >>> 24) & 255) > 64)
-                {
-                    if (x < x0) x0 = x; if (x > x1) x1 = x;
-                    if (y < y0) y0 = y; if (y > y1) y1 = y;
-                }
+                if (((salida[y * w + x] >>> 24) & 255) > 128) { porCol[x]++; porFila[y]++; }
+
+            int minCol = Math.Max(3, h / 100), minFila = Math.Max(3, w / 100);
+            var x0 = Array.FindIndex(porCol, c => c >= minCol);
+            var x1 = Array.FindLastIndex(porCol, c => c >= minCol);
+            var y0 = Array.FindIndex(porFila, c => c >= minFila);
+            var y1 = Array.FindLastIndex(porFila, c => c >= minFila);
 
             if (x1 >= 0)
             {
