@@ -22,9 +22,6 @@
   //   en los dos casos el mod le da un número de torneo libre en el mes que se juega.
   //   - "id" (avanzado): número de torneo fijo, con fechas en "calendario"; "meses" limita en qué meses lo usa.
   "torneos": [
-    // Rookie Cup en 3 ediciones (rango E), en lugar de la original (ver "excluir").
-    // Sin "id": entran al sorteo y el mod les da un número libre.
-    // Rivales: los más débiles de la liga E, recalculados cada semana ("peor 1" = el más débil).
     {
       "nombre": "Rookie Cup",
       "plantilla": 64,
@@ -40,20 +37,21 @@
       "plantilla": 64,
       "participantes": ["peor 5", "peor 6", "peor 7"]
     },
-    // --- Torneos nuevos de rango A (rivales aleatorios de la liga A, entran al sorteo) ---
     {
-      "nombre": "Ironwood Cup",
+      "nombre": "Quebracho Cup",
       "plantilla": 17,
       "premios": [4500, 2250],
       "bonus": "Fire Stone",
-      "participantes": [9, 12, 15]
+      "participantes": [9, 12, 14],
+      "banner": "imagenes/quebracho_cup.png"
     },
     {
       "nombre": "Lighthouse Cup",
       "plantilla": 19,
       "premios": [3500, 2300, 1200],
       "bonus": "Paradoxine",
-      "participantes": [10, 13, 16]
+      "participantes": [10, 13, 16],
+      "banner": "imagenes/lighthouse_cup.png"
     },
     {
       "nombre": "Aurora Cup",
@@ -67,7 +65,8 @@
       "plantilla": 21,
       "premios": [3000, 2000, 1000],
       "bonus": "Torles Water",
-      "participantes": [12, 15, 10]
+      "participantes": [12, 15, 10],
+      "banner": "imagenes/pampas_grand_prix.png"
     },
     {
       "nombre": "Summit Cup",
@@ -76,13 +75,13 @@
       "bonus": "Manseitan",
       "participantes": [13, 16, 11]
     },
-    // --- Torneos nuevos de rango B (rivales aleatorios de la liga B, entran al sorteo) ---
     {
-      "nombre": "Tea Leaf Cup",
+      "nombre": "Mate Cup",
       "plantilla": 30,
+      "banner": "imagenes/mate_cup.png",
       "premios": [3000, 1500],
       "bonus": "Larox",
-      "participantes": [17, 20, 23]
+      "participantes": [17, 21, 23]
     },
     {
       "nombre": "Storm Tourney",
@@ -103,29 +102,32 @@
       "plantilla": 32,
       "premios": [4000, 2000],
       "bonus": "Perfume",
-      "participantes": [20, 23, 26]
+      "participantes": [20, 23, 26],
+      "banner": "imagenes/harbor_cup.png"
     },
     {
-      "nombre": "Andes Challenge",
-      "plantilla": 29,
+      "nombre": "Desafio Andino",
+      "plantilla": 17,
+      "banner": "imagenes/desafio_andino.png",
       "premios": [3000, 2000, 1000],
       "bonus": "Olive Oil",
-      "participantes": [17, 22, 26]
+      "participantes": [9, 12, 14]
     },
-    // --- Torneos nuevos de rango C (rivales aleatorios de la liga C, entran al sorteo) ---
     {
-      "nombre": "Herbal Cup",
+      "nombre": "Yerba Cup",
       "plantilla": 40,
+      "banner": "imagenes/yerba_cup.png",
       "premios": [2500, 1250],
-      "bonus": "Star Prune",
-      "participantes": [27, 30, 33]
+      "bonus": "Sour Jellies",
+      "participantes": [27, 31, 33]
     },
     {
       "nombre": "Snowstorm Tourney",
       "plantilla": 38,
       "premios": [2000, 1300, 700],
       "bonus": "Kasseitan",
-      "participantes": [28, 31, 34]
+      "participantes": [28, 31, 34],
+      "banner": "imagenes/snowstorm_tourney.png"
     },
     {
       "nombre": "Coral Tree Cup",
@@ -139,22 +141,24 @@
       "plantilla": 44,
       "premios": [2500, 1250],
       "bonus": "Bay Shrimp",
-      "participantes": [30, 33, 36]
+      "participantes": [30, 33, 36],
+      "banner": "imagenes/lagoon_cup.png"
     },
     {
       "nombre": "Dune Tourney",
       "plantilla": 46,
       "premios": [3000, 1500],
       "bonus": "Incense",
-      "participantes": [27, 32, 36]
+      "participantes": [27, 32, 36],
+      "banner": "imagenes/dune_tourney.png"
     },
-    // --- Torneos nuevos de rango D (rivales aleatorios de la liga D, entran al sorteo) ---
     {
       "nombre": "Barbecue Cup",
       "plantilla": 53,
       "premios": [2000, 1000, 500],
       "bonus": "Smoked Snake",
-      "participantes": [37, 40, 43]
+      "participantes": [37, 40, 43],
+      "banner": "imagenes/barbecue_cup.png"
     },
     {
       "nombre": "Whirlwind Tourney",
@@ -168,7 +172,8 @@
       "plantilla": 55,
       "premios": [2000, 1000, 500],
       "bonus": "Fun Can",
-      "participantes": [39, 42, 37]
+      "participantes": [39, 42, 37],
+      "banner": "imagenes/reed_cup.png"
     },
     {
       "nombre": "Creek Cup",
@@ -184,13 +189,13 @@
       "bonus": "Mint Leaf",
       "participantes": [41, 44, 39]
     },
-    // --- Torneos nuevos de rango E (rivales aleatorios de la liga E, entran al sorteo) ---
     {
-      "nombre": "Fledgling Cup",
+      "nombre": "Pichon Cup",
       "plantilla": 61,
+      "banner": "imagenes/pichon_cup.png",
       "premios": [1000, 500, 250],
       "bonus": "Candy",
-      "participantes": [45, 47, 49]
+      "participantes": [45, 48, 49]
     },
     {
       "nombre": "Sprout Tourney",
@@ -218,28 +223,26 @@
       "plantilla": 65,
       "premios": [800, 400, 200],
       "bonus": "Powder",
-      "participantes": [45, 46, 47]
+      "participantes": [45, 46, 47],
+      "banner": "imagenes/spark_tourney.png"
     },
-    // Champions Cup de cada rango (premios: 50% más que la plantilla): todos contra todos, 3 rivales fijos (los más fuertes de cada liga al crearla;
-    // se pueden cambiar por cualquier monstruo de la lista de Rivales Kokemon). Diciembre, semana 2, todos los años.
     {
-      // Rango S: formato y premio de Elimination Grade S.
       "nombre": "Champions Cup",
       "plantilla": 8,
       "fecha": { "mes": 12, "semana": 2 },
       "banner": "imagenes/champions_cup_s.png",
       "premios": [13500, 6750],
-      // Bonus: uno al azar por año (igual para todos): mitad de las veces un ítem especial, mitad un Disc Chip.
       "bonus": [
         ["Dragon Tusk", "Fire Feather", "Undine Slate", "God Slate", "Double-edged", "Mystic Seed", "Gold Peach", "Silver Peach"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Prometheus", "Daphiel", "Ordorf"]
     },
     {
-      // Rango A: formato y premio de Taurus Cup.
       "nombre": "Champions Cup",
       "plantilla": 17,
       "fecha": { "mes": 12, "semana": 2 },
@@ -247,14 +250,15 @@
       "premios": [7500, 3750],
       "bonus": [
         ["Taurus' Horn", "Dino's Tail", "Zilla Beard", "Big Footstep", "Gali Mask", "Crystal", "Gold Peach", "Silver Peach"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Lamsweet", "Siva", "Sharkin"]
     },
     {
-      // Rango B: formato y premio de Torble Port Cup.
       "nombre": "Champions Cup",
       "plantilla": 32,
       "fecha": { "mes": 12, "semana": 2 },
@@ -262,14 +266,15 @@
       "premios": [6000, 3000],
       "bonus": [
         ["Pure Platina", "Pure Gold", "Pure Silver", "Fire Stone", "Paradoxine", "Teromeamn", "Gemini's Pot", "Sculpture"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Epsilon", "Ghoulshine", "Aspin"]
     },
     {
-      // Rango C: formato y premio de Torble Sea Cup.
       "nombre": "Champions Cup",
       "plantilla": 41,
       "fecha": { "mes": 12, "semana": 2 },
@@ -277,14 +282,15 @@
       "premios": [4500, 2250],
       "bonus": [
         ["Pure Gold", "Pure Silver", "Torles Water", "Manseitan", "Larox", "Nageel", "Gemini's Pot", "Sculpture"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Zamber", "Gunburn", "Nicolle"]
     },
     {
-      // Rango D: formato y premio de Gemini Cup.
       "nombre": "Champions Cup",
       "plantilla": 52,
       "fecha": { "mes": 12, "semana": 2 },
@@ -292,14 +298,15 @@
       "premios": [3000, 1500, 750],
       "bonus": [
         ["Pure Silver", "Bay Shrimp", "Shoes", "Perfume", "Olive Oil", "Star Prune", "Kasseitan", "Troron", "Gemini's Pot", "Sculpture"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Sakura Art", "Capella", "Milliam"]
     },
     {
-      // Rango E: formato y premio de Artemis Cup.
       "nombre": "Champions Cup",
       "plantilla": 63,
       "fecha": { "mes": 12, "semana": 2 },
@@ -307,15 +314,15 @@
       "premios": [1500, 750, 375],
       "bonus": [
         ["Pure Silver", "Bay Shrimp", "Star Prune", "Incense", "Fun Can", "Smoked Snake", "Apple Cake", "Crab's Claw", "Sculpture"],
-        // Disc Chips (cada número es un disco distinto)
-        [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-         146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167]
+        [
+          42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+          146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+          162, 163, 164, 165, 166, 167
+        ]
       ],
       "participantes": ["Junomoule", "Angie", "Mocho"]
     }
   ],
-  // Cuántos torneos chicos se juegan por año en cada rango: [mínimo, máximo]. Salen de un pozo con los
-  // originales del rango y los torneos nuevos con "sorteo". Sin repetir, salvo que el pozo sea más chico.
   "cantidades": {
     "A": [4, 7],
     "B": [6, 10],
@@ -323,10 +330,6 @@
     "D": [6, 10],
     "E": [5, 8]
   },
-  // Torneos chicos originales que salen del sorteo (reemplazados por torneos nuevos). 64 = 0x40 Rookie Cup.
   "excluir": [64],
-  // Fechas fijas: qué torneo se juega en cada mes (1-12), semana (1-4) y rango (S, A, B, C, D, E), todos los años.
-  // "torneo": número de torneo, o -1 para dejar la semana sin torneo.
-  "calendario": [
-  ]
+  "calendario": []
 }
