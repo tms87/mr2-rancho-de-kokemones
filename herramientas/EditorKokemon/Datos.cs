@@ -12,6 +12,24 @@ public static class Datos
 {
     public static readonly string[] Rangos = ["S", "A", "B", "C", "D", "E"];
 
+    /// <summary>Razas como las nombra el juego (MonsterGenus del Base Mod), por número.</summary>
+    private static readonly string[] Razas =
+    [
+        "Pixie", "Dragon", "Centaur", "ColorPandora", "Beaclon", "Henger", "Wracky", "Golem", "Zuum", "Durahan",
+        "Arrowhead", "Tiger", "Hopper", "Hare", "Baku", "Gali", "Kato", "Zilla", "Bajarl", "Mew", "Phoenix", "Ghost",
+        "Metalner", "Suezo", "Jill", "Mocchi", "Joker", "Gaboo", "Jell", "Undine", "Niton", "Mock", "Ducken", "Plant",
+        "Monol", "Ape", "Worm", "Naga", "Count", "XY", "XZ", "YX", "YY", "YZ"
+    ];
+
+    /// <summary>Versiones de un rival que se ofrecen en el desplegable (también se puede escribir otra).</summary>
+    public static readonly string[] Versiones =
+    [
+        "", "1 año", "2 años", "3 años", "4 años", "5 años", "6 años",
+        "Campeón E", "Campeón D", "Campeón C", "Campeón B", "Campeón A", "Campeón S", "Definitivo"
+    ];
+
+    public static string NombreRaza(int n) => n >= 0 && n < Razas.Length ? Razas[n] : $"#{n}";
+
     public static readonly Plantilla[] Plantillas =
     [
         new(0x08, "S", "Elimination Grade S", false, [9000, 4500], ""),

@@ -151,6 +151,8 @@ if ($LASTEXITCODE -ge 8) { Fallar "Error copiando la configuracion (robocopy $LA
 Copy-Item (Join-Path $origen 'jugar.ps1') $Destino -Force
 Copy-Item (Join-Path $origen 'icono.ico') $Destino -Force
 Copy-Item (Join-Path $origen 'version.txt') $Destino -Force
+Copy-Item (Join-Path $origen 'subir.ps1') $Destino -Force
+Copy-Item (Join-Path $origen 'clave.ps1') $Destino -Force
 
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
 Get-ChildItem $Destino -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
@@ -206,6 +208,21 @@ if (-not $SinAccesoDirecto) {
         $lnk.Save()
     }
     Ok 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.'
+}
+
+# Acceso para subir exportados: tambien en las actualizaciones automaticas (que no tocan los demas accesos),
+# solo si todavia no existe.
+$shell = New-Object -ComObject WScript.Shell
+foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
+    $ruta = Join-Path $carpeta 'MR2 Subir exportados.lnk'
+    if ((Test-Path $ruta) -and $SinAccesoDirecto) { continue }
+    $lnk = $shell.CreateShortcut($ruta)
+    $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+    $lnk.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
+    $lnk.WorkingDirectory = $Destino
+    $lnk.IconLocation = "$(Join-Path $Destino 'icono.ico'),0"
+    $lnk.Description = 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias'
+    $lnk.Save()
 }
 
 Write-Host ''

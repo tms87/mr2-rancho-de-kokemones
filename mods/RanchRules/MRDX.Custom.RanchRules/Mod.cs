@@ -58,6 +58,7 @@ public class Mod : ModBase
     // Partida nueva: la fecha retrocede sin que se haya cargado una partida. Se confirma unos segundos después
     // (si en ese tiempo se carga una partida, era una carga y no una partida nueva).
     private readonly Stopwatch _dateWentBack = new();
+    private bool _newGameUnconfirmed;
     private const int NewGameConfirmMs = 5000;
     private const long StartWeek = 0; // contador de semanas al empezar una partida (medido en el juego)
 
@@ -104,7 +105,11 @@ public class Mod : ModBase
         save.OnLoad += OnLoad;
         save.OnSave += OnSave;
 
-        _saves = new SaveManager(() => _config, Log, _stateDir, hooks) { AutosaveDate = Calibrate };
+        _saves = new SaveManager(() => _config, Log, _stateDir, hooks)
+        {
+            AutosaveDate = Calibrate,
+            CompetitionDir = Path.Combine(loader.GetDirectoryForModId(_modConfig.ModId), "Competencias")
+        };
         // Datos por ranura que viajan con la copia anual.
         _saves.AddCompanion(i => ShrinePath(i.ToString("00")));
         var toleranceDir = Path.Combine(loader.GetModConfigDirectory("MRDX.Custom.ItemTolerance"), "partidas");
@@ -264,6 +269,7 @@ public class Mod : ModBase
     private void OnLoad(ISaveFileEntry file)
     {
         _dateWentBack.Reset(); // era una carga, no una partida nueva
+        _newGameUnconfirmed = false;
         _slot = file.Slot;
         _shrine = ShrineState.Load(ShrinePath(_slot));
         _blocked = false;
@@ -283,6 +289,12 @@ public class Mod : ModBase
     {
         // Con el modo ironman, el juego informa la ranura 15 (la que realmente escribió).
         _slot = file.Slot;
+        if (_newGameUnconfirmed)
+        {
+            _newGameUnconfirmed = false;
+            Log($"Partida nueva: el santuario empieza con {_config.ShrinePerYear} invocaciones.", Color.LightGreen);
+        }
+
         try
         {
             _shrine.Save(ShrinePath(_slot));
@@ -310,15 +322,17 @@ public class Mod : ModBase
         var ret = _hookFrame!.OriginalFunction();
         _saves?.OnFrame();
 
-        // La fecha retrocedió hace unos segundos y no se cargó ninguna partida: es una partida nueva.
+        // La fecha volvió a 0 hace unos segundos y no se cargó ninguna partida: partida nueva, o la pantalla de título
+        // / el modo VS (que también ponen la fecha en 0). El santuario se reinicia en memoria (si después se carga una
+        // partida, se lee de nuevo) y el aviso se da recién si se guarda, que solo pasa en una partida nueva.
         if (_dateWentBack.IsRunning && _dateWentBack.ElapsedMilliseconds > NewGameConfirmMs)
         {
             _dateWentBack.Reset();
             _shrine = new ShrineState();
             _blocked = false;
             _pending = false;
-            Log($"Partida nueva: el santuario vuelve a tener {_config.ShrinePerYear} invocaciones ({DateText}).",
-                Color.LightGreen);
+            _newGameUnconfirmed = true;
+            _saves?.OnNewGame();
             UpdateMessage();
         }
 

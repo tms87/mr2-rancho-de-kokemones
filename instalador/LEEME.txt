@@ -42,8 +42,12 @@ QUE CAMBIA EN EL JUEGO
 - Torneos de rango inferior: un monstruo no puede entrar a torneos de un rango mas bajo que el
   suyo (los libres, F, siempre). Se puede permitir uno o mas rangos abajo en la configuracion.
 - Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
-  Cada año nuevo se hace una copia en las ranuras 1 a 14, rotando.
+  Cada año nuevo se hace una copia en las ranuras 1 a 7, rotando.
   (Para ver las copias, carga la ranura correspondiente.)
+- Ranuras 8 a 14: grabaciones de competencia para el modo VS (se arman solas con los campeones,
+  entrenador "Kokemon"). Si cargas una, lo que guardes queda en esa ranura: el autoguardado no se toca.
+- Exportados: al guardar, tus monstruos se exportan en un archivo "fecha Entrenador.json".
+  Para compartirlos usa "MR2 Subir exportados" (la primera vez pide la clave que te pasan por privado).
 
 IMPORTANTE
 ----------

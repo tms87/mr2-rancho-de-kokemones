@@ -1,6 +1,6 @@
 <!-- Guía para jugadores: qué cambia en el juego, en formato Discord (un mensaje por sección, separadas por ---). -->
 
-# 🐾 Rancho de Kokemones v1.3.0
+# 🐾 Rancho de Kokemones v1.4.0
 Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que cambia **para el jugador**, para que nadie tenga ventaja por saber cómo funciona por dentro.
 
 ## 💻 Instalación
@@ -37,8 +37,9 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 
 ## 💾 Guardado (modo ironman)
 - Elijas la ranura que elijas, **siempre se guarda en la ranura Auto**, así que no se puede guardar antes de algo y recargar.
-- Cada enero se hace una copia automática en las ranuras 1 a 14, rotando. Son una red de seguridad, no para hacer trampa.
+- Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.
 - **Las copias anuales son las que se usan para competir en el modo versus.**
+- **Las ranuras 8 a 14 son para competencias:** se arman solas con los campeones de cada competencia (en el congelador, con el entrenador "Kokemon") después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, lo que guardes queda en esa misma ranura: tu partida (Auto) no se toca.
 
 ---
 
@@ -65,7 +66,8 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 ## 👥 Rivales Kokemon
 - En los torneos de liga (E a S), **los rivales se sortean cada semana** de una lista por liga: los 50 originales más **monstruos de jugadores del grupo**.
 - El sorteo es **el mismo para todos** en la misma semana del juego.
-- **Al guardar, tu monstruo y los del congelador se exportan** a una carpeta (hay un acceso directo en el escritorio). Si los compartís, pueden pasar a ser rivales en las partidas de todos.
+- **Al guardar, tu monstruo y los del congelador se exportan** en un archivo con la fecha del juego y tu entrenador (por ejemplo `1020-08-1 Gareth.json`); si nada cambió desde el último, no se repite.
+- **Para compartirlos, usá "MR2 Subir exportados"** (acceso directo en el escritorio): elegís qué exportados subir y llegan al editor del grupo, donde pueden pasar a ser rivales o entrar en una competencia. La primera vez te pide la clave que te pasan por privado (es personal: no la compartas).
 - **Con el paso del tiempo, los monstruos más débiles de cada rango van a bajar de rango o salir de la lista**, a medida que entren rivales más fuertes.
 - FIMBA, los 4 grandes y los torneos especiales no cambian.
 

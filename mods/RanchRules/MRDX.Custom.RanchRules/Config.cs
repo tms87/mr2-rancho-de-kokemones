@@ -23,7 +23,7 @@ public class Config : Configurable<Config>
     [Category("2. Guardado")]
     [DisplayName("Modo ironman")]
     [Description("Activado: al guardar a mano, elijas la ranura que elijas, el juego escribe en la ranura 15\n" +
-                 "(autoguardado); la elegida no se toca. Las copias anuales usan las ranuras 1 a 14.\n" +
+                 "(autoguardado); la elegida no se toca. Las copias anuales usan las ranuras 1 a 7 (8 a 14: competencias).\n" +
                  "Desactivado: guardás libremente como en el original y las copias anuales usan las ranuras 8 a 13.")]
     [DefaultValue(false)]
     public bool IronmanMode { get; set; }

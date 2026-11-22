@@ -1,0 +1,17 @@
+Grabaciones de competencia (modo VS)
+
+Cada archivo competenciaNN.json (NN = 08 a 14) arma la ranura NN del juego al abrirlo:
+una copia del autoguardado con el congelador reemplazado por los monstruos del archivo (hasta 20).
+En el modo VS, elegí esa grabación y se registran los monstruos congelados.
+
+Se regeneran solas cuando cambia el archivo. Si no hay archivo para una ranura, esa ranura no se toca.
+Con el modo ironman, las copias anuales usan las ranuras 1 a 7.
+
+Formato:
+{
+  "nombre": "Campeones E",
+  "monstruos": [
+    { "nombre": "Angie", "crudo": "<datos del monstruo en base64, 524 bytes>" }
+  ]
+}
+Los arma el Editor Kokemon (pestaña Competencias).

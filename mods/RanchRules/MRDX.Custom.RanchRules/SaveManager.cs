@@ -42,7 +42,7 @@ public delegate void H_WriteSaveIndex(nint self);
 ///     - Copia anual: tras el primer guardado de un año nuevo se copia el autoguardado a otra ranura y se le pide al
 ///       juego que registre la huella de esa ranura y reescriba psdata001.bin.
 /// </summary>
-public sealed class SaveManager
+public sealed partial class SaveManager
 {
     private const int AutosaveIndex = 14;
     private const int SlotCount = 15;
@@ -63,7 +63,11 @@ public sealed class SaveManager
 
     // Guardado manual redirigido en curso.
     private int _redirectedFrom = -1;
+    private int _redirectTo = AutosaveIndex;
     private readonly Stopwatch _redirectClock = new();
+
+    // Índice de archivo (7..13) de la grabación de competencia cargada, o -1.
+    private int _loadedCompetition = -1;
     private readonly Stopwatch _lastWrite = Stopwatch.StartNew();
 
     // Copia anual pendiente (se hace unos segundos después, cuando todos los mods ya guardaron sus datos).
@@ -102,7 +106,7 @@ public sealed class SaveManager
         try
         {
             if (mode == 1) _lastWrite.Restart();
-            if (mode == 1 && _config().IronmanMode && path != 0)
+            if (mode == 1 && path != 0 && (_config().IronmanMode || _loadedCompetition >= 0))
             {
                 var p = (byte*)path;
                 var len = 0;
@@ -110,16 +114,25 @@ public sealed class SaveManager
                 var text = Encoding.ASCII.GetString(p, len);
                 var idx = text.LastIndexOf(SlotPrefix, StringComparison.Ordinal);
 
-                if (idx >= 0 && len - idx == SlotPrefix.Length + 2 &&
-                    int.TryParse(text.AsSpan(len - 2, 2), out var slot) && slot != AutosaveIndex)
+                if (idx >= 0 && len - idx == SlotPrefix.Length + 2 && int.TryParse(text.AsSpan(len - 2, 2), out var slot))
                 {
-                    // Misma longitud: se cambian los dos últimos dígitos en el propio buffer del juego.
-                    p[len - 2] = (byte)'1';
-                    p[len - 1] = (byte)'4';
-                    if (_redirectedFrom != slot)
-                        _log($"Guardado manual en la ranura {slot + 1} → se escribe en la 15 (autoguardado).", null);
-                    _redirectedFrom = slot;
-                    _redirectClock.Restart();
+                    // Con una grabación de competencia cargada, todo guardado (también el autoguardado) va a esa misma
+                    // ranura: nunca pisa el autoguardado del jugador. Si no, con el ironman todo va al autoguardado.
+                    var target = _loadedCompetition >= 0 ? _loadedCompetition : AutosaveIndex;
+                    if (slot != target)
+                    {
+                        // Misma longitud: se cambian los dos últimos dígitos en el propio buffer del juego.
+                        var digits = target.ToString("00");
+                        p[len - 2] = (byte)digits[0];
+                        p[len - 1] = (byte)digits[1];
+                        if (_redirectedFrom != slot)
+                            _log(_loadedCompetition >= 0
+                                ? $"Grabación de competencia cargada: el guardado en la ranura {slot + 1} se escribe en la {target + 1} (no en el autoguardado)."
+                                : $"Guardado manual en la ranura {slot + 1} → se escribe en la 15 (autoguardado).", null);
+                        _redirectedFrom = slot;
+                        _redirectTo = target;
+                        _redirectClock.Restart();
+                    }
                 }
             }
         }
@@ -136,7 +149,7 @@ public sealed class SaveManager
         _indexObject = self;
 
         if (_redirectedFrom >= 0 && slot == _redirectedFrom && _redirectClock.ElapsedMilliseconds < 30_000)
-            slot = AutosaveIndex;
+            slot = _redirectTo;
         _redirectedFrom = -1;
 
         var ret = _hookRegister!.OriginalFunction(self, slot);
@@ -162,6 +175,7 @@ public sealed class SaveManager
     /// <summary>Llamar en cada frame (hilo del juego).</summary>
     public void OnFrame()
     {
+        CompetitionsOnFrame();
         if (_pendingYear == 0) return;
         if (_pendingClock.ElapsedMilliseconds < 2500 || _lastWrite.ElapsedMilliseconds < 1500) return;
 
@@ -185,6 +199,16 @@ public sealed class SaveManager
         _redirectedFrom = -1;
         var dir = Path.GetDirectoryName(entry.Filename);
         if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir)) _folder = dir;
+
+        var name = Path.GetFileName(entry.Filename) ?? "";
+        _loadedCompetition = name.StartsWith(SlotPrefix) && int.TryParse(name.AsSpan(name.Length - 2), out var loaded) &&
+                             loaded + 1 is >= FirstCompetitionSlot and <= LastCompetitionSlot &&
+                             CompetitionFile(loaded + 1) != null
+            ? loaded
+            : -1;
+        if (_loadedCompetition >= 0)
+            _log($"Grabación de competencia (ranura {_loadedCompetition + 1}): los guardados quedan en esa ranura, " +
+                 "el autoguardado no se toca.", Color.Orange);
 
         // El año de referencia es el de la partida cargada (también si es una copia de un año anterior).
         var data = ReadOrNull(entry.Filename);
@@ -238,10 +262,21 @@ public sealed class SaveManager
         }
 
         // Ranuras del juego (1..15) → índices de archivo (0..14).
-        // Ironman: ranuras 1 a 14. Normal: ranuras 8 a 13 (las demás quedan libres para el jugador).
-        var (first, last) = cfg.IronmanMode ? (0, 13) : (7, 12);
+        // Ironman: ranuras 1 a 7 (de la 8 a la 14 son para competencias). Normal: ranuras 8 a 13 (las demás quedan
+        // libres para el jugador). En los dos casos se saltean las ranuras que tienen un competenciaNN.json.
+        var (first, last) = cfg.IronmanMode ? (0, 6) : (7, 12);
         var target = _state.NextIndex;
         if (target < first || target > last) target = first;
+        for (var tries = 0; CompetitionFile(target + 1) != null; tries++)
+        {
+            if (tries > last - first)
+            {
+                _log("Copia anual: todas las ranuras de copias tienen una competencia asignada.", Color.Orange);
+                return;
+            }
+
+            target = target + 1 > last ? first : target + 1;
+        }
 
         var source = SlotFile(AutosaveIndex);
         var dest = SlotFile(target);

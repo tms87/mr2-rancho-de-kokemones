@@ -1,0 +1,4 @@
+Campeones por rango (uno .json por monstruo, en la carpeta de su rango: S, A, B, C, D, E).
+Los guarda el Editor Kokemon (pestaña Competencias) leyendo cualquier grabación del juego.
+"crudo" es el monstruo tal como está en la grabación (524 bytes en base64): con eso se arman
+las grabaciones de competencia para el modo VS.

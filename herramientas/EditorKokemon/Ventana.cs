@@ -4,14 +4,14 @@ using System.Text.Json.Nodes;
 namespace EditorKokemon;
 
 /// <summary>Editor de contenido: rivales, torneos, banners y subida a GitHub.</summary>
-public sealed class Ventana : Form
+public sealed partial class Ventana : Form
 {
     private readonly Repo _repo;
 
     public Ventana(Repo repo)
     {
         _repo = repo;
-        Text = $"Editor Kokemon (v2: WebP) — {repo.Raiz}";
+        Text = $"Editor Kokemon — {repo.Raiz}";
         Width = 1180;
         Height = 760;
         StartPosition = FormStartPosition.CenterScreen;
@@ -22,6 +22,7 @@ public sealed class Ventana : Form
         tabs.TabPages.Add(PestanaRivales());
         tabs.TabPages.Add(PestanaTorneos());
         tabs.TabPages.Add(PestanaBanners());
+        tabs.TabPages.Add(PestanaCompetencias());
         tabs.TabPages.Add(PestanaSubir());
         tabs.SelectedIndexChanged += (_, _) =>
         {
@@ -56,28 +57,34 @@ public sealed class Ventana : Form
 
         var arriba = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = false };
         arriba.Controls.Add(new Label { Text = "Exportados:", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
-        _carpetaExportados = new TextBox { Width = 700, Text = CarpetaExportadosPorDefecto() };
+        _carpetaExportados = new TextBox { Width = 560, Text = HayRecibidos() ? CarpetaRecibidos : CarpetaExportadosPorDefecto() };
         arriba.Controls.Add(_carpetaExportados);
         arriba.Controls.Add(Boton("Cambiar…", () =>
         {
             using var d = new FolderBrowserDialog { SelectedPath = _carpetaExportados.Text };
             if (d.ShowDialog() == DialogResult.OK) { _carpetaExportados.Text = d.SelectedPath; CargarRivales(); }
         }));
+        arriba.Controls.Add(Boton("Recibidos (GitHub)", () => { _carpetaExportados.Text = CarpetaRecibidos; CargarRivales(); }));
+        arriba.Controls.Add(Boton("Mis exportados", () => { _carpetaExportados.Text = CarpetaExportadosPorDefecto(); CargarRivales(); }));
         arriba.Controls.Add(Boton("Recargar", CargarRivales));
         tabla.Controls.Add(arriba);
 
         _gridExportados = Grilla();
         _gridExportados.Columns.Add(new DataGridViewCheckBoxColumn { Name = "Agregar", HeaderText = "Agregar", Width = 60 });
-        _gridExportados.Columns.Add(new DataGridViewTextBoxColumn { Name = "Nombre", HeaderText = "Nombre", Width = 140 });
+        _gridExportados.Columns.Add(Solo("Nombre", 110));
+        _gridExportados.Columns.Add(ColumnaVersion(_gridExportados));
+        _gridExportados.Columns.Add(Solo("Entrenador", 90));
         _gridExportados.Columns.Add(Solo("Raza", 170));
         _gridExportados.Columns.Add(Solo("Total", 60));
         _gridExportados.Columns.Add(Solo("Exportado", 75));
         _gridExportados.Columns.Add(new DataGridViewComboBoxColumn { Name = "Liga", HeaderText = "Liga", DataSource = Datos.Rangos, Width = 55 });
-        _gridExportados.Columns.Add(Solo("Estado", 420));
+        _gridExportados.Columns.Add(Solo("Estado", 330));
+        _gridExportados.Columns.Add(Solo("Archivo", 260));
         tabla.Controls.Add(_gridExportados);
 
         var medio = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill };
         medio.Controls.Add(Boton("Agregar los marcados a la lista de rivales", AgregarRivales));
+        medio.Controls.Add(Boton("Descartar el archivo del seleccionado", DescartarArchivo));
         medio.Controls.Add(new Label
         {
             AutoSize = true, Margin = new Padding(12, 8, 3, 3),
@@ -87,15 +94,18 @@ public sealed class Ventana : Form
 
         tabla.Controls.Add(new Label { Text = "Lista de rivales (jugadores):", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
         _gridLista = Grilla();
-        _gridLista.Columns.Add(new DataGridViewTextBoxColumn { Name = "Nombre", HeaderText = "Nombre", Width = 140 });
+        _gridLista.Columns.Add(new DataGridViewTextBoxColumn { Name = "Nombre", HeaderText = "Nombre", Width = 110 });
+        _gridLista.Columns.Add(ColumnaVersion(_gridLista));
+        _gridLista.Columns.Add(Solo("Entrenador", 90));
         _gridLista.Columns.Add(Solo("Raza", 170));
         _gridLista.Columns.Add(Solo("Total", 60));
         _gridLista.Columns.Add(new DataGridViewComboBoxColumn { Name = "Liga", HeaderText = "Liga", DataSource = Datos.Rangos, Width = 55 });
-        _gridLista.Columns.Add(Solo("Archivo", 360));
+        _gridLista.Columns.Add(Solo("Origen", 60));
+        _gridLista.Columns.Add(Solo("Archivo", 300));
         tabla.Controls.Add(_gridLista);
 
         var abajo = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill };
-        abajo.Controls.Add(Boton("Guardar cambios (nombre y liga)", GuardarLista));
+        abajo.Controls.Add(Boton("Guardar cambios (versión y liga)", GuardarLista));
         abajo.Controls.Add(Boton("Quitar el seleccionado", QuitarRival));
         tabla.Controls.Add(abajo);
 
@@ -109,15 +119,23 @@ public sealed class Ventana : Form
         _lista = _repo.LeerRivales(_repo.Jugadores).OrderBy(r => r.Liga).ThenByDescending(r => r.Total).ToList();
         var originales = _repo.LeerRivales(_repo.Originales);
         var rangos = _repo.RangosOriginales();
-        _exportados = _repo.LeerRivales(_carpetaExportados.Text).OrderBy(r => r.Nombre).ToList();
+        var todos = _repo.LeerRivales(_carpetaExportados.Text);
+        _exportados = EsCarpetaRecibidos
+            // Recibidos: cada archivo completo (se revisa entero y después se descarta), archivo por archivo.
+            ? todos.OrderBy(r => Path.GetFileName(r.Archivo)).ToList()
+            // Mis exportados: de cada monstruo, el exportado más nuevo (los archivos empiezan con la fecha del juego).
+            : todos.OrderByDescending(r => r.Datos["crudo"] != null).ThenByDescending(r => Path.GetFileName(r.Archivo))
+                .DistinctBy(r => (r.Entrenador, r.Nombre, r.Raza)).OrderBy(r => r.Nombre).ToList();
 
         _gridExportados.Rows.Clear();
         foreach (var r in _exportados)
         {
             var sugerida = LigaSugerida(r.Total, r.Liga, rangos);
             var estado = EstadoRival(r, originales);
-            var i = _gridExportados.Rows.Add(estado == "" , r.Nombre, r.Raza, r.Total, r.Liga, sugerida,
-                estado == "" ? (sugerida != r.Liga ? $"Nuevo (sus stats encajan en {sugerida})" : "Nuevo") : estado);
+            // Siempre desmarcados: se eligen uno por uno.
+            var i = _gridExportados.Rows.Add(false, r.Nombre, VersionEnColumna(_gridExportados, r.Version), r.Entrenador, r.Raza, r.Total,
+                r.Liga, sugerida, estado == "" ? (sugerida != r.Liga ? $"Nuevo (sus stats encajan en {sugerida})" : "Nuevo") : estado,
+                Path.GetFileName(r.Archivo));
             _gridExportados.Rows[i].Tag = r;
             if (estado != "") _gridExportados.Rows[i].DefaultCellStyle.ForeColor = Color.Gray;
         }
@@ -125,9 +143,45 @@ public sealed class Ventana : Form
         _gridLista.Rows.Clear();
         foreach (var r in _lista)
         {
-            var i = _gridLista.Rows.Add(r.Nombre, r.Raza, r.Total, Datos.Rangos.Contains(r.Liga) ? r.Liga : "E", Path.GetFileName(r.Archivo));
+            var i = _gridLista.Rows.Add(r.Nombre, VersionEnColumna(_gridLista, r.Version), r.Entrenador, r.Raza, r.Total,
+                Datos.Rangos.Contains(r.Liga) ? r.Liga : "E", r.Origen, Path.GetFileName(r.Archivo));
             _gridLista.Rows[i].Tag = r;
+            // Los que vienen de un exportado (con el monstruo completo) conservan el nombre del juego.
+            _gridLista.Rows[i].Cells["Nombre"].ReadOnly = r.Completo;
+            if (r.Completo) _gridLista.Rows[i].Cells["Nombre"].Style.ForeColor = Color.DimGray;
         }
+    }
+
+    // ---- Versión: desplegable con valores fijos, pero se puede escribir otra ----
+
+    private DataGridViewComboBoxColumn ColumnaVersion(DataGridView grilla)
+    {
+        var col = new DataGridViewComboBoxColumn
+        {
+            Name = "Version", HeaderText = "Versión", Width = 110, FlatStyle = FlatStyle.Flat,
+            DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        };
+        col.Items.AddRange(Datos.Versiones.Cast<object>().ToArray());
+        grilla.EditingControlShowing += (_, e) =>
+        {
+            if (grilla.CurrentCell?.OwningColumn == col && e.Control is ComboBox cb) cb.DropDownStyle = ComboBoxStyle.DropDown;
+        };
+        grilla.CellValidating += (_, e) =>
+        {
+            if (grilla.Columns[e.ColumnIndex] != col) return;
+            var texto = (e.FormattedValue as string ?? "").Trim();
+            if (!col.Items.Contains(texto)) col.Items.Add(texto);
+            grilla.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = texto;
+        };
+        grilla.DataError += (_, e) => e.ThrowException = false;
+        return col;
+    }
+
+    /// <summary>Una versión escrita a mano tiene que estar entre las opciones de la columna para poder mostrarse.</summary>
+    private static string VersionEnColumna(DataGridView grilla, string version)
+    {
+        if (grilla.Columns["Version"] is DataGridViewComboBoxColumn col && !col.Items.Contains(version)) col.Items.Add(version);
+        return version;
     }
 
     /// <summary>La liga alcanzada si sus stats encajan con los originales de esa liga; si no, la que encaja.</summary>
@@ -139,40 +193,44 @@ public sealed class Ventana : Form
         return "E";
     }
 
-    /// <summary>Vacío si se puede agregar; si no, por qué no (ya está, nombre repetido, mismo monstruo).</summary>
+    private static string Clave(string nombre, string version) => $"{nombre.Trim()}|{version.Trim()}".ToLowerInvariant();
+
+    /// <summary>Vacío si se puede agregar; si no, por qué no (ya está, nombre + versión repetidos).</summary>
     private string EstadoRival(Rival r, List<Rival> originales)
     {
-        var todos = _lista.Concat(originales).ToList();
+        // El mismo monstruo exacto (mismos bytes) ya está, con cualquier versión.
+        var igual = r.Completo ? _lista.FirstOrDefault(x => (string?)x.Datos["crudo"] == (string?)r.Datos["crudo"]) : null;
+        if (igual != null) return $"Ya está en la lista como {igual.Etiqueta}";
         if (_lista.Any(x => string.Equals(Path.GetFileName(x.Archivo), r.NombreArchivo(), StringComparison.OrdinalIgnoreCase)
                             && x.Total == r.Total)) return "Ya está en la lista";
-        var mismo = _lista.FirstOrDefault(x => x.Raza == r.Raza && x.Especiales == r.Especiales && x.Especiales != 0);
-        if (mismo != null) return $"Parece el mismo monstruo que {mismo.Nombre} (misma raza y especiales); se puede agregar cambiando el nombre";
-        if (todos.Any(x => string.Equals(x.Nombre, r.Nombre, StringComparison.OrdinalIgnoreCase)))
-            return "Nombre repetido: cambialo para poder agregarlo";
+        if (_lista.Concat(originales).Any(x => Clave(x.Nombre, x.Version) == Clave(r.Nombre, r.Version)))
+            return "Ya hay un rival con ese nombre y versión: elegí otra versión para agregarlo";
         return "";
     }
 
     private void AgregarRivales()
     {
         _gridExportados.EndEdit();
-        var nombres = _lista.Select(x => x.Nombre.ToLowerInvariant()).ToHashSet();
+        var claves = _lista.Concat(_repo.LeerRivales(_repo.Originales)).Select(x => Clave(x.Nombre, x.Version)).ToHashSet();
         var agregados = new List<string>();
         var problemas = new List<string>();
         foreach (DataGridViewRow fila in _gridExportados.Rows)
         {
             if (fila.Tag is not Rival r || fila.Cells["Agregar"].Value is not true) continue;
-            var nombre = (fila.Cells["Nombre"].Value as string ?? "").Trim();
-            if (nombre == "" || nombre.Length > 12) { problemas.Add($"{r.Nombre}: el nombre tiene que tener de 1 a 12 letras"); continue; }
-            if (nombres.Contains(nombre.ToLowerInvariant())) { problemas.Add($"{nombre}: ya hay un rival con ese nombre"); continue; }
             var copia = new Rival { Archivo = "", Datos = r.Datos.DeepClone().AsObject() };
-            copia.Nombre = nombre;
+            copia.Version = fila.Cells["Version"].Value as string ?? "";
             copia.Liga = fila.Cells["Liga"].Value as string ?? r.Liga;
+            if (!claves.Add(Clave(copia.Nombre, copia.Version)))
+            {
+                problemas.Add($"{copia.Etiqueta}: ya hay un rival con ese nombre y versión (elegí otra versión)");
+                continue;
+            }
+
             var destino = Path.Combine(_repo.Jugadores, copia.NombreArchivo());
-            if (File.Exists(destino)) { problemas.Add($"{nombre}: ya existe {Path.GetFileName(destino)}"); continue; }
+            if (File.Exists(destino)) { problemas.Add($"{copia.Etiqueta}: ya existe {Path.GetFileName(destino)}"); continue; }
             Directory.CreateDirectory(_repo.Jugadores);
             copia.Guardar(destino);
-            nombres.Add(nombre.ToLowerInvariant());
-            agregados.Add($"{nombre} (liga {copia.Liga})");
+            agregados.Add($"{copia.Etiqueta} (liga {copia.Liga})");
         }
 
         CargarRivales();
@@ -184,14 +242,27 @@ public sealed class Ventana : Form
     {
         _gridLista.EndEdit();
         var cambios = 0;
+        var claves = _lista.Concat(_repo.LeerRivales(_repo.Originales)).Select(x => Clave(x.Nombre, x.Version)).ToList();
         foreach (DataGridViewRow fila in _gridLista.Rows)
         {
             if (fila.Tag is not Rival r) continue;
-            var nombre = (fila.Cells["Nombre"].Value as string ?? "").Trim();
+            var nombre = r.Completo ? r.Nombre : (fila.Cells["Nombre"].Value as string ?? "").Trim();
+            var version = (fila.Cells["Version"].Value as string ?? "").Trim();
             var liga = fila.Cells["Liga"].Value as string ?? r.Liga;
-            if (nombre == r.Nombre && liga == r.Liga) continue;
+            if (nombre == r.Nombre && version == r.Version && liga == r.Liga) continue;
             if (nombre == "" || nombre.Length > 12) { MessageBox.Show($"{r.Nombre}: el nombre tiene que tener de 1 a 12 letras."); continue; }
+            var antes = Clave(r.Nombre, r.Version);
+            var despues = Clave(nombre, version);
+            if (despues != antes && claves.Contains(despues))
+            {
+                MessageBox.Show($"{nombre} ({version}): ya hay un rival con ese nombre y versión.");
+                continue;
+            }
+
+            claves.Remove(antes);
+            claves.Add(despues);
             r.Nombre = nombre;
+            r.Version = version;
             r.Liga = liga;
             var nuevo = Path.Combine(_repo.Jugadores, r.NombreArchivo());
             r.Guardar(nuevo);
@@ -206,7 +277,7 @@ public sealed class Ventana : Form
     private void QuitarRival()
     {
         if (_gridLista.CurrentRow?.Tag is not Rival r) return;
-        if (MessageBox.Show($"¿Quitar a {r.Nombre} de la lista de rivales?", "Rivales", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+        if (MessageBox.Show($"¿Quitar a {r.Etiqueta} de la lista de rivales?", "Rivales", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
         File.Delete(r.Archivo);
         CargarRivales();
     }
@@ -272,8 +343,8 @@ public sealed class Ventana : Form
         _tRivalesLiga = new ListBox { Width = 320, Height = 110, IntegralHeight = false };
         _tRivalesLiga.DoubleClick += (_, _) =>
         {
-            if (_tRivalesLiga.SelectedItem is not string s) return;
-            var nombre = s.Split(" (")[0];
+            if (_tRivalesLiga.SelectedItem is not ItemRival s) return;
+            var nombre = s.Referencia;
             _tModoPart.SelectedIndex = 2;
             _tParticipantes.Text = string.Join(", ", _tParticipantes.Text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Append(nombre));
         };
@@ -361,7 +432,7 @@ public sealed class Ventana : Form
         var rango = _tRango.SelectedItem as string ?? "";
         foreach (var r in _repo.LeerRivales(_repo.Originales).Concat(_repo.LeerRivales(_repo.Jugadores))
                      .Where(x => x.Liga == rango).OrderByDescending(x => x.Total))
-            _tRivalesLiga.Items.Add($"{r.Nombre} ({r.Total})");
+            _tRivalesLiga.Items.Add(new ItemRival(r.Referencia, $"{r.Etiqueta} ({r.Total})"));
     }
 
     private void ListarTorneos()
@@ -799,4 +870,10 @@ public sealed class Ventana : Form
         panel.Controls.Add(new Label { Text = ayuda, AutoSize = true, ForeColor = Color.DimGray, MaximumSize = new Size(700, 0) });
         t.Controls.Add(panel);
     }
+}
+
+/// <summary>Un rival en la lista del torneo: se muestra "Angie (Campeón E) (812)" y se agrega por su referencia.</summary>
+public sealed record ItemRival(string Referencia, string Texto)
+{
+    public override string ToString() => Texto;
 }

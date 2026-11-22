@@ -4,3 +4,6 @@ build/
 *.user
 .vs/
 *.zip
+clave-issues.txt
+recibidos/
+clave-issues.dat

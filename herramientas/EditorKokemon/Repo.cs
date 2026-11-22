@@ -10,7 +10,42 @@ public sealed class Rival
     public required string Archivo { get; init; }
     public required JsonObject Datos { get; init; }
 
+    /// <summary>Entrenador de la grabación de donde se exportó (vacío en los originales y los cargados antes).</summary>
+    public string Entrenador => (string?)Datos["entrenador"] ?? "";
+
+    /// <summary>Número del issue de GitHub por el que llegó (si vino de "MR2 Subir exportados").</summary>
+    public int? Issue => (int?)Datos["issue"];
+
+    public string Origen => Issue is { } n ? $"#{n}" : "";
+
+    /// <summary>Si trae el monstruo completo ("crudo"), su único dato editable además de la liga es el nombre.</summary>
+    public bool Completo => Datos["crudo"] != null;
+
+    /// <summary>
+    ///     Nombre como rival. Se puede cambiar (p. ej. para distinguir al mismo monstruo campeón de la E con 1 año y
+    ///     su versión adulta); los bytes del monstruo ("crudo") no se tocan.
+    /// </summary>
     public string Nombre { get => (string?)Datos["nombre"] ?? ""; set => Datos["nombre"] = value; }
+
+    /// <summary>
+    ///     Versión del monstruo (p. ej. "Campeón E" o "Definitivo"): distingue distintas instancias del mismo monstruo
+    ///     (el nombre, de hasta 12 letras, es el del juego). Lo que no se puede repetir es nombre + versión.
+    /// </summary>
+    public string Version
+    {
+        get => ((string?)Datos["version"] ?? "").Trim();
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value)) Datos.Remove("version");
+            else Datos["version"] = value.Trim();
+        }
+    }
+
+    /// <summary>Como se muestra: "Angie (Campeón E)", o solo el nombre si no tiene versión.</summary>
+    public string Etiqueta => Version == "" ? Nombre : $"{Nombre} ({Version})";
+
+    /// <summary>Cómo lo nombran los torneos (participantes fijos): el nombre, o el archivo si tiene versión.</summary>
+    public string Referencia => Version == "" ? Nombre : Path.GetFileNameWithoutExtension(NombreArchivo());
     public string Liga { get => ((string?)Datos["liga"] ?? "").Trim().ToUpperInvariant(); set => Datos["liga"] = value; }
     public string Raza => $"{Datos["razaPrincipal"]}/{Datos["razaSub"]}";
     public int Especiales => (int?)Datos["especiales"] ?? 0;
@@ -22,8 +57,10 @@ public sealed class Rival
     public string NombreArchivo()
     {
         var invalidos = Path.GetInvalidFileNameChars();
-        var n = new string(Nombre.Where(c => !invalidos.Contains(c)).ToArray()).Trim();
-        return $"{(n == "" ? "monstruo" : n)}_{Datos["razaPrincipal"]}-{Datos["razaSub"]}.json";
+        string Limpio(string s) => new string(s.Where(c => !invalidos.Contains(c)).ToArray()).Trim();
+        var n = Limpio(Nombre);
+        var v = Version == "" ? "" : $" ({Limpio(Version)})";
+        return $"{(n == "" ? "monstruo" : n)}{v}_{Datos["razaPrincipal"]}-{Datos["razaSub"]}.json";
     }
 
     public static Rival Leer(string archivo) => new()
@@ -44,13 +81,17 @@ public sealed class Repo
     public string Originales => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\originales");
     public string Torneos => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\torneos.json");
     public string Imagenes => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\imagenes");
+    public string Campeones => Path.Combine(Raiz, "campeones");
+    public string Competencias => Path.Combine(Raiz, @"mods\RanchRules\MRDX.Custom.RanchRules\Competencias");
 
     /// <summary>Carpetas y archivos que sube el botón "Subir" (solo contenido).</summary>
     public string[] Contenido =>
     [
         @"mods/Leagues/MRDX.Custom.Leagues/Liga",
         @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/torneos.json",
-        @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/imagenes"
+        @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/imagenes",
+        @"campeones",
+        @"mods/RanchRules/MRDX.Custom.RanchRules/Competencias"
     ];
 
     public Repo(string raiz) => Raiz = raiz;
@@ -63,14 +104,44 @@ public sealed class Repo
         return null;
     }
 
-    public List<Rival> LeerRivales(string carpeta) =>
-        Directory.Exists(carpeta)
-            ? Directory.GetFiles(carpeta, "*.json").Select(f =>
+    /// <summary>
+    ///     Rivales de una carpeta. Un archivo puede ser un rival (un monstruo) o un exportado de grabación
+    ///     ("fecha Entrenador.json", con "monstruos"): en ese caso cada monstruo es un rival.
+    /// </summary>
+    public List<Rival> LeerRivales(string carpeta)
+    {
+        var res = new List<Rival>();
+        if (!Directory.Exists(carpeta)) return res;
+        foreach (var f in Directory.GetFiles(carpeta, "*.json"))
+        {
+            try
             {
-                try { return Rival.Leer(f); }
-                catch { return null; }
-            }).OfType<Rival>().ToList()
-            : [];
+                var o = JsonNode.Parse(File.ReadAllText(f))!.AsObject();
+                if (o["monstruos"] is JsonArray lista)
+                {
+                    var de = $"exportado {o["fecha"]}{(o["entrenador"] is { } e ? $" de {e}" : "")}";
+                    foreach (var m in lista.OfType<JsonObject>())
+                    {
+                        var datos = m.DeepClone().AsObject();
+                        datos["origen"] = $"{de} ({datos["lugar"]})";
+                        datos.Remove("lugar");
+                        if (o["entrenador"] is { } entrenador) datos["entrenador"] = (string?)entrenador;
+                        // Recibidos de GitHub: "#123 fecha Entrenador.json" → issue 123.
+                        var issue = System.Text.RegularExpressions.Regex.Match(Path.GetFileName(f), @"^#(\d+) ");
+                        if (issue.Success) datos["issue"] = int.Parse(issue.Groups[1].Value);
+                        res.Add(new Rival { Archivo = f, Datos = datos });
+                    }
+                }
+                else if (o["nombre"] != null) res.Add(new Rival { Archivo = f, Datos = o });
+            }
+            catch
+            {
+                // archivo inválido: se ignora
+            }
+        }
+
+        return res;
+    }
 
     /// <summary>Rango de suma de stats de los rivales originales de cada liga.</summary>
     public Dictionary<string, (int Min, int Max)> RangosOriginales()

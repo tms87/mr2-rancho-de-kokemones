@@ -28,7 +28,8 @@ public class Config : Configurable<Config>
     [Category("2. Exportar")]
     [DisplayName("Exportar al guardar")]
     [Description("Al guardar, tu monstruo y los del congelador se exportan a la carpeta \"Exportados\" (en la\n" +
-                 "configuración de este mod), con la liga del rango que alcanzaron, listos para compartirlos.")]
+                 "configuración de este mod): un archivo \"fecha Entrenador.json\" por grabación, con todos sus datos,\n" +
+                 "listo para compartirlo. Si los monstruos no cambiaron desde un archivo anterior, no se repite.")]
     [DefaultValue(true)]
     public bool ExportOnSave { get; set; } = true;
 

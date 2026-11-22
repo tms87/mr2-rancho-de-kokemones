@@ -555,17 +555,30 @@ public class Mod : ModBase
     private void OnSave(ISaveFileEntry file)
     {
         if (!_config.ExportOnSave) return;
-        var exported = new List<string>();
+        var exported = new List<LeagueMonster>();
+        var date = SaveDate(file.Filename);
+        var trainer = SaveTrainer(file.Filename);
         Export(_exeBase + MonsterOffset, "rancho", exported);
         for (var i = 0; i < FreezerSlots; i++)
             Export(_exeBase + FreezerOffset + (nuint)(i * FreezerSlotSize + FreezerMonsterStart), $"congelador {i + 1}", exported);
-        if (exported.Count > 0)
-            Log($"Exportados {exported.Count} monstruos a {_exportDir}: {string.Join(", ", exported)}");
+        try
+        {
+            var path = ExportFile(new ExportedSave { Trainer = trainer, Date = date, Monsters = exported });
+            if (path != null)
+                Log($"Exportados {exported.Count} monstruos a {path}: {string.Join(", ", exported.Select(m => m.Name))}");
+            else if (_config.VerboseLog)
+                Log("Exportación: los monstruos no cambiaron desde el último archivo, no se repite.");
+        }
+        catch (Exception e)
+        {
+            Log($"No se pudo exportar: {e.Message}", Color.Orange);
+        }
+
         if (UnknownChars.Count > 0)
             Log($"Nombres con caracteres desconocidos (quedaron como ?): códigos {string.Join(" ", UnknownChars)}. Se puede corregir el nombre en el archivo exportado.", Color.Orange);
     }
 
-    private unsafe void Export(nuint s, string where, List<string> exported)
+    private unsafe void Export(nuint s, string where, List<LeagueMonster> exported)
     {
         try
         {
@@ -575,6 +588,9 @@ public class Mod : ModBase
             var sub = *(int*)(p + OffGenusSub);
             var life = *(ushort*)(p + OffLife);
             if (main is < 0 or > 45 || sub is < 0 or > 45 || life == 0) return;
+
+            // El monstruo completo: el registro de 0x20C bytes empieza 8 bytes antes (igual que en el congelador).
+            var raw = new ReadOnlySpan<byte>(p - FreezerMonsterStart, FreezerSlotSize).ToArray();
 
             var techs = new List<int>();
             for (var i = 0; i < 24; i++)
@@ -595,13 +611,12 @@ public class Mod : ModBase
                 Fear = p[OffFear], Spoil = p[OffSpoil],
                 Techniques = techs,
                 ArenaSpeed = p[OffArenaSpeed], GutsRate = p[OffGutsRate],
-                BattleSpecials = *(ushort*)(p + OffBattleSpecials)
+                BattleSpecials = *(ushort*)(p + OffBattleSpecials),
+                Place = where,
+                Raw = Convert.ToBase64String(raw)
             };
 
-            Directory.CreateDirectory(_exportDir);
-            var path = Path.Combine(_exportDir, $"{FileSafe(m.Name)}_{m.GenusMain}-{m.GenusSub}.json");
-            File.WriteAllText(path, JsonSerializer.Serialize(m, LeagueMonster.Json));
-            exported.Add($"{m.Name} ({where}, liga {m.League})");
+            exported.Add(m);
             if (_config.VerboseLog)
                 Log($"  {m.Label}, rango {rank} → liga {m.League}, naturaleza {m.Nature}, técnicas [{string.Join(",", techs)}]");
         }
@@ -609,6 +624,113 @@ public class Mod : ModBase
         {
             Log($"No se pudo exportar el monstruo ({where}): {e.Message}", Color.Orange);
         }
+    }
+
+    // ------------------------------------------------------------------
+    // Exportación: un archivo por grabación, Exportados\"año-mes-semana Entrenador.json", con todos sus monstruos
+    // (rancho y congelador): datos de batalla legibles y el monstruo completo ("crudo"). Si el conjunto de monstruos
+    // es igual al de un archivo anterior, no se repite.
+    // ------------------------------------------------------------------
+
+    private HashSet<string>? _exportedSets; // huella de los monstruos de cada archivo ya exportado
+
+    private static string SetKey(IEnumerable<LeagueMonster> monsters) =>
+        string.Join("|", monsters.Select(m => m.Raw).Order(StringComparer.Ordinal));
+
+    /// <summary>Escribe el archivo de la grabación. Devuelve su ruta, o null si ya había uno igual.</summary>
+    private string? ExportFile(ExportedSave save)
+    {
+        if (save.Monsters.Count == 0) return null;
+        Directory.CreateDirectory(_exportDir);
+        if (_exportedSets == null)
+        {
+            _exportedSets = [];
+            foreach (var f in Directory.GetFiles(_exportDir, "*.json"))
+            {
+                try
+                {
+                    var old = JsonSerializer.Deserialize<ExportedSave>(File.ReadAllText(f), LeagueMonster.Json);
+                    if (old?.Monsters is { Count: > 0 }) _exportedSets.Add(SetKey(old.Monsters));
+                }
+                catch
+                {
+                    // exportados del formato anterior (un monstruo por archivo) u otros: se ignoran
+                }
+            }
+        }
+
+        var key = SetKey(save.Monsters);
+        if (!_exportedSets.Add(key)) return null;
+
+        var baseName = $"{save.Date} {FileSafe(save.Trainer ?? "Entrenador")}";
+        var path = Path.Combine(_exportDir, baseName + ".json");
+        for (var n = 2; File.Exists(path); n++) path = Path.Combine(_exportDir, $"{baseName} ({n}).json");
+        File.WriteAllText(path, JsonSerializer.Serialize(save, LeagueMonster.Json));
+        return path;
+    }
+
+    /// <summary>Nombre del entrenador de la grabación (0x2B06: como los nombres de monstruo, B0 + código, fin 0xFF).</summary>
+    private static string? SaveTrainer(string? saveFile)
+    {
+        try
+        {
+            if (saveFile == null || !File.Exists(saveFile)) return null;
+            var d = File.ReadAllBytes(saveFile);
+            if (d.Length < 0x2B06 + 26) return null;
+            var sb = new System.Text.StringBuilder();
+            for (var i = 0x2B06; i < 0x2B06 + 24 && d[i] != 0xFF;)
+            {
+                if (d[i] is >= 0xA2 and <= 0xAB) { sb.Append((char)('0' + d[i] - 0xA2)); i++; continue; }
+                var c = d[i + 1];
+                sb.Append(c <= 0x19 ? (char)('A' + c) : c <= 0x33 ? (char)('a' + c - 0x1A) : c is >= 0x57 and <= 0x60 ? (char)('0' + c - 0x57) : '?');
+                i += 2;
+            }
+
+            var name = sb.ToString().Trim();
+            return name.Length > 0 ? name : null;
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Fecha de la partida recién guardada ("1020-08-1"), de la cabecera de la grabación o del contador.</summary>
+    private unsafe string SaveDate(string? saveFile)
+    {
+        try
+        {
+            if (saveFile != null && File.Exists(saveFile))
+            {
+                var d = File.ReadAllBytes(saveFile);
+                int? year = null, month = null, week = null;
+                var number = 0;
+                var digits = 0;
+                for (var i = 0; i < Math.Min(d.Length - 1, 0x80); i++)
+                {
+                    if (d[i] == 0x82 && d[i + 1] is >= 0x4F and <= 0x58) { number = number * 10 + d[i + 1] - 0x4F; digits++; i++; continue; }
+                    if (digits > 0)
+                    {
+                        if (d[i] == 0x94 && d[i + 1] == 0x4E) year = number;
+                        else if (d[i] == 0x8C && d[i + 1] == 0x8E) month = number;
+                        else if (d[i] == 0x8F && d[i + 1] == 0x54) week = number;
+                    }
+
+                    number = 0;
+                    digits = 0;
+                }
+
+                if (year != null && month != null && week != null) return $"{year}-{month:00}-{week}";
+            }
+        }
+        catch (IOException)
+        {
+            // se usa el contador
+        }
+
+        // El contador de semanas va 12 semanas atrás de la fecha real (semana 0 = año 1000, mes 4, semana 1).
+        var w = (long)*(uint*)(_exeBase + WeekCounterOffset) + 12;
+        return $"{1000 + w / 48}-{w % 48 / 4 + 1:00}-{w % 4 + 1}";
     }
 
     /// <summary>

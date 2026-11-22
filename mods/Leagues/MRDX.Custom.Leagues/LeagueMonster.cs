@@ -41,6 +41,19 @@ public sealed class LeagueMonster
     [JsonPropertyName("agallas")] public byte GutsRate { get; set; }
     [JsonPropertyName("especiales")] public ushort BattleSpecials { get; set; }
 
+    /// <summary>Dónde estaba en la grabación exportada ("rancho", "congelador 3").</summary>
+    [JsonPropertyName("lugar")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Place { get; set; }
+
+    /// <summary>
+    ///     El monstruo completo tal como está en la grabación (0x20C bytes: 8 de cabecera + el monstruo, en base64).
+    ///     Con esto se arman las grabaciones de competencia (Reglas del rancho); los torneos no lo usan.
+    /// </summary>
+    [JsonPropertyName("crudo")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Raw { get; set; }
+
     [JsonIgnore] public string File { get; set; } = "";
     [JsonIgnore] public int StatTotal => Life + Power + Intelligence + Skill + Speed + Defense;
 
@@ -128,4 +141,16 @@ public sealed class LeagueMonster
     }
 
     [JsonIgnore] public string Label =>$"{Name} ({GenusMain}/{GenusSub}, {StatTotal})";
+}
+
+/// <summary>
+///     Un archivo de exportación (Exportados\"año-mes-semana Entrenador.json"): todos los monstruos de una grabación
+///     (rancho y congelador) al guardarla. Lo lee el Editor Kokemon para sumarlos como rivales o a competencias.
+/// </summary>
+public sealed class ExportedSave
+{
+    [JsonPropertyName("formato")] public int Format { get; set; } = 1;
+    [JsonPropertyName("entrenador")] public string? Trainer { get; set; }
+    [JsonPropertyName("fecha")] public string Date { get; set; } = "";
+    [JsonPropertyName("monstruos")] public List<LeagueMonster> Monsters { get; set; } = [];
 }
