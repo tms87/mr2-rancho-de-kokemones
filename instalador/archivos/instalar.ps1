@@ -153,6 +153,8 @@ Copy-Item (Join-Path $origen 'icono.ico') $Destino -Force
 Copy-Item (Join-Path $origen 'version.txt') $Destino -Force
 Copy-Item (Join-Path $origen 'subir.ps1') $Destino -Force
 Copy-Item (Join-Path $origen 'clave.ps1') $Destino -Force
+Copy-Item (Join-Path $origen 'Kokedex.html') $Destino -Force
+Copy-Item (Join-Path $origen 'kokedex.ico') $Destino -Force
 
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
 Get-ChildItem $Destino -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
@@ -210,19 +212,29 @@ if (-not $SinAccesoDirecto) {
     Ok 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.'
 }
 
-# Acceso para subir exportados: tambien en las actualizaciones automaticas (que no tocan los demas accesos),
-# solo si todavia no existe.
+# Accesos para subir exportados y para la Kokedex: tambien en las actualizaciones automaticas (que no tocan los
+# demas accesos), solo si todavia no existen.
 $shell = New-Object -ComObject WScript.Shell
+$powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+$accesos = @(
+    @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
+       Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
+       Descripcion = 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' },
+    @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
+       Descripcion = 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' }
+)
 foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
-    $ruta = Join-Path $carpeta 'MR2 Subir exportados.lnk'
-    if ((Test-Path $ruta) -and $SinAccesoDirecto) { continue }
-    $lnk = $shell.CreateShortcut($ruta)
-    $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    $lnk.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
-    $lnk.WorkingDirectory = $Destino
-    $lnk.IconLocation = "$(Join-Path $Destino 'icono.ico'),0"
-    $lnk.Description = 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias'
-    $lnk.Save()
+    foreach ($a in $accesos) {
+        $ruta = Join-Path $carpeta "$($a.Nombre).lnk"
+        if ((Test-Path $ruta) -and $SinAccesoDirecto) { continue }
+        $lnk = $shell.CreateShortcut($ruta)
+        $lnk.TargetPath = $a.Destino
+        $lnk.Arguments = $a.Argumentos
+        $lnk.WorkingDirectory = $Destino
+        $lnk.IconLocation = "$(Join-Path $Destino $a.Icono),0"
+        $lnk.Description = $a.Descripcion
+        $lnk.Save()
+    }
 }
 
 Write-Host ''

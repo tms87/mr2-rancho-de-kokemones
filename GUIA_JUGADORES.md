@@ -1,6 +1,6 @@
 <!-- Guía para jugadores: qué cambia en el juego, en formato Discord (un mensaje por sección, separadas por ---). -->
 
-# 🐾 Rancho de Kokemones v1.4.0
+# 🐾 Rancho de Kokemones v1.4.2
 Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que cambia **para el jugador**, para que nadie tenga ventaja por saber cómo funciona por dentro.
 
 ## 💻 Instalación
@@ -18,7 +18,9 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 2. Steam tiene que estar abierto; si no lo está, el acceso directo lo abre.
 3. **La primera vez puede tardar varios minutos** en aparecer y no se ve nada mientras tanto. Esperá y no lo abras dos veces.
 
-**Actualizaciones:** cada vez que abrís el juego con el acceso directo, se actualiza solo: rivales, torneos, banners y versiones nuevas. Sin internet arranca igual. Tus partidas no se tocan.
+**Kokedex:** en el escritorio también queda el acceso directo **Kokedex**, una guía que se abre en el navegador con todo esto y qué hace cada objeto.
+
+**Actualizaciones:** cada vez que abrís el juego con el acceso directo, se actualiza solo: rivales, torneos, banners, la Kokedex y versiones nuevas. Sin internet arranca igual. Tus partidas no se tocan.
 
 ---
 
@@ -49,27 +51,40 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 
 ---
 
-## 🥜 Items Kokemon (Nuts Oil, Magic Banana y otros)
-- **Pierden efecto si los das semanas seguidas:** cada semana seguida suma un punto de tolerancia, y cada punto le quita un 10 % al efecto (100 % → 90 % → 80 %…), hasta un mínimo del 40 %.
+## 🥜 Nuts Oil y Magic Banana
+- **Pierden efecto si los das semanas seguidas:** cada semana seguida suma un punto de tolerancia, y cada punto le quita un 10 % al efecto (100 % → 90 % → 80 %…), hasta un mínimo del 40 %. Se recupera de a un punto por cada semana que no los das.
 - **La tolerancia es compartida:** alternar Nuts Oil y Magic Banana no sirve para esquivarla.
-- **Se recupera** de a un punto por cada semana que no los das.
-- **Pueden acortar la vida:** cada vez que el monstruo come uno, hay un riesgo de perder 1 semana de vida. El riesgo empieza en 2 % y sube 2 % por cada uno que comió en toda su vida, con un tope de 50 %.
-- **La Magic Banana tiene 3 resultados al azar**, y cada uno pesa distinto en el riesgo:
- - **Sin bajar el cansancio** (miedo +10, mimo +10, forma −1, estrés −10): **desintoxica**, le resta 1 a la cuenta de frutas de su vida.
- - **Cansancio −15** (miedo −10, mimo +10, estrés −5): suma 1 a la cuenta y tira el riesgo de vida, pero **no suma tolerancia**.
- - **Cansancio −30** (miedo −10, mimo −10, forma +1): como una Nuts Oil, suma a la cuenta, tira el riesgo y suma tolerancia.
-- **Objetos que desintoxican** (bajan la cuenta de frutas de su vida; sus efectos normales siguen igual):
- - **Quack Doll:** 50 % la deja en 0, 50 % la deja en la mitad.
+- **Son items tóxicos y pueden acortar la vida:** cada uno que come el monstruo le suma 1 de **intoxicación**, que se acumula en toda su vida. Cada vez que sube, hay un riesgo de perder 1 semana de vida: 2 % por punto de intoxicación, con un tope de 50 %.
+- **La Magic Banana tiene 3 resultados al azar**, y cada uno cuenta distinto:
+ - **No baja el cansancio** (miedo +10, mimo +10, forma −1, estrés −10): **desintoxica**, le resta 1 a la intoxicación.
+ - **Cansancio −15** (miedo −10, mimo +10, estrés −5): suma 1 a la intoxicación y tira el riesgo de vida, pero **no suma tolerancia**.
+ - **Cansancio −30** (miedo −10, mimo −10, forma +1): como una Nuts Oil, suma a la intoxicación, tira el riesgo y suma tolerancia.
+
+---
+
+## 🧪 Otros objetos: intoxicación y vida
+Sus efectos normales siguen igual; el mod les agrega esto:
+- **Desintoxican** (bajan la intoxicación, y con eso el riesgo de perder vida):
+ - **Quack Doll:** la baja entre 1 y 5, al azar.
  - **Rock Candy:** 50 % de bajarla 3.
  - **Irritater** y **Griever:** 30 % de bajarla 1.
- - **Half Eaten:** −1. **Gold Peach:** −3. **Silver Peach:** −1.
-- **Objetos que restan vida:** la vida que sacan pasa a ser al azar (en semanas), y **cuanto más viejo es el monstruo, más fácil salen las restas grandes** (de joven salen más las chicas; a mitad de vida es parejo):
- - **Paradoxine:** de 5 a 20. **Teromeamn:** de 5 a 21. **Troron:** de 2 a 6.
- - **Larox:** de 0 a 4. **Manseitan:** de 0 a 5. **Kasseitan** y **Nageel:** de 10 a 22.
-- **Baúl de disc chips:** los disc chips dejan de ocupar lugar en el inventario.
- - Cuando conseguís uno, entra al inventario como siempre (necesita un lugar libre) y lo podés vender.
- - **Al empezar cada mes**, todos los disc chips del inventario pasan al baúl. Desde ahí ya no se pueden vender.
- - En el **laboratorio**, al elegir el objeto para combinar, aparecen los objetos de combinación de tu inventario más **un disc chip de cada tipo** que tengas en el baúl, sin límite de lugares. Al usar uno, se descuenta del baúl.
+ - **Half Eaten:** −1.
+ - **Gold Peach:** 50 % la baja a la mitad, 50 % la deja en 0.
+ - **Silver Peach:** 50 % le saca un cuarto, 50 % la baja a la mitad.
+- **Restan vida al azar** (en semanas), y **cuanto más viejo es el monstruo, más fácil salen las restas grandes**: de joven salen más las chicas y a mitad de vida es parejo.
+ - **Paradoxine:** de 3 a 10. **Troron:** de 1 a 3. **Larox:** de 0 a 4. **Manseitan:** de 0 a 5.
+- **Más items tóxicos:** suman intoxicación, y **cada punto tira por separado** el riesgo de perder 1 semana de vida (si suma 6, son 6 tiradas).
+ - **Teromeamn**, **Kasseitan** y **Nageel** (torneos): **ya no restan vida**; suman de 1 a 5 de intoxicación al azar.
+ - **Troron:** suma 2. **Paradoxine:** suma 6.
+
+---
+
+## 💿 Baúl de disc chips
+Los disc chips dejan de ocupar lugar en el inventario:
+- Cuando conseguís uno, entra al inventario como siempre (necesita un lugar libre) y **lo podés vender**.
+- **Al empezar cada mes**, todos los disc chips del inventario pasan al **baúl**. Desde ahí ya no se pueden vender.
+- En el **laboratorio**, al elegir el objeto para combinar, aparecen los objetos de combinación de tu inventario más **un disc chip de cada tipo** que tengas en el baúl, sin límite de lugares. Al usar uno, se descuenta del baúl.
+- El baúl se guarda con cada partida.
 
 ---
 

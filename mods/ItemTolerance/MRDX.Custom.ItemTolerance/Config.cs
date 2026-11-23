@@ -39,16 +39,16 @@ public class Config : Configurable<Config>
 
     [Category("2. Riesgo de vida")]
     [DisplayName("Probabilidad base (%)")]
-    [Description("Probabilidad fija de acortar la vida cada vez que el monstruo come uno de estos objetos.")]
+    [Description("Probabilidad fija de acortar la vida en cada tirada (cada punto de intoxicación que suma un item tóxico).")]
     [DefaultValue(0)]
     public int LifespanBaseChancePercent { get; set; } = 0;
 
     [Category("2. Riesgo de vida")]
-    [DisplayName("Probabilidad extra por objeto ingerido (%)")]
-    [Description("Se suma por cada Nuts Oil o Magic Banana que el monstruo haya comido en toda su vida\n" +
-                 "(incluyendo el actual). Con 2: el 1º tiene 2%, el 5º 10%, el 10º 20%...\n" +
-                 "Magic Banana: si no baja el cansancio resta 1 (desintoxica); con -15 de cansancio suma 1 sin sumar\n" +
-                 "tolerancia; con -30 cuenta igual que una Nuts Oil.")]
+    [DisplayName("Probabilidad extra por punto de intoxicación (%)")]
+    [Description("Se suma por cada punto de intoxicación acumulado en la vida del monstruo (incluyendo el nuevo).\n" +
+                 "Con 2: con 1 punto 2%, con 5 10%, con 10 20%... Cada punto que suma un item tóxico tira por separado.\n" +
+                 "Items tóxicos: Nuts Oil y Magic Banana (1), Teromeamn, Kasseitan y Nageel (1 a 5), Troron (2) y Paradoxine (6).\n" +
+                 "Magic Banana: si no baja el cansancio desintoxica 1; con -15 suma 1 sin tolerancia; con -30 suma 1 y tolerancia.")]
     [DefaultValue(2)]
     public int LifespanChancePerItemPercent { get; set; } = 2;
 
@@ -91,6 +91,14 @@ public class Config : Configurable<Config>
                  "Solo para pruebas: dejarlo desactivado.")]
     [DefaultValue(false)]
     public bool DevolverBaul { get; set; }
+
+    [Category("4. Diagnóstico")]
+    [DisplayName("Preparar prueba de objetos")]
+    [Description("Al cargar una grabación de competencia (ranuras 8 a 14), pone cansancio y estrés en 100,\n" +
+                 "llena el inventario con objetos de prueba y registra cada cambio del monstruo.\n" +
+                 "Solo para pruebas: dejarlo desactivado.")]
+    [DefaultValue(false)]
+    public bool PruebaObjetos { get; set; }
 }
 
 public class ConfiguratorMixin : ConfiguratorMixinBase

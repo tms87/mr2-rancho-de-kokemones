@@ -189,6 +189,7 @@ public partial class Mod : ModBase
     {
         try
         {
+            if (_config.PruebaObjetos && EsRanuraCompetencia) RegistrarCambioPrueba(change);
             var prev = change.Previous;
             var cur = change.Current;
             var c = new Change
@@ -247,6 +248,12 @@ public partial class Mod : ModBase
             DevolverBaulAlInventario();
         }
 
+        if (_pruebaReloj.IsRunning && _pruebaReloj.ElapsedMilliseconds > 3000)
+        {
+            _pruebaReloj.Reset();
+            PrepararPrueba();
+        }
+
         var p = _pending;
         if (p != null && p.Clock.ElapsedMilliseconds > EffectWindowMs)
         {
@@ -265,23 +272,32 @@ public partial class Mod : ModBase
             p.Counted = true;
             FinishBanana(p);
         }
-        else if (p.Effect?.Desintoxicar is { } desintoxicar && !p.Counted)
+        else if (p.Effect is { } ef && (ef.Desintoxicar != null || ef.IntoxMax > 0) && !p.Counted)
         {
             p.Counted = true;
             // Se aplica si lo aceptó: se vio algún efecto o el juego lo marca como comido esta semana.
             var m = _game!.Monster;
             if (!p.AnyEffect && !m.ItemUsed)
             {
-                if (_config.VerboseLog) Log($"{p.ItemName}: no lo aceptó; no desintoxica.");
+                if (_config.VerboseLog) Log($"{p.ItemName}: no lo aceptó; no cambia la intoxicación.");
                 return;
             }
 
             var rec = _data.For(m);
+            if (ef.IntoxMax > 0)
+            {
+                // Intoxica: cada punto suma 1 y tira el riesgo de vida por separado.
+                var puntos = ef.Intoxica(_rng);
+                Log($"{p.ItemName}: intoxica {puntos} (intoxicación {rec.LifetimeCount}→{rec.LifetimeCount + puntos}).", Color.Yellow);
+                for (var i = 0; i < puntos; i++) Intoxicar(p.ItemName, m, rec);
+                return;
+            }
+
             var antes = rec.LifetimeCount;
-            rec.LifetimeCount = Math.Clamp(desintoxicar(_rng, antes), 0, antes);
+            rec.LifetimeCount = Math.Clamp(ef.Desintoxicar!(_rng, antes), 0, antes);
             Log(rec.LifetimeCount < antes
-                    ? $"{p.ItemName}: desintoxica. Frutas en su vida {antes}→{rec.LifetimeCount}."
-                    : $"{p.ItemName}: esta vez no desintoxicó (frutas en su vida: {antes}).",
+                    ? $"{p.ItemName}: desintoxica. Intoxicación {antes}→{rec.LifetimeCount}."
+                    : $"{p.ItemName}: esta vez no desintoxicó (intoxicación: {antes}).",
                 rec.LifetimeCount < antes ? Color.LightGreen : null);
         }
         else if (!p.Counted && p.Kind != Tipo.Otro && _config.VerboseLog)
@@ -337,7 +353,7 @@ public partial class Mod : ModBase
         {
             var antes = rec.LifetimeCount;
             rec.LifetimeCount = Math.Max(0, rec.LifetimeCount - 1);
-            Log($"Magic Banana (resultado 1, sin bajar el cansancio): desintoxica. Frutas en su vida {antes}→{rec.LifetimeCount}.",
+            Log($"Magic Banana (resultado 1, sin bajar el cansancio): desintoxica. Intoxicación {antes}→{rec.LifetimeCount}.",
                 Color.LightGreen);
             return;
         }
@@ -372,7 +388,9 @@ public partial class Mod : ModBase
             var resta = ef.RestaVida(_rng, vivida);
             var target = (ushort)Math.Max(1, c.PrevLife - resta);
             if (target != c.CurLife) m.Lifespan = target;
-            Log($"{p.ItemName}: vida {c.PrevLife}→{target} (-{resta} de {ef.VidaMin}-{ef.VidaMax}, vida consumida {vivida:P0}; sin mod: -{c.PrevLife - c.CurLife}).",
+            Log(ef.SinVida
+                    ? $"{p.ItemName}: no resta vida (sin mod: -{c.PrevLife - c.CurLife})."
+                    : $"{p.ItemName}: vida {c.PrevLife}→{target} (-{resta}{(ef.MitadVida ? " (la mitad)" : "")} de {ef.VidaMin}-{ef.VidaMax}, vida consumida {vivida:P0}; sin mod: -{c.PrevLife - c.CurLife}).",
                 Color.Yellow);
         }
 
@@ -425,7 +443,17 @@ public partial class Mod : ModBase
             rec.UsedThisWeek.Add(key);
         }
 
-        // 3) Riesgo de acortar la vida, creciente con el total ingerido en la vida del monstruo.
+        // 3) Riesgo de acortar la vida, creciente con la intoxicación acumulada en la vida del monstruo.
+        Intoxicar(p.ItemName, m, rec);
+        if (_config.VerboseLog) Log($"Tolerancia ahora: {rec.Tolerance.GetValueOrDefault(key)}.");
+    }
+
+    /// <summary>
+    ///     Suma 1 de intoxicación y tira el riesgo de vida con la intoxicación nueva (cada punto, su tirada):
+    ///     base + extra por punto, con tope.
+    /// </summary>
+    private void Intoxicar(string nombre, IMonster m, MonsterRecord rec)
+    {
         rec.LifetimeCount++;
         var chance = Math.Min(_config.LifespanMaxChancePercent,
             _config.LifespanBaseChancePercent + _config.LifespanChancePerItemPercent * rec.LifetimeCount);
@@ -435,13 +463,12 @@ public partial class Mod : ModBase
         {
             var before = m.Lifespan;
             m.Lifespan = (ushort)Math.Max(1, before - _config.LifespanWeeksLost);
-            Log($"¡{p.ItemName} le ha sentado mal! Vida {before}→{m.Lifespan} " +
-                $"(probabilidad {chance}%, objetos en su vida: {rec.LifetimeCount}).", Color.OrangeRed);
+            Log($"¡{nombre} le ha sentado mal! Vida {before}→{m.Lifespan} " +
+                $"(probabilidad {chance}%, intoxicación {rec.LifetimeCount}).", Color.OrangeRed);
         }
         else
         {
-            Log($"Riesgo de vida superado (probabilidad {chance}%, objetos en su vida: {rec.LifetimeCount}). " +
-                $"Tolerancia ahora: {rec.Tolerance.GetValueOrDefault(key)}.");
+            Log($"Riesgo de vida superado (probabilidad {chance}%, intoxicación {rec.LifetimeCount}).");
         }
     }
 
@@ -465,6 +492,7 @@ public partial class Mod : ModBase
         // Mes nuevo: los disc chips del inventario pasan al baúl.
         if (EmpiezaMes(change.OldWeek, change.NewWeek))
         {
+            if (_config.PruebaObjetos && EsRanuraCompetencia) PruebaInicioDeMes();
             try
             {
                 GuardarChipsEnBaul();
@@ -508,6 +536,8 @@ public partial class Mod : ModBase
             _pending = null;
             Log($"Datos cargados para la ranura {_slot}.");
             if (_config.DevolverBaul) _devolverReloj.Restart(); // cuando el juego ya puso el inventario en memoria
+            _pruebaLista = false;
+            if (_config.PruebaObjetos && EsRanuraCompetencia) _pruebaReloj.Restart();
         }
         catch (Exception e)
         {

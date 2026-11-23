@@ -17,6 +17,10 @@
       "borrarSobrantes": true
     },
     {
+      "repo": "instalador/archivos/Kokedex.html",
+      "destino": "Kokedex.html"
+    },
+    {
       "repo": "mods/RanchRules/MRDX.Custom.RanchRules/Competencias",
       "destino": "Reloaded-II/Mods/MRDX.Custom.RanchRules/Competencias",
       "borrarSobrantes": true

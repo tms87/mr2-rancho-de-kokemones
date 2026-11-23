@@ -16,9 +16,21 @@ public enum Tipo
 ///     - Desintoxicación: baja la cuenta de Nuts Oil y Magic Banana comidas en su vida (la que sube el riesgo de vida).
 ///     - Vida: reemplaza la vida que el objeto le saca por una cantidad al azar (semanas, ambos extremos incluidos).
 /// </summary>
-public sealed record Efecto(string Nombre, Func<Random, int, int>? Desintoxicar = null, int VidaMin = 0, int VidaMax = 0)
+public sealed record Efecto(
+    string Nombre,
+    Func<Random, int, int>? Desintoxicar = null,
+    int VidaMin = 0,
+    int VidaMax = 0,
+    int IntoxMin = 0,
+    int IntoxMax = 0,
+    bool SinVida = false,
+    bool MitadVida = false)
 {
-    public bool CambiaVida => VidaMax > 0;
+    /// <summary>Reemplaza la vida que resta el juego (por un rango al azar, o por nada si <see cref="SinVida" />).</summary>
+    public bool CambiaVida => VidaMax > 0 || SinVida;
+
+    /// <summary>Puntos de intoxicación que suma (cada uno con su tirada de riesgo de vida).</summary>
+    public int Intoxica(Random r) => IntoxMax > 0 ? r.Next(IntoxMin, IntoxMax + 1) : 0;
 
     /// <summary>
     ///     Semanas de vida que resta, sesgadas por la parte de la vida que ya consumió (0 = recién nacido, 1 = al final):
@@ -27,9 +39,12 @@ public sealed record Efecto(string Nombre, Func<Random, int, int>? Desintoxicar 
     /// </summary>
     public int RestaVida(Random r, double vivida)
     {
+        if (SinVida) return 0;
         var a = Math.Pow(2, 1 - 2 * Math.Clamp(vivida, 0, 1));
         var x = Math.Pow(r.NextDouble(), a);
-        return Math.Min(VidaMax, VidaMin + (int)Math.Floor(x * (VidaMax - VidaMin + 1)));
+        var resta = Math.Min(VidaMax, VidaMin + (int)Math.Floor(x * (VidaMax - VidaMin + 1)));
+        // Mitad: la misma tirada, partida a la mitad (redondeo hacia arriba en los .5).
+        return MitadVida ? (int)Math.Round(resta / 2.0, MidpointRounding.AwayFromZero) : resta;
     }
 }
 
@@ -38,25 +53,31 @@ public static class Objetos
     // Clave: el nombre del objeto con solo letras y números, en minúsculas ("Half—Eaten" → "halfeaten").
     private static readonly Dictionary<string, Efecto> Efectos = new()
     {
-        // Quack Doll: 50% desintoxicación total, 50% la mitad.
-        ["quackdoll"] = new("Quack Doll", (r, c) => r.Next(2) == 0 ? 0 : c / 2),
+        // Quack Doll: baja entre 1 y 5 al azar.
+        ["quackdoll"] = new("Quack Doll", (r, c) => c - r.Next(1, 6)),
         ["rockcandy"] = new("Rock Candy", (r, c) => r.Next(100) < 50 ? c - 3 : c),
         ["irritater"] = new("Irritater", (r, c) => r.Next(100) < 30 ? c - 1 : c),
         ["griever"] = new("Griever", (r, c) => r.Next(100) < 30 ? c - 1 : c),
         ["halfeaten"] = new("Half Eaten", (_, c) => c - 1),
-        ["goldpeach"] = new("Gold Peach", (_, c) => c - 3),
-        ["silverpeach"] = new("Silver Peach", (_, c) => c - 1),
+        // Peaches: 50/50 entre dos porcentajes de la intoxicación (redondeado para arriba).
+        ["goldpeach"] = new("Gold Peach", (r, c) => c - Porcentaje(c, r.Next(2) == 0 ? 50 : 100)),
+        ["silverpeach"] = new("Silver Peach", (r, c) => c - Porcentaje(c, r.Next(2) == 0 ? 25 : 50)),
 
-        ["paradoxine"] = new("Paradoxine", VidaMin: 5, VidaMax: 20),
-        ["teromeamn"] = new("Teromeamn", VidaMin: 5, VidaMax: 21),
-        ["troron"] = new("Troron", VidaMin: 2, VidaMax: 6),
+        // Entrenamiento: la mitad de la resta del rango, y suman intoxicación fija.
+        ["paradoxine"] = new("Paradoxine", VidaMin: 5, VidaMax: 20, MitadVida: true, IntoxMin: 6, IntoxMax: 6),
+        ["troron"] = new("Troron", VidaMin: 2, VidaMax: 6, MitadVida: true, IntoxMin: 2, IntoxMax: 2),
         ["larox"] = new("Larox", VidaMin: 0, VidaMax: 4),
         ["manseitan"] = new("Manseitan", VidaMin: 0, VidaMax: 5),
-        ["kasseitan"] = new("Kasseitan", VidaMin: 10, VidaMax: 22),
-        ["nageel"] = new("Nageel", VidaMin: 10, VidaMax: 22)
+        // Torneo: no restan vida; suman intoxicación al azar entre 1 y 5.
+        ["teromeamn"] = new("Teromeamn", SinVida: true, IntoxMin: 1, IntoxMax: 5),
+        ["kasseitan"] = new("Kasseitan", SinVida: true, IntoxMin: 1, IntoxMax: 5),
+        ["nageel"] = new("Nageel", SinVida: true, IntoxMin: 1, IntoxMax: 5)
     };
 
     private static Dictionary<int, string>? _nombres;
+
+    /// <summary>El porcentaje de la intoxicación, redondeado para arriba (con 1 punto, el 25 % ya baja 1).</summary>
+    private static int Porcentaje(int c, int pct) => (int)Math.Ceiling(Math.Max(c, 0) * pct / 100.0);
 
     public static string Clave(string nombre) => new(nombre.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
 

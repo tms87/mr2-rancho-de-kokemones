@@ -10,6 +10,7 @@ INSTALAR
    - Si falta .NET 9, lo descarga de Microsoft e instala (Windows puede pedir permiso).
    - Si faltan las librerias Visual C++ que usa el juego, las instala.
 4. Listo: juga con el acceso directo "MR2 Rancho de Kokemones" del escritorio.
+   Para ver las reglas y que hace cada objeto, abri la "Kokedex" (acceso directo del escritorio).
    LA PRIMERA VEZ puede tardar varios minutos en abrir (se extraen los datos del juego,
    unos 360 MB) y no se ve nada mientras tanto: espera, no lo abras dos veces.
 
@@ -28,8 +29,9 @@ QUE CAMBIA EN EL JUEGO
 - Santuario: 5 monstruos por año. Al entrar te dice cuantos quedan.
 - Items Kokemon: Nuts Oil y Magic Banana pierden efecto si se usan seguido y pueden acortar la vida;
   la Magic Banana suma o resta segun su resultado, otros objetos desintoxican (Quack Doll, Rock Candy,
-  Irritater, Griever, Half Eaten, Gold y Silver Peach) y la vida que restan Paradoxine, Teromeamn,
-  Troron, Larox, Manseitan, Kasseitan y Nageel pasa a ser al azar (detalle en la guia de jugadores).
+  Irritater, Griever, Half Eaten, Gold y Silver Peach), la vida que restan Paradoxine, Troron, Larox
+  y Manseitan pasa a ser al azar, y los de torneo (Teromeamn, Kasseitan, Nageel) ya no restan vida
+  pero intoxican, igual que Troron y Paradoxine (detalle en la Kokedex).
   Baul de disc chips: al empezar cada mes los disc chips pasan a un baul y no ocupan lugar;
   en el laboratorio aparecen todos (uno de cada tipo) para combinar.
 - Batallas automaticas: en los torneos tu monstruo pelea solo. Aunque elijas controlarlo,
