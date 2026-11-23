@@ -2,7 +2,7 @@
     "ModId": "MRDX.Custom.Leagues",
     "ModName": "Rivales Kokemon",
     "ModAuthor": "",
-    "ModVersion": "0.6.0",
+    "ModVersion": "0.6.1",
     "ModDescription": "Los rivales de los torneos de liga (E a S) salen sorteados cada semana de una lista de monstruos por liga: los originales más los que se agreguen (por ejemplo, los de tus amigos). Al guardar, exporta tu monstruo a un archivo para compartirlo. FIMBA, los 4 grandes y los torneos especiales no cambian.",
     "ModDll": "MRDX.Custom.Leagues.dll",
     "ModIcon": "Preview.png",

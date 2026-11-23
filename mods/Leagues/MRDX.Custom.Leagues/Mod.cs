@@ -106,6 +106,7 @@ public class Mod : ModBase
             Draw(c.NewWeek);
         };
         save.OnSave += OnSave;
+        save.OnLoad += OnLoad;
 
         Log($"Cargado. Semilla {_config.Seed}.", Color.LightGreen);
     }
@@ -552,11 +553,29 @@ public class Mod : ModBase
     // Freezer: 20 slots of 524 bytes; the monster starts 8 bytes in (its name at +0x170). Empty: name = 0xFF.
     private const int FreezerOffset = 0x3768BC, FreezerSlots = 20, FreezerSlotSize = 524, FreezerMonsterStart = 8;
 
+    // Año de referencia para exportar: el de la partida cargada. Se exporta solo en el primer guardado de un año nuevo
+    // (enero), igual que la copia anual de "Reglas del rancho": un exportado por año, la foto de enero.
+    private int _exportYear;
+
+    private void OnLoad(ISaveFileEntry file) => _exportYear = YearOf(SaveDate(file.Filename));
+
+    private static int YearOf(string date) => int.TryParse(date.Split('-')[0], out var y) ? y : 0;
+
     private void OnSave(ISaveFileEntry file)
     {
         if (!_config.ExportOnSave) return;
-        var exported = new List<LeagueMonster>();
         var date = SaveDate(file.Filename);
+        var year = YearOf(date);
+        if (_exportYear == 0 || year == 0 || year <= _exportYear)
+        {
+            // Primer guardado sin una partida cargada (partida nueva) o mismo año: no se exporta.
+            if (_exportYear == 0) _exportYear = year;
+            if (_config.VerboseLog) Log($"Exportación: se hace al empezar cada año (próxima: enero de {_exportYear + 1}).");
+            return;
+        }
+
+        _exportYear = year;
+        var exported = new List<LeagueMonster>();
         var trainer = SaveTrainer(file.Filename);
         Export(_exeBase + MonsterOffset, "rancho", exported);
         for (var i = 0; i < FreezerSlots; i++)

@@ -1,0 +1,25 @@
+{
+    "ModId": "MRDX.Custom.Sonda",
+    "ModName": "Sonda (desarrollo)",
+    "ModAuthor": "",
+    "ModVersion": "0.1.0",
+    "ModDescription": "Solo para desarrollo: registra con puntos de interrupción por hardware qué código del juego lee el inventario.",
+    "ModDll": "MRDX.Custom.Sonda.dll",
+    "ModIcon": "Preview.png",
+    "ModR2RManagedDll32": "",
+    "ModR2RManagedDll64": "",
+    "ModNativeDll32": "",
+    "ModNativeDll64": "",
+    "IsLibrary": false,
+    "ReleaseMetadataFileName": "",
+    "PluginData": {},
+    "IsUniversalMod": false,
+    "ModDependencies": [
+        "reloaded.sharedlib.hooks",
+        "MRDX.Base.Mod"
+    ],
+    "OptionalDependencies": [],
+    "SupportedAppId": [
+        "mf2.exe"
+    ]
+}

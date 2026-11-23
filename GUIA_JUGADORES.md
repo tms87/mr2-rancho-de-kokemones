@@ -49,11 +49,27 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 
 ---
 
-## 🥜 Nuts Oil y Magic Banana
+## 🥜 Items Kokemon (Nuts Oil, Magic Banana y otros)
 - **Pierden efecto si los das semanas seguidas:** cada semana seguida suma un punto de tolerancia, y cada punto le quita un 10 % al efecto (100 % → 90 % → 80 %…), hasta un mínimo del 40 %.
 - **La tolerancia es compartida:** alternar Nuts Oil y Magic Banana no sirve para esquivarla.
 - **Se recupera** de a un punto por cada semana que no los das.
 - **Pueden acortar la vida:** cada vez que el monstruo come uno, hay un riesgo de perder 1 semana de vida. El riesgo empieza en 2 % y sube 2 % por cada uno que comió en toda su vida, con un tope de 50 %.
+- **La Magic Banana tiene 3 resultados al azar**, y cada uno pesa distinto en el riesgo:
+ - **Sin bajar el cansancio** (miedo +10, mimo +10, forma −1, estrés −10): **desintoxica**, le resta 1 a la cuenta de frutas de su vida.
+ - **Cansancio −15** (miedo −10, mimo +10, estrés −5): suma 1 a la cuenta y tira el riesgo de vida, pero **no suma tolerancia**.
+ - **Cansancio −30** (miedo −10, mimo −10, forma +1): como una Nuts Oil, suma a la cuenta, tira el riesgo y suma tolerancia.
+- **Objetos que desintoxican** (bajan la cuenta de frutas de su vida; sus efectos normales siguen igual):
+ - **Quack Doll:** 50 % la deja en 0, 50 % la deja en la mitad.
+ - **Rock Candy:** 50 % de bajarla 3.
+ - **Irritater** y **Griever:** 30 % de bajarla 1.
+ - **Half Eaten:** −1. **Gold Peach:** −3. **Silver Peach:** −1.
+- **Objetos que restan vida:** la vida que sacan pasa a ser al azar (en semanas), y **cuanto más viejo es el monstruo, más fácil salen las restas grandes** (de joven salen más las chicas; a mitad de vida es parejo):
+ - **Paradoxine:** de 5 a 20. **Teromeamn:** de 5 a 21. **Troron:** de 2 a 6.
+ - **Larox:** de 0 a 4. **Manseitan:** de 0 a 5. **Kasseitan** y **Nageel:** de 10 a 22.
+- **Baúl de disc chips:** los disc chips dejan de ocupar lugar en el inventario.
+ - Cuando conseguís uno, entra al inventario como siempre (necesita un lugar libre) y lo podés vender.
+ - **Al empezar cada mes**, todos los disc chips del inventario pasan al baúl. Desde ahí ya no se pueden vender.
+ - En el **laboratorio**, al elegir el objeto para combinar, aparecen los objetos de combinación de tu inventario más **un disc chip de cada tipo** que tengas en el baúl, sin límite de lugares. Al usar uno, se descuenta del baúl.
 
 ---
 
@@ -66,7 +82,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 ## 👥 Rivales Kokemon
 - En los torneos de liga (E a S), **los rivales se sortean cada semana** de una lista por liga: los 50 originales más **monstruos de jugadores del grupo**.
 - El sorteo es **el mismo para todos** en la misma semana del juego.
-- **Al guardar, tu monstruo y los del congelador se exportan** en un archivo con la fecha del juego y tu entrenador (por ejemplo `1020-08-1 Gareth.json`); si nada cambió desde el último, no se repite.
+- **Al empezar cada año, tu monstruo y los del congelador se exportan** (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo `1021-01-1 Gareth.json`.
 - **Para compartirlos, usá "MR2 Subir exportados"** (acceso directo en el escritorio): elegís qué exportados subir y llegan al editor del grupo, donde pueden pasar a ser rivales o entrar en una competencia. La primera vez te pide la clave que te pasan por privado (es personal: no la compartas).
 - **Con el paso del tiempo, los monstruos más débiles de cada rango van a bajar de rango o salir de la lista**, a medida que entren rivales más fuertes.
 - FIMBA, los 4 grandes y los torneos especiales no cambian.

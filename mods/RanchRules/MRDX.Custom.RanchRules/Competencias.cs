@@ -85,6 +85,8 @@ public sealed partial class SaveManager
             if (json == null) continue;
 
             var fileIndex = gameSlot - 1;
+            // La ranura que se está jugando no se toca: se regenera en una sesión siguiente (ya cambió su huella).
+            if (fileIndex == _loadedCompetition) continue;
             var dest = SlotFile(fileIndex);
             var jsonHash = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(json)));
             var key = gameSlot.ToString("00");

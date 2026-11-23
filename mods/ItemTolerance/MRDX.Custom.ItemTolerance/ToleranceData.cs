@@ -21,6 +21,9 @@ public class SlotData
 {
     public Dictionary<string, MonsterRecord> Monsters { get; set; } = new();
 
+    /// <summary>Baúl de disc chips de la partida: número de objeto → cantidad guardada.</summary>
+    public Dictionary<int, int> Baul { get; set; } = new();
+
     public static string KeyFor(IMonster m) =>
         $"{m.Name}|{(int)m.GenusMain}|{(int)m.GenusSub}|{m.InitalLifespan}";
 

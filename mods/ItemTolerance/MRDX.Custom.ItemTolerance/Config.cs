@@ -46,7 +46,9 @@ public class Config : Configurable<Config>
     [Category("2. Riesgo de vida")]
     [DisplayName("Probabilidad extra por objeto ingerido (%)")]
     [Description("Se suma por cada Nuts Oil o Magic Banana que el monstruo haya comido en toda su vida\n" +
-                 "(incluyendo el actual). Con 2: el 1º tiene 2%, el 5º 10%, el 10º 20%...")]
+                 "(incluyendo el actual). Con 2: el 1º tiene 2%, el 5º 10%, el 10º 20%...\n" +
+                 "Magic Banana: si no baja el cansancio resta 1 (desintoxica); con -15 de cansancio suma 1 sin sumar\n" +
+                 "tolerancia; con -30 cuenta igual que una Nuts Oil.")]
     [DefaultValue(2)]
     public int LifespanChancePerItemPercent { get; set; } = 2;
 
@@ -82,6 +84,13 @@ public class Config : Configurable<Config>
     [Description("Escribe en la consola de Reloaded el ID de cada objeto que se da y los cálculos del mod.")]
     [DefaultValue(true)]
     public bool VerboseLog { get; set; } = true;
+
+    [Category("4. Diagnóstico")]
+    [DisplayName("Devolver el baúl al inventario al cargar")]
+    [Description("Al cargar una partida, los disc chips del baúl vuelven al inventario (hasta llenar sus lugares).\n" +
+                 "Solo para pruebas: dejarlo desactivado.")]
+    [DefaultValue(false)]
+    public bool DevolverBaul { get; set; }
 }
 
 public class ConfiguratorMixin : ConfiguratorMixinBase

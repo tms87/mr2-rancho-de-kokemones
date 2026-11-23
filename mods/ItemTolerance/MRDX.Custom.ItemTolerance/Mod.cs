@@ -17,16 +17,18 @@ namespace MRDX.Custom.ItemTolerance;
 [Function(CallingConventions.Cdecl)]
 public delegate void H_ItemUsed(int p1, uint p2, uint p3);
 
-public class Mod : ModBase
+public partial class Mod : ModBase
 {
     private const int SharedKey = -1;
 
     // Tras dar el objeto, durante cuánto tiempo atribuimos los cambios del monstruo al objeto.
-    // (Medido en el juego: el efecto llega ~30 ms después de dar el objeto.)
-    private const int EffectWindowMs = 3000;
+    // Medido en el juego: el efecto llega 30-80 ms después de que el jugador confirma con "Sí", ya en la animación de
+    // comer, durante la cual no puede hacer nada (ni pasar de semana). 1 s sobra y nunca alcanza una acción del jugador.
+    private const int EffectWindowMs = 1000;
 
-    // Si el efecto llegó justo antes de la llamada al hook, lo aceptamos si tiene menos de esto.
-    private const int RecentChangeMs = 3000;
+    // Si el efecto llegó justo antes de la llamada al hook, lo aceptamos si tiene menos de esto (antes de confirmar,
+    // el jugador navegó el menú: un cambio de semana no puede caer en este medio segundo).
+    private const int RecentChangeMs = 500;
 
     private readonly ILogger _logger = null!;
     private readonly IModConfig _modConfig = null!;
@@ -43,11 +45,18 @@ public class Mod : ModBase
     private SlotData _data = new();
 
     private Pending? _pending;
+    private readonly Stopwatch _sinceItem = new(); // medición: tiempo desde el último objeto dado
+    private readonly Stopwatch _devolverReloj = new(); // diagnóstico: devolver el baúl un rato después de cargar
+    private long _week = -1;
     private Change? _recent;
 
     private sealed class Pending
     {
         public int ItemId;
+        public long Week; // semana en que se dio: un cambio de otra semana nunca es del objeto
+        public Tipo Kind;
+        public Efecto? Effect;
+        public bool LifeDone;
         public string ItemName = "";
         public readonly Stopwatch Clock = Stopwatch.StartNew();
         public int ToleranceBefore;
@@ -55,6 +64,11 @@ public class Mod : ModBase
         public bool Counted;
         public bool FatigueDone;
         public bool StressDone;
+
+        // Magic Banana: lo que cambió (sin el recorte del mod) para saber cuál de sus 3 resultados salió.
+        public int FatigueDrop, StressDrop, FearDelta, SpoilDelta, FormDelta;
+        public int FatigueBefore = -1;
+        public bool AnyEffect;
     }
 
     private sealed class Change
@@ -62,6 +76,8 @@ public class Mod : ModBase
         public readonly Stopwatch Clock = Stopwatch.StartNew();
         public byte PrevFatigue, CurFatigue;
         public sbyte PrevStress, CurStress;
+        public ushort PrevLife, CurLife;
+        public int FearDelta, SpoilDelta, FormDelta;
         public bool OtherChanged;
     }
 
@@ -88,6 +104,7 @@ public class Mod : ModBase
 
         hooks.AddHook<H_ItemUsed>(OnItemUsed).ContinueWith(r => _hookItemUsed = r.Result);
         hooks.AddHook<FrameStart>(OnFrameStart).ContinueWith(r => _hookFrameStart = r.Result);
+        InstalarBaul(context.Hooks);
         _game.OnWeekChange += OnWeekChange;
         _game.OnMonsterChanged += OnMonsterChanged;
 
@@ -124,23 +141,28 @@ public class Mod : ModBase
         try
         {
             var itemId = *(byte*)(p1 + 76);
+            _sinceItem.Restart();
             var m = _game!.Monster;
 
             if (_config.VerboseLog)
                 Log($"Objeto dado: ID {itemId} (ya comió esta semana: {m.ItemUsed}). " +
                     $"Cansancio {m.Fatigue}, Estrés {m.Stress}, Mimo {m.LoyalSpoil}, Miedo {m.LoyalFear}");
 
-            var name = NameOf(itemId);
-            if (name != null && !m.ItemUsed)
+            var tipo = Objetos.TipoDe(itemId, _config.NutsOilId, _config.MagicBananaId);
+            var efecto = tipo == Tipo.Otro ? Objetos.EfectoDe(itemId) : null;
+            if ((tipo != Tipo.Otro || efecto != null) && !m.ItemUsed)
             {
                 var rec = _data.For(m);
-                rec.Tolerance.TryGetValue(KeyFor(itemId), out var tolerance);
+                rec.Tolerance.TryGetValue(KeyFor(tipo), out var tolerance);
                 var mult = Math.Max(_config.MinimumEffectPercent, 100 - _config.ToleranceStepPercent * tolerance);
 
                 _pending = new Pending
                 {
                     ItemId = itemId,
-                    ItemName = name,
+                    Week = _week,
+                    Kind = tipo,
+                    Effect = efecto,
+                    ItemName = efecto?.Nombre ?? (tipo == Tipo.NutsOil ? "Nuts Oil" : "Magic Banana"),
                     ToleranceBefore = tolerance,
                     Mult = Math.Clamp(mult, 0, 100) / 100.0
                 };
@@ -173,15 +195,24 @@ public class Mod : ModBase
             {
                 PrevFatigue = prev.Fatigue, CurFatigue = cur.Fatigue,
                 PrevStress = prev.Stress, CurStress = cur.Stress,
+                PrevLife = prev.Lifespan, CurLife = cur.Lifespan,
+                FearDelta = cur.LoyalFear - prev.LoyalFear, SpoilDelta = cur.LoyalSpoil - prev.LoyalSpoil,
+                FormDelta = cur.FormRaw - prev.FormRaw,
                 OtherChanged = prev.LoyalSpoil != cur.LoyalSpoil || prev.LoyalFear != cur.LoyalFear
             };
 
-            var relevant = c.CurFatigue != c.PrevFatigue || c.CurStress != c.PrevStress || c.OtherChanged;
+            var relevant = c.CurFatigue != c.PrevFatigue || c.CurStress != c.PrevStress || c.OtherChanged ||
+                           c.CurLife != c.PrevLife || c.FormDelta != 0;
             if (!relevant) return;
 
             var p = _pending;
             if (p == null)
             {
+                // Medición: cualquier cambio fuera de la ventana, con el tiempo desde el último objeto y la semana.
+                if (_config.VerboseLog)
+                    Log($"  (fuera de ventana) +{_sinceItem.ElapsedMilliseconds}ms desde el último objeto, semana {_week}: " +
+                        $"Cansancio {c.PrevFatigue}→{c.CurFatigue}, Estrés {c.PrevStress}→{c.CurStress}, " +
+                        $"Mimo {prev.LoyalSpoil}→{cur.LoyalSpoil}, Miedo {prev.LoyalFear}→{cur.LoyalFear}, Vida {c.PrevLife}→{c.CurLife}");
                 _recent = c;
                 return;
             }
@@ -190,6 +221,12 @@ public class Mod : ModBase
                 Log($"  +{p.Clock.ElapsedMilliseconds}ms cambio: Cansancio {c.PrevFatigue}→{c.CurFatigue}, " +
                     $"Estrés {c.PrevStress}→{c.CurStress}, Mimo {prev.LoyalSpoil}→{cur.LoyalSpoil}, " +
                     $"Miedo {prev.LoyalFear}→{cur.LoyalFear}");
+
+            if (_week != p.Week)
+            {
+                if (_config.VerboseLog) Log("  Cambio de otra semana: no es del objeto.");
+                return;
+            }
 
             Process(p, c);
         }
@@ -203,15 +240,111 @@ public class Mod : ModBase
     {
         var result = _hookFrameStart!.OriginalFunction();
 
+        // Diagnóstico: devolver el baúl 3 s después de cargar (antes, el juego todavía no puso el inventario).
+        if (_devolverReloj.IsRunning && _devolverReloj.ElapsedMilliseconds > 3000)
+        {
+            _devolverReloj.Reset();
+            DevolverBaulAlInventario();
+        }
+
         var p = _pending;
         if (p != null && p.Clock.ElapsedMilliseconds > EffectWindowMs)
         {
             _pending = null;
-            if (!p.Counted && _config.VerboseLog)
-                Log($"{p.ItemName}: no se detectó ningún efecto (¿lo rechazó o ya estaba a 0?). No cuenta.");
+            Finish(p);
         }
 
         return result;
+    }
+
+    /// <summary>Cierra el objeto dado: la Magic Banana se resuelve acá (ya llegaron todos sus cambios).</summary>
+    private void Finish(Pending p)
+    {
+        if (p.Kind == Tipo.MagicBanana && !p.Counted)
+        {
+            p.Counted = true;
+            FinishBanana(p);
+        }
+        else if (p.Effect?.Desintoxicar is { } desintoxicar && !p.Counted)
+        {
+            p.Counted = true;
+            // Se aplica si lo aceptó: se vio algún efecto o el juego lo marca como comido esta semana.
+            var m = _game!.Monster;
+            if (!p.AnyEffect && !m.ItemUsed)
+            {
+                if (_config.VerboseLog) Log($"{p.ItemName}: no lo aceptó; no desintoxica.");
+                return;
+            }
+
+            var rec = _data.For(m);
+            var antes = rec.LifetimeCount;
+            rec.LifetimeCount = Math.Clamp(desintoxicar(_rng, antes), 0, antes);
+            Log(rec.LifetimeCount < antes
+                    ? $"{p.ItemName}: desintoxica. Frutas en su vida {antes}→{rec.LifetimeCount}."
+                    : $"{p.ItemName}: esta vez no desintoxicó (frutas en su vida: {antes}).",
+                rec.LifetimeCount < antes ? Color.LightGreen : null);
+        }
+        else if (!p.Counted && p.Kind != Tipo.Otro && _config.VerboseLog)
+            Log($"{p.ItemName}: no se detectó ningún efecto (¿lo rechazó o ya estaba a 0?). No cuenta.");
+    }
+
+    /// <summary>
+    ///     Magic Banana (DX), 3 resultados (tabla de LegendCup):
+    ///       1) miedo +10, mimo +10, forma -1, cansancio 0,   estrés -10 → desintoxica 1 (resta 1 al contador de vida);
+    ///       2) miedo -10, mimo +10,           cansancio -15, estrés -5  → intoxica 1 (suma al contador y tira el dado);
+    ///       3) miedo -10, mimo -10, forma +1, cansancio -30            → intoxica 1 y suma tolerancia.
+    ///     Miedo, mimo, cansancio y estrés pueden estar en el tope y no moverse: un cambio que ocurrió descarta los
+    ///     resultados que no lo producen; uno que no ocurrió no descarta nada (salvo el cansancio: si había y no bajó,
+    ///     no fue ni el 2 ni el 3). La forma también cuenta (baja en el 1, sube en el 3). Si quedan varios, o si la
+    ///     comió y no se movió nada (todo en el tope), se toma el 2 (intoxica sin sumar tolerancia).
+    /// </summary>
+    private void FinishBanana(Pending p)
+    {
+        if (!p.AnyEffect)
+        {
+            if (!_game!.Monster.ItemUsed)
+            {
+                if (_config.VerboseLog) Log("Magic Banana: no la comió (no hubo efecto). No cuenta.");
+                return;
+            }
+
+            Log("Magic Banana: la comió pero no se movió nada (valores en el tope); se toma el resultado 2.", Color.Orange);
+            Count(p, _game.Monster, sumaTolerancia: false);
+            return;
+        }
+
+        var posibles = new HashSet<int> { 1, 2, 3 };
+        if (p.FormDelta < 0) posibles.IntersectWith([1]);
+        if (p.FormDelta > 0) posibles.IntersectWith([3]);
+        if (p.FearDelta > 0) posibles.IntersectWith([1]);
+        if (p.FearDelta < 0) posibles.IntersectWith([2, 3]);
+        if (p.SpoilDelta > 0) posibles.IntersectWith([1, 2]);
+        if (p.SpoilDelta < 0) posibles.IntersectWith([3]);
+        if (p.FatigueDrop > 15) posibles.IntersectWith([3]);
+        else if (p.FatigueDrop > 0) posibles.IntersectWith([2, 3]);
+        else if (p.FatigueBefore > 0) posibles.IntersectWith([1]); // tenía cansancio y no bajó
+        if (p.StressDrop > 5) posibles.IntersectWith([1]);
+        else if (p.StressDrop > 0) posibles.IntersectWith([1, 2]);
+
+        var resultado = posibles.Count == 1 ? posibles.First() : 2;
+        if (posibles.Count != 1)
+            Log($"Magic Banana: no se pudo saber el resultado ({(posibles.Count == 0 ? "cambios contradictorios" : "valores en el tope")}); " +
+                "se toma el 2.", Color.Orange);
+
+        var m = _game!.Monster;
+        var rec = _data.For(m);
+        if (resultado == 1)
+        {
+            var antes = rec.LifetimeCount;
+            rec.LifetimeCount = Math.Max(0, rec.LifetimeCount - 1);
+            Log($"Magic Banana (resultado 1, sin bajar el cansancio): desintoxica. Frutas en su vida {antes}→{rec.LifetimeCount}.",
+                Color.LightGreen);
+            return;
+        }
+
+        Count(p, m, sumaTolerancia: resultado == 3);
+        if (_config.VerboseLog)
+            Log($"Magic Banana: resultado {resultado} (miedo {p.FearDelta:+0;-0;0}, mimo {p.SpoilDelta:+0;-0;0}, forma {p.FormDelta:+0;-0;0}, cansancio -{p.FatigueDrop}).");
     }
 
     // ------------------------------------------------------------------
@@ -222,6 +355,29 @@ public class Mod : ModBase
     {
         var m = _game!.Monster;
         var any = c.OtherChanged;
+        if (p.FatigueBefore < 0) p.FatigueBefore = c.PrevFatigue;
+        p.FearDelta += c.FearDelta;
+        p.SpoilDelta += c.SpoilDelta;
+        p.FormDelta += c.FormDelta;
+        if (c.OtherChanged || c.CurFatigue != c.PrevFatigue || c.CurStress != c.PrevStress || c.CurLife != c.PrevLife ||
+            c.FormDelta != 0)
+            p.AnyEffect = true;
+
+        // Objetos que restan vida: la resta del juego se reemplaza por una al azar del rango del mod.
+        if (p.Effect is { CambiaVida: true } ef && !p.LifeDone && c.CurLife < c.PrevLife)
+        {
+            p.LifeDone = true;
+            // Parte de la vida que ya consumió: semanas vividas sobre vividas + las que le quedaban antes del objeto.
+            var vivida = m.Age + c.PrevLife > 0 ? (double)m.Age / (m.Age + c.PrevLife) : 0.5;
+            var resta = ef.RestaVida(_rng, vivida);
+            var target = (ushort)Math.Max(1, c.PrevLife - resta);
+            if (target != c.CurLife) m.Lifespan = target;
+            Log($"{p.ItemName}: vida {c.PrevLife}→{target} (-{resta} de {ef.VidaMin}-{ef.VidaMax}, vida consumida {vivida:P0}; sin mod: -{c.PrevLife - c.CurLife}).",
+                Color.Yellow);
+        }
+
+        // Los demás objetos no tienen tolerancia: el recorte y la cuenta son solo de Nuts Oil y Magic Banana.
+        if (p.Kind == Tipo.Otro) return;
 
         // 1) Efecto decreciente: solo se recorta la parte beneficiosa (bajada de cansancio y estrés).
         if (!p.FatigueDone && c.CurFatigue < c.PrevFatigue)
@@ -229,6 +385,7 @@ public class Mod : ModBase
             p.FatigueDone = true;
             any = true;
             var reduction = c.PrevFatigue - c.CurFatigue;
+            p.FatigueDrop = reduction;
             var target = (byte)(c.PrevFatigue - (int)Math.Round(reduction * p.Mult));
             if (target != c.CurFatigue) m.Fatigue = target;
             Log($"{p.ItemName}: cansancio {c.PrevFatigue}→{target} (sin mod: {c.CurFatigue}), " +
@@ -240,27 +397,33 @@ public class Mod : ModBase
             p.StressDone = true;
             any = true;
             var reduction = c.PrevStress - c.CurStress;
+            p.StressDrop = reduction;
             var target = (sbyte)(c.PrevStress - (int)Math.Round(reduction * p.Mult));
             if (target != c.CurStress) m.Stress = target;
             Log($"{p.ItemName}: estrés {c.PrevStress}→{target} (sin mod: {c.CurStress}), " +
                 $"efecto al {p.Mult * 100:0}% (tolerancia {p.ToleranceBefore}).", Color.Yellow);
         }
 
-        if (any && !p.Counted)
+        // La Nuts Oil cuenta (tolerancia y riesgo) con cualquier efecto. La Magic Banana se resuelve al cerrar el
+        // objeto (Finish), cuando ya se sabe cuál de sus 3 resultados salió.
+        if (p.Kind == Tipo.NutsOil && any && !p.Counted)
         {
             p.Counted = true;
-            Count(p, m);
+            Count(p, m, sumaTolerancia: true);
         }
     }
 
-    private void Count(Pending p, IMonster m)
+    private void Count(Pending p, IMonster m, bool sumaTolerancia)
     {
         var rec = _data.For(m);
-        var key = KeyFor(p.ItemId);
+        var key = KeyFor(p.Kind);
 
         // 2) Subir tolerancia y marcar uso esta semana.
-        rec.Tolerance[key] = Math.Min(_config.MaxTolerance, p.ToleranceBefore + 1);
-        rec.UsedThisWeek.Add(key);
+        if (sumaTolerancia)
+        {
+            rec.Tolerance[key] = Math.Min(_config.MaxTolerance, p.ToleranceBefore + 1);
+            rec.UsedThisWeek.Add(key);
+        }
 
         // 3) Riesgo de acortar la vida, creciente con el total ingerido en la vida del monstruo.
         rec.LifetimeCount++;
@@ -278,15 +441,19 @@ public class Mod : ModBase
         else
         {
             Log($"Riesgo de vida superado (probabilidad {chance}%, objetos en su vida: {rec.LifetimeCount}). " +
-                $"Tolerancia ahora: {rec.Tolerance[key]}.");
+                $"Tolerancia ahora: {rec.Tolerance.GetValueOrDefault(key)}.");
         }
     }
 
-    private int KeyFor(int itemId) => _config.SharedTolerance ? SharedKey : itemId;
+    // Clave de tolerancia: compartida, o el número de la configuración de cada fruta (como en las partidas guardadas).
+    private int KeyFor(Tipo tipo) => _config.SharedTolerance ? SharedKey : tipo == Tipo.NutsOil ? _config.NutsOilId : _config.MagicBananaId;
 
     private void OnWeekChange(IWeekChange change)
     {
-        // Lo que ocurra después de pasar la semana ya no es efecto del objeto.
+        if (change.NewWeek != uint.MaxValue) _week = change.NewWeek;
+        if (_config.VerboseLog) Log($"  Cambio de semana {change.OldWeek}→{change.NewWeek} (+{_sinceItem.ElapsedMilliseconds}ms desde el último objeto).");
+        // Lo que ocurra después de pasar la semana ya no es efecto del objeto (la banana pendiente se resuelve ya).
+        if (_pending is { } p) Finish(p);
         _pending = null;
         _recent = null;
 
@@ -294,6 +461,19 @@ public class Mod : ModBase
         if (change.OldWeek == uint.MaxValue || change.NewWeek <= change.OldWeek) return;
         var weeks = (int)(change.NewWeek - change.OldWeek);
         if (weeks > 12) return;
+
+        // Mes nuevo: los disc chips del inventario pasan al baúl.
+        if (EmpiezaMes(change.OldWeek, change.NewWeek))
+        {
+            try
+            {
+                GuardarChipsEnBaul();
+            }
+            catch (Exception e)
+            {
+                Log($"Error pasando los disc chips al baúl: {e.Message}", Color.Red);
+            }
+        }
 
         var m = _game?.Monster;
         if (m == null) return;
@@ -327,6 +507,7 @@ public class Mod : ModBase
             _data = SlotData.Load(FileFor(_slot));
             _pending = null;
             Log($"Datos cargados para la ranura {_slot}.");
+            if (_config.DevolverBaul) _devolverReloj.Restart(); // cuando el juego ya puso el inventario en memoria
         }
         catch (Exception e)
         {
