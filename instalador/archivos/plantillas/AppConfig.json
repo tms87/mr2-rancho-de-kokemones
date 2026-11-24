@@ -13,7 +13,7 @@
     "MRDX.Custom.RanchRules",
     "MRDX.Custom.AutoBattle",
     "MRDX.Custom.Leagues",
-    "MRDX.Custom.LigaKokemon"
+    "MRDX.Custom.CalendarioKokemon"
   ],
   "WorkingDirectory": "{{CARPETA_JUEGO}}",
   "PluginData": {},
@@ -25,7 +25,7 @@
     "MRDX.Custom.RanchRules",
     "MRDX.Custom.AutoBattle",
     "MRDX.Custom.Leagues",
-    "MRDX.Custom.LigaKokemon"
+    "MRDX.Custom.CalendarioKokemon"
   ],
   "PreserveDisabledModOrder": true,
   "DontInject": false,

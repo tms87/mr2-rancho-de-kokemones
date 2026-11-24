@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace MRDX.Custom.LigaKokemon.Template.Configuration;
+namespace MRDX.Custom.CalendarioKokemon.Template.Configuration;
 
 public class Utilities
 {

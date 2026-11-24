@@ -1,8 +1,8 @@
 using Reloaded.Mod.Interfaces;
 using Reloaded.Hooks.Definitions;
-using MRDX.Custom.LigaKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Template;
+namespace MRDX.Custom.CalendarioKokemon.Template;
 
 /// <summary>
 /// Represents information passed in from the mod loader template to the implementing mod.

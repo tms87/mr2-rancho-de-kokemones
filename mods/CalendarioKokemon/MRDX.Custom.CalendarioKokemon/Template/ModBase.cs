@@ -1,6 +1,6 @@
-using MRDX.Custom.LigaKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Template;
+namespace MRDX.Custom.CalendarioKokemon.Template;
 
 /// <summary>
 /// Base class for implementing mod functionality.

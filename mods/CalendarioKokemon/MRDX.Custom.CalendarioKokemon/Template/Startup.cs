@@ -7,10 +7,10 @@
 using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 using Reloaded.Hooks.Definitions;
-using MRDX.Custom.LigaKokemon.Template.Configuration;
-using MRDX.Custom.LigaKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Template.Configuration;
+using MRDX.Custom.CalendarioKokemon.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Template;
+namespace MRDX.Custom.CalendarioKokemon.Template;
 
 public class Startup : IMod
 {

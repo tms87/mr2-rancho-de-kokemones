@@ -79,16 +79,16 @@ public sealed class Repo
     public string Raiz { get; }
     public string Jugadores => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\jugadores");
     public string Originales => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\originales");
-    public string Torneos => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\torneos.json");
-    public string Imagenes => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\imagenes");
+    public string Torneos => Path.Combine(Raiz, @"mods\CalendarioKokemon\MRDX.Custom.CalendarioKokemon\torneos.json");
+    public string Imagenes => Path.Combine(Raiz, @"mods\CalendarioKokemon\MRDX.Custom.CalendarioKokemon\imagenes");
     public string Competencias => Path.Combine(Raiz, @"mods\RanchRules\MRDX.Custom.RanchRules\Competencias");
 
     /// <summary>Carpetas y archivos que sube el botón "Subir" (solo contenido).</summary>
     public string[] Contenido =>
     [
         @"mods/Leagues/MRDX.Custom.Leagues/Liga",
-        @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/torneos.json",
-        @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/imagenes",
+        @"mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/torneos.json",
+        @"mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/imagenes",
         @"mods/RanchRules/MRDX.Custom.RanchRules/Competencias"
     ];
 

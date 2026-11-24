@@ -10,7 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>x86</PlatformTarget>
     <!-- Carpeta lista para copiar a Reloaded-II\Mods -->
-    <OutputPath>..\build\MRDX.Custom.LigaKokemon</OutputPath>
+    <OutputPath>..\build\MRDX.Custom.CalendarioKokemon</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

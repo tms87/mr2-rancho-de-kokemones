@@ -79,7 +79,7 @@ public static class Objetos
     public static string Clave(string nombre) => new(nombre.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
 
     /// <summary>
-    ///     Nombres de los objetos por número, de la tabla del juego (taikai_en.flk, sección 5), como Liga Kokemon.
+    ///     Nombres de los objetos por número, de la tabla del juego (taikai_en.flk, sección 5), como Calendario Kokemon.
     ///     Hay objetos con varios números (Quack Doll, Nuts Oil, Magic Banana): por nombre se reconocen todos.
     /// </summary>
     public static string? NombreDe(int id)

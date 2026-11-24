@@ -1,7 +1,7 @@
 using Reloaded.Mod.Interfaces;
-using MRDX.Custom.LigaKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Template.Configuration;
+namespace MRDX.Custom.CalendarioKokemon.Template.Configuration;
 
 public class Configurator : IConfiguratorV3
 {

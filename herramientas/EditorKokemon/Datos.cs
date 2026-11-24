@@ -105,7 +105,7 @@ public static class Datos
         "Crystal", "Undine Slate", "Spear", "Wracky Doll", "Disc Chips"
     ];
 
-    /// <summary>Comparación de nombres de ítems como la hace Liga Kokemon (solo letras y números).</summary>
+    /// <summary>Comparación de nombres de ítems como la hace Calendario Kokemon (solo letras y números).</summary>
     public static string Clave(string nombre) => new string(nombre.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
 
     public static bool ItemValido(string item) =>

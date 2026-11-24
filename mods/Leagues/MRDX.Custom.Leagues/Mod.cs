@@ -131,7 +131,7 @@ public class Mod : ModBase
     private void Draw(long week)
     {
         if (_original == null || _redirector == null) return;
-        // Same week: nothing to do, unless "Liga Kokemon" changed its tables (a new month can change the tournaments).
+        // Same week: nothing to do, unless "Calendario Kokemon" changed its tables (a new month can change the tournaments).
         var ligaStamp = LigaTablesStamp();
         if (week == _drawnWeek && ligaStamp == _drawnLigaStamp) return;
         _drawnWeek = week;
@@ -139,12 +139,12 @@ public class Mod : ModBase
 
         try
         {
-            // Tournament tables from "Liga Kokemon" (new tournaments), if it is active.
-            var (data, ligaTables) = WithLigaKokemonTables(_original);
+            // Tournament tables from "Calendario Kokemon" (new tournaments), if it is active.
+            var (data, calendarioTables) = WithCalendarioKokemonTables(_original);
 
             if (!_config.Enabled)
             {
-                if (!ligaTables) SetRedirect(false);
+                if (!calendarioTables) SetRedirect(false);
                 else ServeGenerated(data);
                 return;
             }
@@ -187,7 +187,7 @@ public class Mod : ModBase
                 summary.Add($"{league}: {string.Join(", ", byPickStrength.Select(p => p.Name))}");
             }
 
-            if (ligaTables) ApplyFixedParticipants(data, pool, summary);
+            if (calendarioTables) ApplyFixedParticipants(data, pool, summary);
 
             ServeGenerated(data);
 
@@ -215,7 +215,7 @@ public class Mod : ModBase
     // 0 = tournaments (btl_form.obj), 1 = prizes (btl_gold.obj), 2 = brackets, 3 = random draw,
     // 4 = rivals (table of offsets u32, relative to the section, + 60-byte records), 5 = names.
     private const int SectionCount = 6, SectionTable = 8, RivalsSection = 4;
-    private const string LigaKokemonId = "MRDX.Custom.LigaKokemon";
+    private const string CalendarioKokemonId = "MRDX.Custom.CalendarioKokemon";
     private const int MsgBlock = 0x4000, NextBlock = 0x8000; // fixed blocks of taikai_en.flk after the sections
 
     private static int SectionOffset(byte[] data, int s) => BitConverter.ToInt32(data, SectionTable + s * 4);
@@ -228,15 +228,15 @@ public class Mod : ModBase
     }
 
     /// <summary>
-    ///     If "Liga Kokemon" is active and generated its tables, rebuilds the container with them (the tournament
+    ///     If "Calendario Kokemon" is active and generated its tables, rebuilds the container with them (the tournament
     ///     section can change size, so the offsets of the following sections are recomputed).
     /// </summary>
-    private (byte[] Data, bool Changed) WithLigaKokemonTables(byte[] original)
+    private (byte[] Data, bool Changed) WithCalendarioKokemonTables(byte[] original)
     {
         try
         {
-            if (_loader == null || !_loader.GetActiveMods().Any(m => m.Generic.ModId == LigaKokemonId)) return ((byte[])original.Clone(), false);
-            var dir = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado");
+            if (_loader == null || !_loader.GetActiveMods().Any(m => m.Generic.ModId == CalendarioKokemonId)) return ((byte[])original.Clone(), false);
+            var dir = Path.Combine(_loader.GetModConfigDirectory(CalendarioKokemonId), "generado");
             var replace = new Dictionary<int, string> { [0] = "btl_form.obj", [1] = "btl_gold.obj" };
             var parts = new byte[SectionCount][];
             var changed = false;
@@ -257,7 +257,7 @@ public class Mod : ModBase
                 }
             }
 
-            // Battle messages of Liga Kokemon (names of the new tournaments for the announcer).
+            // Battle messages of Calendario Kokemon (names of the new tournaments for the announcer).
             var msgPath = Path.Combine(dir, "msg_btl_en.obj");
             var msg = original[MsgBlock..NextBlock];
             if (File.Exists(msgPath))
@@ -288,12 +288,12 @@ public class Mod : ModBase
             o.AddRange(original[NextBlock..]);
 
             if (_config.VerboseLog && _drawnWeekLoggedLiga++ == 0)
-                Log("Torneos de Liga Kokemon incluidos en el archivo de torneos.");
+                Log("Torneos de Calendario Kokemon incluidos en el archivo de torneos.");
             return (o.ToArray(), true);
         }
         catch (Exception e)
         {
-            Log($"No se pudieron incluir los torneos de Liga Kokemon: {e.Message}", Color.Orange);
+            Log($"No se pudieron incluir los torneos de Calendario Kokemon: {e.Message}", Color.Orange);
             return ((byte[])original.Clone(), false);
         }
     }
@@ -306,7 +306,7 @@ public class Mod : ModBase
         try
         {
             if (_loader == null) return default;
-            var dir = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado");
+            var dir = Path.Combine(_loader.GetModConfigDirectory(CalendarioKokemonId), "generado");
             return new[] { "btl_form.obj", "btl_gold.obj", "participantes.json", "msg_btl_en.obj" }
                 .Select(n => Path.Combine(dir, n)).Where(File.Exists).Select(File.GetLastWriteTimeUtc)
                 .DefaultIfEmpty().Max();
@@ -387,14 +387,14 @@ public class Mod : ModBase
     }
 
     /// <summary>
-    ///     Fixed participants of the "Liga Kokemon" tournaments (generado\participantes.json): monsters of the league
+    ///     Fixed participants of the "Calendario Kokemon" tournaments (generado\participantes.json): monsters of the league
     ///     list, by name or file name, or the Nth strongest of a league. They go in rival slots no original
     ///     tournament uses.
     /// </summary>
     private void ApplyFixedParticipants(byte[] data, List<LeagueMonster> pool, List<string> summary)
     {
         if (_loader == null) return;
-        var file = Path.Combine(_loader.GetModConfigDirectory(LigaKokemonId), "generado", "participantes.json");
+        var file = Path.Combine(_loader.GetModConfigDirectory(CalendarioKokemonId), "generado", "participantes.json");
         if (!File.Exists(file)) return;
         var entries = JsonSerializer.Deserialize<List<FixedParticipant>>(File.ReadAllText(file)) ?? [];
         static string Key(string s) => Path.GetFileNameWithoutExtension(s.Trim()).ToLowerInvariant();

@@ -1,10 +1,10 @@
 {
-    "ModId": "MRDX.Custom.LigaKokemon",
-    "ModName": "Liga Kokemon",
+    "ModId": "MRDX.Custom.CalendarioKokemon",
+    "ModName": "Calendario Kokemon",
     "ModAuthor": "",
     "ModVersion": "1.0.0",
     "ModDescription": "Torneos nuevos y calendario de torneos personalizado (definidos en torneos.json).",
-    "ModDll": "MRDX.Custom.LigaKokemon.dll",
+    "ModDll": "MRDX.Custom.CalendarioKokemon.dll",
     "ModIcon": "Preview.png",
     "ModR2RManagedDll32": "",
     "ModR2RManagedDll64": "",

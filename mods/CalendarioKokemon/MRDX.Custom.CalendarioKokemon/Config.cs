@@ -1,24 +1,24 @@
 using System.ComponentModel;
-using MRDX.Custom.LigaKokemon.Template.Configuration;
+using MRDX.Custom.CalendarioKokemon.Template.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Configuration;
+namespace MRDX.Custom.CalendarioKokemon.Configuration;
 
 public class Config : Configurable<Config>
 {
-    [Category("1. Liga Kokemon")]
+    [Category("1. Calendario Kokemon")]
     [DisplayName("Activado")]
     [Description("Agrega los torneos nuevos y aplica los cambios de calendario de torneos.json.")]
     [DefaultValue(true)]
     public bool Enabled { get; set; } = true;
 
-    [Category("1. Liga Kokemon")]
+    [Category("1. Calendario Kokemon")]
     [DisplayName("Sortear torneos chicos cada año")]
     [Description("Cada año cambian las fechas de los torneos chicos de rango A a E. Los oficiales, los 4 grandes, " +
                  "FIMBA y los especiales quedan como en el original.")]
     [DefaultValue(true)]
     public bool ShuffleSmall { get; set; } = true;
 
-    [Category("1. Liga Kokemon")]
+    [Category("1. Calendario Kokemon")]
     [DisplayName("Semilla")]
     [Description("Con la misma semilla, todos tienen el mismo calendario cada año.")]
     [DefaultValue(24)]

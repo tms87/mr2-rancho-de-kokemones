@@ -115,7 +115,7 @@ Los disc chips dejan de ocupar lugar en el inventario:
 
 ---
 
-## 📅 Liga Kokemon: calendario
+## 📅 Calendario Kokemon
 - **El calendario cambia todos los años.** Los torneos chicos de A a E se sortean, tanto cuántos hay como en qué fecha, de un pozo con los originales y **25 torneos nuevos**.
 - Cantidad de torneos por año:
  - **A:** entre 4 y 7

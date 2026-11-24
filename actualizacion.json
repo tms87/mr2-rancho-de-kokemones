@@ -8,12 +8,12 @@
       "borrarSobrantes": true
     },
     {
-      "repo": "mods/LigaKokemon/MRDX.Custom.LigaKokemon/torneos.json",
-      "destino": "Reloaded-II/Mods/MRDX.Custom.LigaKokemon/torneos.json"
+      "repo": "mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/torneos.json",
+      "destino": "Reloaded-II/Mods/MRDX.Custom.CalendarioKokemon/torneos.json"
     },
     {
-      "repo": "mods/LigaKokemon/MRDX.Custom.LigaKokemon/imagenes",
-      "destino": "Reloaded-II/Mods/MRDX.Custom.LigaKokemon/imagenes",
+      "repo": "mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/imagenes",
+      "destino": "Reloaded-II/Mods/MRDX.Custom.CalendarioKokemon/imagenes",
       "borrarSobrantes": true
     },
     {

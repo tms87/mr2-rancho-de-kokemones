@@ -1,5 +1,5 @@
 {
-  // Torneos nuevos de Liga Kokemon. Cada torneo:
+  // Torneos nuevos de Calendario Kokemon. Cada torneo:
   // "nombre": como se ve en el calendario, la entrada y el comentarista.
   // "plantilla": número de un torneo existente del que se copian rango, formato, estadio, música, trofeo, premio y bonus
   //   (ej. 64 = 0x40 Rookie Cup, rango E, eliminación).

@@ -3,15 +3,15 @@ using System.Drawing;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using MRDX.Base.Mod.Interfaces;
-using MRDX.Custom.LigaKokemon.Configuration;
-using MRDX.Custom.LigaKokemon.Template;
+using MRDX.Custom.CalendarioKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Template;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Universal.Redirector.Interfaces;
 
-namespace MRDX.Custom.LigaKokemon;
+namespace MRDX.Custom.CalendarioKokemon;
 
 /// <summary>
-///     Liga Kokemon: new tournaments and tournament calendar changes. Generates modified copies of the game's
+///     Calendario Kokemon: new tournaments and tournament calendar changes. Generates modified copies of the game's
 ///     tables (mf2\data\obj\btl_*.obj and the calendar copy in farm_etc*.obj) and the Reloaded redirector serves
 ///     them. The same tables also live inside taikai_en.flk: "Rivales Kokemon" picks them up from generado\ when it
 ///     generates that file.

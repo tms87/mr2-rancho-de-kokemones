@@ -1,7 +1,7 @@
 using Reloaded.Mod.Interfaces;
-using MRDX.Custom.LigaKokemon.Configuration;
+using MRDX.Custom.CalendarioKokemon.Configuration;
 
-namespace MRDX.Custom.LigaKokemon.Template.Configuration;
+namespace MRDX.Custom.CalendarioKokemon.Template.Configuration;
 
 /// <summary>
 /// Creates the various different configurations used by the mod.

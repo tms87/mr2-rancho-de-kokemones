@@ -59,6 +59,11 @@ foreach ($c in $compilados) {
     Robocopy-Ok $c.FullName (Join-Path $archivos "Reloaded-II\Mods\$($c.Name)") @('/MIR')
     Write-Host "   OK  $($c.Name)" -ForegroundColor Green
 }
+# Mods propios que cambiaron de nombre: la base todavia los trae con el nombre viejo.
+foreach ($viejo in @('MRDX.Custom.LigaKokemon')) {
+    $dir = Join-Path $archivos "Reloaded-II\Mods\$viejo"
+    if (Test-Path $dir) { Remove-Item $dir -Recurse -Force; Write-Host "   --  $viejo (renombrado)" -ForegroundColor DarkGray }
+}
 Copy-Item (Join-Path $raiz 'instalador\Instalar.bat') $paquete -Force
 Copy-Item (Join-Path $raiz 'instalador\LEEME.txt') $paquete -Force
 Robocopy-Ok (Join-Path $raiz 'instalador\archivos') $archivos @('/E')
