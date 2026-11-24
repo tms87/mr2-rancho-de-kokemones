@@ -37,7 +37,7 @@ public static class Croma
         double Fuerza(double r, double g, double b) => verde ? g - Math.Max(r, b) : Math.Min(r, b) - g;
         var kFuerza = Fuerza(kr, kg, kb);
         // Algunas IA dan un magenta "apagado" (p. ej. 213,45,133 o 205,74,122): alcanza con que se distinga del logo.
-        if (kFuerza < 30) throw new InvalidDataException("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)");
+        if (kFuerza < 30) throw new InvalidDataException(T("el fondo no es magenta ni verde liso (mirá las esquinas de la imagen)", "the background is not flat magenta or green (check the image corners)"));
 
         var salida = new int[n];
         for (var i = 0; i < n; i++)

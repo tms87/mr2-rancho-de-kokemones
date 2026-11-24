@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
@@ -12,11 +12,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- T("español", "english"): textos en el idioma de la liga. -->
+    <!-- T("espaÃ±ol", "english"): textos en el idioma de la liga. -->
     <Using Include="EditorKokemon.Textos" Static="true" />
   </ItemGroup>
   <ItemGroup>
     <!-- Lee WebP (muchas IA guardan WebP con extension .png), PNG, JPG, etc. -->
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
 </Project>

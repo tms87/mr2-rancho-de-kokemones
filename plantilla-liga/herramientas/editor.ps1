@@ -57,7 +57,10 @@ if (-not (Test-Path $exe) -or (Get-Item $exe).LastWriteTime -lt $ultimo) {
 # Los que suben los jugadores ("MR2 Subir exportados"): issues abiertos con la etiqueta "exportado" en el repositorio
 # de la liga. Se bajan a recibidos\ ("#numero titulo.json"); los de issues ya cerrados se borran.
 $recibidos = Join-Path $raiz 'recibidos'
-try {
+if (-not (Test-Path (Join-Path $raiz '.git'))) {
+    Write-Host (T 'Esta carpeta no es un repositorio de git: no se bajan exportados recibidos ni se puede subir.' 'This folder is not a git repository: received exports are not downloaded and uploading is not possible.') -ForegroundColor Yellow
+}
+else { try {
     $url = (git -C $raiz remote get-url origin) 2>$null
     if ($url -match 'github\.com[:/]([^/]+/[^/]+?)(\.git)?$') {
         $repo = $Matches[1]
@@ -81,6 +84,6 @@ try {
 }
 catch {
     Write-Host (T "No se pudieron bajar los exportados recibidos: $($_.Exception.Message)" "Could not download the received exports: $($_.Exception.Message)") -ForegroundColor Yellow
-}
+} }
 
 Start-Process $exe -ArgumentList "`"$raiz`""

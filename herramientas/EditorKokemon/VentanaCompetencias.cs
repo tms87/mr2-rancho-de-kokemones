@@ -20,14 +20,14 @@ public sealed partial class Ventana
     private readonly List<MonstruoGuardado> _cParticipantes = [];
     private bool _cCargando;
     private const int MaxParticipantes = 20;
-    private const string SinRango = "Sin rango";
+    private static string SinRango => T("Sin rango", "No rank");
 
     /// <summary>Lo que dice cada archivo de competencia.</summary>
     private sealed record GrabacionCompetencia(int Ranura, string Nombre, int Numero, int Participantes, string? Rango, string Reglas);
 
     private TabPage PestanaCompetencias()
     {
-        var p = new TabPage("Competencias");
+        var p = new TabPage(T("Competencias", "Competitions")) { Name = "competencias" };
         var t = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 3, Padding = new Padding(6) };
         t.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 52));
         t.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48));
@@ -38,8 +38,10 @@ public sealed partial class Ventana
         t.Controls.Add(new Label
         {
             AutoSize = true, MaximumSize = new Size(1120, 0),
-            Text = "Elegí una ranura (8 a 14), poné el nombre de la competencia y agregá participantes desde una grabación o los " +
-                   "exportados (hasta 20 por grabación). Subila con la pestaña \"Subir a GitHub\"."
+            Text = T("Elegí una ranura (8 a 14), poné el nombre de la competencia y agregá participantes desde una grabación o los " +
+                   "exportados (hasta 20 por grabación). Subila con la pestaña \"Subir a GitHub\".",
+                   "Pick a slot (8 to 14), enter the competition name and add participants from a save or the exports " +
+                   "(up to 20 per recording). Upload it with the \"Upload to GitHub\" tab.")
         }, 0, 0);
         t.SetColumnSpan(t.GetControlFromPosition(0, 0)!, 2);
 
@@ -50,12 +52,12 @@ public sealed partial class Ventana
         izq.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         var f1 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = false };
-        f1.Controls.Add(new Label { Text = "Leer de:", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
+        f1.Controls.Add(new Label { Text = T("Leer de:", "Read from:"), AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
         _cRanura = Combo([]);
         _cRanura.Width = 330;
         f1.Controls.Add(_cRanura);
-        f1.Controls.Add(Boton("Leer", LeerGrabacion));
-        f1.Controls.Add(Boton("Actualizar lista", CargarRanuras));
+        f1.Controls.Add(Boton(T("Leer", "Read"), LeerGrabacion));
+        f1.Controls.Add(Boton(T("Actualizar lista", "Refresh list"), CargarRanuras));
         izq.Controls.Add(f1);
 
         _cGrabacion = GrillaMonstruos();
@@ -63,7 +65,7 @@ public sealed partial class Ventana
         izq.Controls.Add(_cGrabacion);
 
         var f2 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill };
-        f2.Controls.Add(Boton("Agregar como participante →", () => AgregarParticipante(_cGrabacion.CurrentRow?.Tag as MonstruoGuardado)));
+        f2.Controls.Add(Boton(T("Agregar como participante →", "Add as participant →"), () => AgregarParticipante(_cGrabacion.CurrentRow?.Tag as MonstruoGuardado)));
         izq.Controls.Add(f2);
         t.Controls.Add(izq, 0, 1);
 
@@ -74,7 +76,7 @@ public sealed partial class Ventana
         der.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         var g1 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = false };
-        g1.Controls.Add(new Label { Text = "Ranura:", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
+        g1.Controls.Add(new Label { Text = T("Ranura:", "Slot:"), AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
         _cSlot = Combo([]);
         _cSlot.Width = 330;
         _cSlot.SelectedIndexChanged += (_, _) => { if (!_cCargando) CargarCompetencia(); };
@@ -82,44 +84,44 @@ public sealed partial class Ventana
         der.Controls.Add(g1);
 
         var g2 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = false };
-        g2.Controls.Add(new Label { Text = "Competencia:", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
+        g2.Controls.Add(new Label { Text = T("Competencia:", "Competition:"), AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
         _cNombre = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown, Width = 200 };
         _cNombre.SelectionChangeCommitted += (_, _) => BeginInvoke((Action)CompletarDesdeCompetencia);
         _cNombre.Leave += (_, _) => CompletarDesdeCompetencia();
         g2.Controls.Add(_cNombre);
-        g2.Controls.Add(new Label { Text = "Grabación #", AutoSize = true, Margin = new Padding(9, 8, 0, 3) });
+        g2.Controls.Add(new Label { Text = T("Grabación #", "Recording #"), AutoSize = true, Margin = new Padding(9, 8, 0, 3) });
         _cNumero = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 45 };
         g2.Controls.Add(_cNumero);
         der.Controls.Add(g2);
 
         var g3 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, WrapContents = false };
-        g3.Controls.Add(new Label { Text = "Rango:", AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
+        g3.Controls.Add(new Label { Text = T("Rango:", "Rank:"), AutoSize = true, Margin = new Padding(3, 8, 3, 3) });
         _cRango = Combo(new object[] { SinRango }.Concat(Datos.Rangos).ToArray());
         _cRango.Width = 90;
         g3.Controls.Add(_cRango);
-        g3.Controls.Add(new Label { Text = "Entrenador:", AutoSize = true, Margin = new Padding(9, 8, 3, 3) });
+        g3.Controls.Add(new Label { Text = T("Entrenador:", "Trainer:"), AutoSize = true, Margin = new Padding(9, 8, 3, 3) });
         _cEntrenador = new TextBox { Width = 90, MaxLength = 8, Text = "Kokemon" };
         g3.Controls.Add(_cEntrenador);
         der.Controls.Add(g3);
 
-        der.Controls.Add(new Label { Text = "Reglas (texto libre, para los jugadores):", AutoSize = true, Margin = new Padding(3, 6, 3, 0) });
+        der.Controls.Add(new Label { Text = T("Reglas (texto libre, para los jugadores):", "Rules (free text, for the players):"), AutoSize = true, Margin = new Padding(3, 6, 3, 0) });
         _cReglas = new TextBox { Multiline = true, ScrollBars = ScrollBars.Vertical, Height = 70, Dock = DockStyle.Fill, AcceptsReturn = true };
         der.Controls.Add(_cReglas);
 
-        var participantes = new GroupBox { Text = "Participantes", Dock = DockStyle.Fill, Padding = new Padding(3) };
+        var participantes = new GroupBox { Text = T("Participantes", "Participants"), Dock = DockStyle.Fill, Padding = new Padding(3) };
         _cCompetencia = GrillaMonstruos();
         participantes.Controls.Add(_cCompetencia);
         der.Controls.Add(participantes);
 
         var g4 = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill };
-        g4.Controls.Add(Boton("Quitar", () =>
+        g4.Controls.Add(Boton(T("Quitar", "Remove"), () =>
         {
             if (_cCompetencia.CurrentRow?.Tag is MonstruoGuardado m) { _cParticipantes.Remove(m); MostrarCompetencia(); }
         }));
         g4.Controls.Add(Boton("▲", () => Mover(-1)));
         g4.Controls.Add(Boton("▼", () => Mover(1)));
-        g4.Controls.Add(Boton("Guardar grabación", GuardarCompetencia));
-        g4.Controls.Add(Boton("Borrar grabación", BorrarCompetencia));
+        g4.Controls.Add(Boton(T("Guardar grabación", "Save recording"), GuardarCompetencia));
+        g4.Controls.Add(Boton(T("Borrar grabación", "Delete recording"), BorrarCompetencia));
         der.Controls.Add(g4);
         t.Controls.Add(der, 1, 1);
 
@@ -158,10 +160,10 @@ public sealed partial class Ventana
         {
             var fecha = Grabaciones.Fecha(r);
             if (fecha == null) continue;
-            _cRanura.Items.Add($"{(r == 15 ? "Auto" : $"Ranura {r}")} — {fecha}");
+            _cRanura.Items.Add($"{(r == 15 ? "Auto" : T($"Ranura {r}", $"Slot {r}"))} — {fecha}");
         }
 
-        if (_cRanura.Items.Count == 1) _cAviso.Text = $"No se encontraron grabaciones en {Grabaciones.Carpeta}.";
+        if (_cRanura.Items.Count == 1) _cAviso.Text = T($"No se encontraron grabaciones en {Grabaciones.Carpeta}.", $"No saves found in {Grabaciones.Carpeta}.");
         _cRanura.SelectedIndex = actual != null && _cRanura.Items.Contains(actual) ? _cRanura.Items.IndexOf(actual) : Math.Min(1, _cRanura.Items.Count - 1);
     }
 
@@ -172,14 +174,14 @@ public sealed partial class Ventana
         return int.TryParse(s.Split(' ', '—')[1], out var n) ? n : 0;
     }
 
-    private const string ExportadosCompletos = "Exportados (con datos completos)";
+    private static string ExportadosCompletos => T("Exportados (con datos completos)", "Exports (with full data)");
 
     /// <summary>Exportados con el monstruo completo en "crudo" (los del formato viejo no lo traen y no aparecen).</summary>
     private void LeerExportadosCompletos()
     {
         _cGrabacion.Rows.Clear();
         var dir = _carpetaExportados.Text;
-        if (!Directory.Exists(dir)) { _cAviso.Text = $"No existe la carpeta de exportados {dir}."; return; }
+        if (!Directory.Exists(dir)) { _cAviso.Text = T($"No existe la carpeta de exportados {dir}.", $"The exports folder {dir} doesn't exist."); return; }
         foreach (var r in _repo.LeerRivales(dir).OrderByDescending(r => Path.GetFileName(r.Archivo)))
         {
             if (r.Datos["crudo"] == null) continue;
@@ -190,7 +192,7 @@ public sealed partial class Ventana
             _cGrabacion.Rows[i].Tag = m;
         }
 
-        _cAviso.Text = $"{_cGrabacion.Rows.Count} exportados con datos completos (los más nuevos primero).";
+        _cAviso.Text = T($"{_cGrabacion.Rows.Count} exportados con datos completos (los más nuevos primero).", $"{_cGrabacion.Rows.Count} exports with full data (newest first).");
     }
 
     private void LeerGrabacion()
@@ -210,11 +212,11 @@ public sealed partial class Ventana
                 _cGrabacion.Rows[i].Tag = mm;
             }
 
-            _cAviso.Text = $"{_cGrabacion.Rows.Count} monstruos en la grabación (rancho y congelador).";
+            _cAviso.Text = T($"{_cGrabacion.Rows.Count} monstruos en la grabación (rancho y congelador).", $"{_cGrabacion.Rows.Count} monsters in the save (ranch and freezer).");
         }
         catch (Exception e)
         {
-            _cAviso.Text = "No se pudo leer la grabación: " + e.Message;
+            _cAviso.Text = T("No se pudo leer la grabación: ", "Could not read the save: ") + e.Message;
         }
     }
 
@@ -241,7 +243,7 @@ public sealed partial class Ventana
             }
             catch
             {
-                res.Add(new GrabacionCompetencia(r, "(archivo inválido)", 1, 0, null, ""));
+                res.Add(new GrabacionCompetencia(r, T("(archivo inválido)", "(invalid file)"), 1, 0, null, ""));
             }
         }
 
@@ -260,8 +262,8 @@ public sealed partial class Ventana
         {
             var g = grabaciones.FirstOrDefault(x => x.Ranura == r);
             _cSlot.Items.Add(g == null
-                ? $"{r} — (libre)"
-                : $"{r} — {g.Nombre} #{g.Numero}{(g.Rango != null ? $" (rango {g.Rango})" : "")}, {g.Participantes} participantes");
+                ? T($"{r} — (libre)", $"{r} — (free)")
+                : $"{r} — {g.Nombre} #{g.Numero}{(g.Rango != null ? T($" (rango {g.Rango})", $" (rank {g.Rango})") : "")}, {g.Participantes} {T("participantes", "participants")}");
         }
 
         _cSlot.SelectedIndex = ranura - 8;
@@ -311,7 +313,7 @@ public sealed partial class Ventana
             }
             catch (Exception e)
             {
-                _cAviso.Text = $"No se pudo leer {Path.GetFileName(ArchivoCompetencia)}: {e.Message}";
+                _cAviso.Text = T($"No se pudo leer {Path.GetFileName(ArchivoCompetencia)}: {e.Message}", $"Could not read {Path.GetFileName(ArchivoCompetencia)}: {e.Message}");
             }
         }
 
@@ -328,20 +330,21 @@ public sealed partial class Ventana
         }
 
         _cAviso.Text = File.Exists(ArchivoCompetencia)
-            ? $"Ranura {SlotElegido}: {_cParticipantes.Count} de {MaxParticipantes} participantes."
-            : $"Ranura {SlotElegido}: libre ({_cParticipantes.Count} de {MaxParticipantes} participantes, sin guardar).";
+            ? T($"Ranura {SlotElegido}: {_cParticipantes.Count} de {MaxParticipantes} participantes.", $"Slot {SlotElegido}: {_cParticipantes.Count} of {MaxParticipantes} participants.")
+            : T($"Ranura {SlotElegido}: libre ({_cParticipantes.Count} de {MaxParticipantes} participantes, sin guardar).", $"Slot {SlotElegido}: free ({_cParticipantes.Count} of {MaxParticipantes} participants, not saved).");
     }
 
     private void AgregarParticipante(MonstruoGuardado? m)
     {
-        if (m == null) { _cAviso.Text = "Primero leé una grabación o los exportados y elegí un monstruo."; return; }
+        if (m == null) { _cAviso.Text = T("Primero leé una grabación o los exportados y elegí un monstruo.", "First read a save or the exports and pick a monster."); return; }
         if (_cParticipantes.Count >= MaxParticipantes)
         {
-            _cAviso.Text = $"La grabación ya tiene {MaxParticipantes} participantes (el congelador no tiene más lugar): armá otra grabación de la misma competencia en una ranura libre.";
+            _cAviso.Text = T($"La grabación ya tiene {MaxParticipantes} participantes (el congelador no tiene más lugar): armá otra grabación de la misma competencia en una ranura libre.",
+                $"The recording already has {MaxParticipantes} participants (the freezer has no more room): make another recording of the same competition in a free slot.");
             return;
         }
 
-        if (_cParticipantes.Any(x => x.Crudo.AsSpan().SequenceEqual(m.Crudo))) { _cAviso.Text = $"{m.Nombre} ya es participante de esta grabación."; return; }
+        if (_cParticipantes.Any(x => x.Crudo.AsSpan().SequenceEqual(m.Crudo))) { _cAviso.Text = T($"{m.Nombre} ya es participante de esta grabación.", $"{m.Nombre} is already a participant in this recording."); return; }
         _cParticipantes.Add(m);
         MostrarCompetencia();
     }
@@ -359,14 +362,14 @@ public sealed partial class Ventana
 
     private void GuardarCompetencia()
     {
-        if (_cParticipantes.Count == 0) { _cAviso.Text = "La grabación no tiene participantes."; return; }
+        if (_cParticipantes.Count == 0) { _cAviso.Text = T("La grabación no tiene participantes.", "The recording has no participants."); return; }
         var nombre = _cNombre.Text.Trim();
-        if (nombre == "") { _cAviso.Text = "Poné el nombre de la competencia."; return; }
+        if (nombre == "") { _cAviso.Text = T("Poné el nombre de la competencia.", "Enter the competition name."); return; }
         var numero = (int)_cNumero.Value;
         var otras = LeerGrabacionesCompetencia().Where(g => g.Ranura != SlotElegido && MismaCompetencia(g.Nombre, nombre)).ToList();
         if (otras.FirstOrDefault(g => g.Numero == numero) is { } repetida)
         {
-            _cAviso.Text = $"\"{nombre}\" ya tiene una grabación #{numero} en la ranura {repetida.Ranura}: cambiá el número.";
+            _cAviso.Text = T($"\"{nombre}\" ya tiene una grabación #{numero} en la ranura {repetida.Ranura}: cambiá el número.", $"\"{nombre}\" already has a recording #{numero} in slot {repetida.Ranura}: change the number.");
             return;
         }
 
@@ -404,10 +407,10 @@ public sealed partial class Ventana
         _cNombre.Text = nombre;
         CargarListaCompetencias(SlotElegido);
         MostrarCompetencia();
-        MessageBox.Show($"Guardada la grabación #{numero} de \"{nombre}\" en la ranura {SlotElegido} ({_cParticipantes.Count} participantes)." +
-                        (actualizadas > 0 ? $"\nTambién se actualizaron el rango y las reglas en sus otras {actualizadas} grabaciones." : "") +
-                        "\n\nSubila con la pestaña \"Subir a GitHub\". En el juego, la ranura se arma después del primer guardado de la sesión.",
-            "Competencias");
+        MessageBox.Show(T($"Guardada la grabación #{numero} de \"{nombre}\" en la ranura {SlotElegido} ({_cParticipantes.Count} participantes).", $"Saved recording #{numero} of \"{nombre}\" in slot {SlotElegido} ({_cParticipantes.Count} participants).") +
+                        (actualizadas > 0 ? T($"\nTambién se actualizaron el rango y las reglas en sus otras {actualizadas} grabaciones.", $"\nThe rank and rules were also updated in its other {actualizadas} recordings.") : "") +
+                        T("\n\nSubila con la pestaña \"Subir a GitHub\". En el juego, la ranura se arma después del primer guardado de la sesión.", "\n\nUpload it with the \"Upload to GitHub\" tab. In the game, the slot is built after the session's first save."),
+            T("Competencias", "Competitions"));
     }
 
     private static void Escribir(string archivo, JsonObject o) =>
@@ -416,8 +419,8 @@ public sealed partial class Ventana
     private void BorrarCompetencia()
     {
         if (!File.Exists(ArchivoCompetencia)) { CargarCompetencia(); return; }
-        if (MessageBox.Show($"¿Borrar la grabación de competencia de la ranura {SlotElegido}? La ranura queda como está en el juego " +
-                            "(no se borra la grabación del juego).", "Competencias", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+        if (MessageBox.Show(T($"¿Borrar la grabación de competencia de la ranura {SlotElegido}? La ranura queda como está en el juego (no se borra la grabación del juego).",
+                            $"Delete the competition recording in slot {SlotElegido}? The slot stays as it is in the game (the game's save is not deleted)."), T("Competencias", "Competitions"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
         File.Delete(ArchivoCompetencia);
         CargarListaCompetencias(SlotElegido);
         CargarCompetencia();
