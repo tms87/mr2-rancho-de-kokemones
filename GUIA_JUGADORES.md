@@ -1,6 +1,6 @@
 <!-- Guía para jugadores: qué cambia en el juego, en formato Discord (un mensaje por sección, separadas por ---). -->
 
-# 🐾 Rancho de Kokemones v1.4.3
+# 🐾 Rancho de Kokemones v0.4.3
 Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que cambia **para el jugador**, para que nadie tenga ventaja por saber cómo funciona por dentro.
 
 ## 💻 Instalación

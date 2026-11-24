@@ -57,7 +57,7 @@ Subir los cambios a `main` alcanza: los jugadores los reciben la próxima vez qu
 ### Publicar una versión
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File herramientaspublicar.ps1 -Version 1.3.0 -Publicar
+powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0 -Publicar
 ```
 Toma como base el zip de la última versión publicada (Reloaded-II y los mods de la comunidad no están en el repositorio) y reemplaza los mods propios, el instalador y el lanzador.
 

@@ -52,7 +52,7 @@ foreach ($f in Get-ChildItem $exportados -Filter '*.json' | Sort-Object Name -De
     }
     catch { }
 }
-if ($lista.Count -eq 0) { Salir 'No hay exportados para subir. Se crean al guardar en el juego (con la version 1.4.0 o mas nueva).' }
+if ($lista.Count -eq 0) { Salir 'No hay exportados para subir. Se crean al guardar en el juego (con la version 0.4.0 o mas nueva).' }
 
 # Elegir: ventana con la lista (si no esta disponible, por numero en la consola).
 $elegidos = @()

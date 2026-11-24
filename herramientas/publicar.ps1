@@ -1,7 +1,7 @@
 # Arma (y opcionalmente publica) una version del paquete "MR2 Rancho de Kokemones".
 #
-#   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.3.0              (solo arma el zip)
-#   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.3.0 -Publicar    (y crea la version en GitHub)
+#   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0              (solo arma el zip)
+#   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0 -Publicar    (y crea la version en GitHub)
 #
 # Toma como base el zip de la ultima version publicada (Reloaded-II, MRDX Base Mod, More Monsters, etc. no estan
 # en el repositorio) y reemplaza lo propio: los mods compilados de mods\, el instalador y el lanzador.
@@ -16,7 +16,7 @@ $ErrorActionPreference = 'Stop'
 $Repo = 'tms87/mr2-rancho-de-kokemones'
 $raiz = Split-Path $PSScriptRoot
 $tmp = Join-Path $env:TEMP 'rk-publicar'
-[version]$Version | Out-Null # valida el formato (1.3.0)
+[version]$Version | Out-Null # valida el formato (1.0.0)
 
 function Paso($t) { Write-Host ''; Write-Host "== $t ==" -ForegroundColor Cyan }
 function Robocopy-Ok($desde, $hacia, [string[]]$extra) {

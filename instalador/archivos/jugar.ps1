@@ -94,8 +94,8 @@ function Actualizar($juego) {
     try {
         $rel = Invoke-RestMethod "https://api.github.com/repos/$Repo/releases/latest" -Headers $h -TimeoutSec 8
         $remota = [version]($rel.tag_name.TrimStart('v'))
-        # 1.3.0 es la primera version con este lanzador: nunca se 'actualiza' a una anterior.
-        if ($remota -gt $local -and $remota -ge [version]'1.3.0') {
+        # 0.3.0 es la primera version con este lanzador: nunca se 'actualiza' a una anterior.
+        if ($remota -gt $local -and $remota -ge [version]'0.3.0') {
             $zipInfo = $rel.assets | Where-Object { $_.name -like '*.zip' } | Select-Object -First 1
             if ($zipInfo) {
                 Estado "Actualizando a la version $remota...`nBajando el paquete ($([math]::Round($zipInfo.size / 1MB)) MB)."
