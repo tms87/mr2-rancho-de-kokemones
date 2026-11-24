@@ -8,6 +8,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 {{?liga.repo}}2. Descargá el instalador de la liga de acá: <https://github.com/{{liga.repo}}/releases/latest>
 {{?!liga.repo}}2. Pedile el instalador de la liga al administrador.
 3. Descomprimilo y hacé doble clic en **`Setup.bat`**.
+ - Te pregunta en qué carpeta instalarlo; con Enter usa la que propone.
  - Busca el juego solo; si no lo encuentra, te pide que elijas `MF2.exe`.
  - Si te falta algo que el juego necesita (.NET 9 o Visual C++), lo instala.
  - Baja Reloaded-II y los mods de la comunidad (unos 55 MB) de sus páginas oficiales.

@@ -54,6 +54,29 @@ try {
     Write-Host (T "Liga: $($liga.nombre)" "League: $($liga.nombre)") -ForegroundColor White
     Write-Host "Rancho de Kokemones $($liga.rancho.version) ($($liga.rancho.repo))"
 
+    # ---- Carpeta de instalacion: Enter acepta la propuesta (la de una instalacion anterior, o la de siempre) ----
+    if (-not $Destino) {
+        $propuesta = Join-Path $env:LOCALAPPDATA 'MR2-Rancho-de-Kokemones'
+        try {
+            $anterior = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MR2RanchoDeKokemones' -ErrorAction Stop).InstallLocation
+            if ($anterior -and (Test-Path (Join-Path $anterior 'jugar.ps1'))) { $propuesta = $anterior }
+        }
+        catch { }
+        Write-Host ''
+        $respuesta = ''
+        if (-not [Console]::IsInputRedirected) {
+            $respuesta = (Read-Host (T "Carpeta de instalacion (Enter = $propuesta)" "Installation folder (Enter = $propuesta)")).Trim().Trim('"')
+        }
+        $Destino = if ($respuesta) { $respuesta } else { $propuesta }
+        $Destino = [IO.Path]::GetFullPath([Environment]::ExpandEnvironmentVariables($Destino))
+        # Una carpeta con otras cosas (por ejemplo D:\Juegos): se instala en una subcarpeta propia.
+        $esInstalacion = Test-Path (Join-Path $Destino 'liga-instalada.json')
+        if ((Test-Path $Destino) -and -not $esInstalacion -and (Get-ChildItem $Destino -Force | Select-Object -First 1)) {
+            $Destino = Join-Path $Destino 'MR2-Rancho-de-Kokemones'
+        }
+        Write-Host (T "Se instala en: $Destino" "Installing to: $Destino") -ForegroundColor White
+    }
+
     # ---- El paquete del Rancho que usa la liga ----
     $tmp = Join-Path $env:TEMP 'rancho-kokemones-instalador'
     if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
