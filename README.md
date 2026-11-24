@@ -1,10 +1,10 @@
 # Rancho de Kokemones
 
-Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), pensados para jugar en grupo: cada grupo de amigos arma su propia **Liga Kokemon**, con sus rivales, torneos, competencias y reglas. / Mods for **Monster Rancher 2** from *Monster Rancher 1 & 2 DX* (Steam), made to play as a group: each group of friends sets up its own **Kokemon League**, with its rivals, tournaments, competitions and rules.
-
-- [Español](#español) · [English](#english)
+<h2 align="center"><a href="#español">🇦🇷 Español</a> &nbsp;·&nbsp; <a href="#english">🇬🇧 English</a></h2>
 
 ## Español
+
+Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), pensados para jugar en grupo: cada grupo de amigos arma su propia **Liga Kokemon**, con sus rivales, torneos, competencias y reglas.
 
 ### Cómo funciona
 
@@ -51,6 +51,8 @@ powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.
 Las ligas que fijen esa versión (`rancho.version` en su `liga.json`) la instalan en el próximo arranque de cada jugador. **Fork:** una liga puede apuntar a tu fork con `rancho.repo`. Para probar el editor con tu copia local: `Editor Kokemon.bat -RanchoLocal <carpeta del Rancho>`.
 
 ## English
+
+Mods for **Monster Rancher 2** from *Monster Rancher 1 & 2 DX* (Steam), made to play as a group: each group of friends sets up its own **Kokemon League**, with its rivals, tournaments, competitions and rules.
 
 ### How it works
 
