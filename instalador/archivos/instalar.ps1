@@ -11,7 +11,9 @@ param(
     # usa la liga ya instalada.
     [string]$LigaRepo,
     [string]$LigaRama = 'main',
-    [string]$LigaLocal
+    [string]$LigaLocal,
+    # Pruebas: no crea ni toca accesos directos.
+    [switch]$SinAccesos
 )
 
 $ErrorActionPreference = 'Stop'
@@ -226,10 +228,10 @@ $plantilla = Get-Content (Join-Path $origen 'plantillas\AppConfig.json') -Raw
 [IO.File]::WriteAllText($app, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
 Ok 'Reloaded-II configurado (sin consola).'
 
-# Una liga local es solo para pruebas: no se tocan los accesos directos del escritorio.
-if ($liga.local) {
+# Pruebas: no se tocan los accesos directos del escritorio.
+if ($SinAccesos) {
     Write-Host ''
-    Write-Host "Listo (liga local, sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" -ForegroundColor Green
+    Write-Host "Listo (sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" -ForegroundColor Green
     exit 0
 }
 

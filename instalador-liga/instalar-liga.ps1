@@ -7,11 +7,14 @@
 #
 # El repositorio de la liga tiene que ser publico: los jugadores lo leen sin credenciales.
 #
-# Pruebas: -LigaLocal (carpeta con la liga) y -PaqueteLocal (zip del Rancho) evitan GitHub.
+# Liga local (no recomendada: no se actualiza sola ni permite subir exportados): -LigaLocal con la carpeta de la liga,
+# o liga-origen.json con { "local": "C:\\carpeta" }.
+# Pruebas: -PaqueteLocal (zip del Rancho) evita GitHub y -SinAccesos no toca los accesos directos.
 param(
     [string]$LigaLocal,
     [string]$PaqueteLocal,
-    [string]$Destino
+    [string]$Destino,
+    [switch]$SinAccesos
 )
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -22,13 +25,16 @@ function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red
 
 try {
     # ---- La liga ----
+    if (-not $LigaLocal) {
+        $origen = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-origen.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
+        if ($origen.local) { $LigaLocal = $origen.local }
+    }
     if ($LigaLocal) {
         $ligaTexto = [IO.File]::ReadAllText((Join-Path $LigaLocal 'liga.json'), [Text.Encoding]::UTF8)
         $ligaArgs = @("-LigaLocal", (Resolve-Path $LigaLocal).Path)
     }
     else {
-        $origen = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-origen.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json
-        $rama = if ($origen.rama) { $origen.rama } else { 'main' }
+        $rama =if ($origen.rama) { $origen.rama } else { 'main' }
         try {
             $ligaTexto = (Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$rama/liga.json" -UseBasicParsing `
                 -Headers @{ 'User-Agent' = $h['User-Agent'] } -TimeoutSec 20).Content
@@ -65,7 +71,8 @@ catch { Fallar $_.Exception.Message }
 
 # ---- Instalador del Rancho (en esta misma ventana) ----
 $extra = @()
-if ($Destino) { $extra = @("-Destino", $Destino) }
+if ($Destino) { $extra += @("-Destino", $Destino) }
+if ($SinAccesos) { $extra += '-SinAccesos' }
 & powershell -NoProfile -ExecutionPolicy Bypass -File $inst.FullName @ligaArgs @extra
 $codigo = $LASTEXITCODE
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
