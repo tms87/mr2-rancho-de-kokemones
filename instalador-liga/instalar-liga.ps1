@@ -24,7 +24,9 @@ $h = @{ 'User-Agent' = 'rancho-de-kokemones-instalador'; 'Accept' = 'application
 # Idioma de los mensajes: el de liga-origen.json hasta leer la liga, despues el de la liga.
 $Idioma = 'es'
 try { $Idioma = ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-origen.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).idioma } catch { }
-function T([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
+# Los mensajes del instalador salen en los dos idiomas (no hace falta elegir). T1: solo el idioma de la liga (accesos directos).
+function T([string]$es, [string]$en) { if ($es -eq $en) { return $es }; if (($es.Length + $en.Length) -le 90) { "$es / $en" } else { "$es`n       $en" } }
+function T1([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
 function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red; exit 1 }
 
 try {

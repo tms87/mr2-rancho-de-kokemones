@@ -22,8 +22,10 @@ $ErrorActionPreference = 'Stop'
 $origen = $PSScriptRoot
 
 if (-not $Idioma) { try { $Idioma = ([IO.File]::ReadAllText((Join-Path $Destino 'liga.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).idioma } catch { } }
-function T([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
-function Titulo($t) { Write-Host ''; Write-Host "== $t ==" -ForegroundColor Cyan }
+# Los mensajes del instalador salen en los dos idiomas (no hace falta elegir). T1: solo el idioma de la liga (accesos directos).
+function T([string]$es, [string]$en) { if ($es -eq $en) { return $es }; if (($es.Length + $en.Length) -le 90) { "$es / $en" } else { "$es`n       $en" } }
+function T1([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
+function Titulo($t) { Write-Host ''; Write-Host "== $($t -replace '\r?\n\s+', ' / ') ==" -ForegroundColor Cyan }
 function Ok($t) { Write-Host "   OK  $t" -ForegroundColor Green }
 function Aviso($t) { Write-Host "   !   $t" -ForegroundColor Yellow }
 function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red; exit 1 }
@@ -201,7 +203,7 @@ Ok ($(if ($actualizacion) { T "Actualizado en $Destino" "Updated in $Destino" } 
 # ------------------------------------------------------------------
 Titulo (T '3b. Reloaded-II, mods de terceros y datos de la liga' '3b. Reloaded-II, third-party mods and league data')
 # ------------------------------------------------------------------
-Write-Host (T '   La primera vez se bajan unos 55 MB (Reloaded-II y More Monsters).' '   The first time about 55 MB are downloaded (Reloaded-II and More Monsters).')
+Write-Host ('       ' + (T 'La primera vez se bajan unos 55 MB (Reloaded-II y More Monsters).' 'The first time about 55 MB are downloaded (Reloaded-II and More Monsters).'))
 try { & (Join-Path $Destino 'sincronizar.ps1') -Instalacion $Destino -Estricto }
 catch { Fallar (T "No se pudo preparar la instalacion: $($_.Exception.Message)" "Could not prepare the installation: $($_.Exception.Message)") }
 Ok (T 'Reloaded-II, mods, datos y configuracion de la liga al dia.' 'Reloaded-II, mods, league data and settings up to date.')
@@ -246,14 +248,14 @@ New-Item -ItemType Directory -Force $exportados | Out-Null
 $accesos = @(
     @{ Nombre = 'MR2 Rancho de Kokemones'; Destino = $powershell; Icono = 'icono.ico'
        Argumentos = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
-       Descripcion = (T 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)' 'MR2 Rancho de Kokemones (Monster Rancher 2 DX with mods)') },
+       Descripcion = (T1 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)' 'MR2 Rancho de Kokemones (Monster Rancher 2 DX with mods)') },
     @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
        Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
-       Descripcion = (T 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
+       Descripcion = (T1 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
     @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
-       Descripcion = (T 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') },
+       Descripcion = (T1 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') },
     @{ Nombre = 'Rivales Kokemon - Exportados'; Destino = $exportados; Icono = $null; Argumentos = ''
-       Descripcion = (T 'Monstruos exportados al guardar (para compartirlos)' 'Monsters exported when saving (to share them)') }
+       Descripcion = (T1 'Monstruos exportados al guardar (para compartirlos)' 'Monsters exported when saving (to share them)') }
 )
 function Crear-Accesos([string]$carpeta) {
     New-Item -ItemType Directory -Force $carpeta | Out-Null
