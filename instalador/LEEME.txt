@@ -27,13 +27,16 @@ QUE CAMBIA EN EL JUEGO
   naturaleza varian en cada creacion. Incluye las especies nuevas de More Monsters; sus
   discos "More Monsters" tambien son aleatorios.
 - Santuario: 5 monstruos por año. Al entrar te dice cuantos quedan.
-- Items Kokemon: Nuts Oil y Magic Banana pierden efecto si se usan seguido y pueden acortar la vida;
+- Items Kokemon: Nuts Oil y Magic Banana bajan menos el cansancio si se usan seguido (acostumbramiento
+  antifatiga) y pueden acortar la vida;
   la Magic Banana suma o resta segun su resultado, otros objetos desintoxican (Quack Doll, Rock Candy,
   Irritater, Griever, Half Eaten, Gold y Silver Peach), la vida que restan Paradoxine, Troron, Larox
   y Manseitan pasa a ser al azar, y los de torneo (Teromeamn, Kasseitan, Nageel) ya no restan vida
   pero intoxican, igual que Troron y Paradoxine (detalle en la Kokedex).
   Baul de disc chips: al empezar cada mes los disc chips pasan a un baul y no ocupan lugar;
   en el laboratorio aparecen todos (uno de cada tipo) para combinar.
+  Comida del mes: 3 comidas nuevas (Squash, Chicken y Green Tea) con gustos propios de cada raza;
+  el Green Tea desintoxica si se toma todos los meses (detalle en la Kokedex).
 - Batallas automaticas: en los torneos tu monstruo pelea solo. Aunque elijas controlarlo,
   la batalla es automatica. El modo VS no cambia.
 - Rivales Kokemon: cada semana, los rivales de los torneos de liga (E a S) salen sorteados
@@ -52,7 +55,7 @@ QUE CAMBIA EN EL JUEGO
   Cada año nuevo se hace una copia en las ranuras 1 a 7, rotando.
   (Para ver las copias, carga la ranura correspondiente.)
 - Ranuras 8 a 14: grabaciones de competencia para el modo VS (se arman solas con los campeones,
-  entrenador "Kokemon"). Si cargas una, lo que guardes queda en esa ranura: el autoguardado no se toca.
+  entrenador "Kokemon"). Si cargas una, no se guarda nada (tampoco el autoguardado): queda igual.
 - Exportados: al empezar cada año (con la copia anual), tus monstruos se exportan en un archivo
   "fecha Entrenador.json".
   Para compartirlos usa "MR2 Subir exportados" (la primera vez pide la clave que te pasan por privado).

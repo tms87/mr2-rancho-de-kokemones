@@ -29,6 +29,14 @@ public class Config : Configurable<Config>
     public bool IronmanMode { get; set; }
 
     [Category("2. Guardado")]
+    [DisplayName("Guardar en grabaciones de competencia")]
+    [Description("Desactivado: con una grabación de competencia (ranuras 8 a 14) cargada no se guarda nada, ni el\n" +
+                 "autoguardado; al volver a cargarla está igual. Activado: lo que se guarda queda en esa misma ranura\n" +
+                 "(sirve para mover una grabación de prueba a otra fecha). Dejarlo desactivado.")]
+    [DefaultValue(false)]
+    public bool SaveCompetitions { get; set; }
+
+    [Category("2. Guardado")]
     [DisplayName("Copia anual")]
     [Description("El primer autoguardado de cada año nuevo (enero) se copia en la siguiente ranura de copias,\n" +
                  "rotando y sobrescribiendo la más antigua. Requiere el autoguardado activado en el juego.")]

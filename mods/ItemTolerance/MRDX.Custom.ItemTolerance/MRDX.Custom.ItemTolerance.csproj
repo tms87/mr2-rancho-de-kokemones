@@ -31,6 +31,11 @@
       <HintPath>..\lib\MRDX.Base.Mod.Interfaces.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <!-- Interfaz del mod "reloaded.universal.redirector" (1.2.9): la aporta ese mod en tiempo de ejecución. -->
+    <Reference Include="Reloaded.Universal.Redirector.Interfaces">
+      <HintPath>..\lib\Reloaded.Universal.Redirector.Interfaces.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
 </Project>

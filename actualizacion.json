@@ -1,6 +1,6 @@
 {
   "_comentario": "Lo lee el lanzador (jugar.ps1) cada vez que se abre el juego. Las carpetas y archivos listados se bajan de la rama main si cambiaron, sin publicar una version nueva. paqueteMinimo: version del paquete que necesitan estos datos (si el jugador tiene una mas vieja, primero se actualiza el paquete).",
-  "paqueteMinimo": "1.4.0",
+  "paqueteMinimo": "1.4.3",
   "datos": [
     {
       "repo": "mods/Leagues/MRDX.Custom.Leagues/Liga",

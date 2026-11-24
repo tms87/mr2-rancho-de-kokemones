@@ -1,6 +1,6 @@
 <!-- Guía para jugadores: qué cambia en el juego, en formato Discord (un mensaje por sección, separadas por ---). -->
 
-# 🐾 Rancho de Kokemones v1.4.2
+# 🐾 Rancho de Kokemones v1.4.3
 Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que cambia **para el jugador**, para que nadie tenga ventaja por saber cómo funciona por dentro.
 
 ## 💻 Instalación
@@ -41,7 +41,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 - Elijas la ranura que elijas, **siempre se guarda en la ranura Auto**, así que no se puede guardar antes de algo y recargar.
 - Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.
 - **Las copias anuales son las que se usan para competir en el modo versus.**
-- **Las ranuras 8 a 14 son para competencias:** se arman solas con los campeones de cada competencia (en el congelador, con el entrenador "Kokemon") después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, lo que guardes queda en esa misma ranura: tu partida (Auto) no se toca.
+- **Las ranuras 8 a 14 son para competencias:** se arman solas con los campeones de cada competencia (en el congelador, con el entrenador "Kokemon") después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, no se guarda nada (tampoco el autoguardado): la próxima vez que la cargues está igual, y tu partida (Auto) no se toca.
 
 ---
 
@@ -52,13 +52,13 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 ---
 
 ## 🥜 Nuts Oil y Magic Banana
-- **Pierden efecto si los das semanas seguidas:** cada semana seguida suma un punto de tolerancia, y cada punto le quita un 10 % al efecto (100 % → 90 % → 80 %…), hasta un mínimo del 40 %. Se recupera de a un punto por cada semana que no los das.
-- **La tolerancia es compartida:** alternar Nuts Oil y Magic Banana no sirve para esquivarla.
+- **Bajan menos el cansancio si los das semanas seguidas:** la Nuts Oil suma **2 puntos** de **acostumbramiento antifatiga** y cada semana baja 1 (también la semana en que se la das), así que cada semana seguida suma 1 en neto. Cada punto le quita un 10 % a lo que baja el cansancio (100 % → 90 % → 80 %…), hasta un mínimo del 40 %. El estrés no cambia. Se recupera de a un punto por cada semana que no los das: descansar es la forma de recuperarlo.
+- **El acostumbramiento es compartido:** alternar Nuts Oil y Magic Banana no sirve para esquivarlo.
 - **Son items tóxicos y pueden acortar la vida:** cada uno que come el monstruo le suma 1 de **intoxicación**, que se acumula en toda su vida. Cada vez que sube, hay un riesgo de perder 1 semana de vida: 2 % por punto de intoxicación, con un tope de 50 %.
 - **La Magic Banana tiene 3 resultados al azar**, y cada uno cuenta distinto:
  - **No baja el cansancio** (miedo +10, mimo +10, forma −1, estrés −10): **desintoxica**, le resta 1 a la intoxicación.
- - **Cansancio −15** (miedo −10, mimo +10, estrés −5): suma 1 a la intoxicación y tira el riesgo de vida, pero **no suma tolerancia**.
- - **Cansancio −30** (miedo −10, mimo −10, forma +1): como una Nuts Oil, suma a la intoxicación, tira el riesgo y suma tolerancia.
+ - **Cansancio −15** (miedo −10, mimo +10, estrés −5): suma 1 a la intoxicación y tira el riesgo de vida, y suma **1 punto** de acostumbramiento antifatiga: con la bajada semanal, queda igual (si ya hay, igual baja menos el cansancio).
+ - **Cansancio −30** (miedo −10, mimo −10, forma +1): como una Nuts Oil, suma a la intoxicación, tira el riesgo y suma 2 puntos de acostumbramiento antifatiga.
 
 ---
 
@@ -76,6 +76,17 @@ Sus efectos normales siguen igual; el mod les agrega esto:
 - **Más items tóxicos:** suman intoxicación, y **cada punto tira por separado** el riesgo de perder 1 semana de vida (si suma 6, son 6 tiradas).
  - **Teromeamn**, **Kasseitan** y **Nageel** (torneos): **ya no restan vida**; suman de 1 a 5 de intoxicación al azar.
  - **Troron:** suma 2. **Paradoxine:** suma 6.
+
+---
+
+## 🍵 Comida del mes: comidas nuevas
+En el menú de la comida del mes (semana 1 de cada mes) aparecen 3 comidas nuevas. Sus valores no dependen del gusto del juego: **le gusta** suma estrés −2 y mimo +2, y **no le gusta** suma estrés +3, miedo +1 y mimo −3.
+- **Squash** (500 G): miedo −2, mimo −2, forma +5, cansancio −10.
+- **Chicken** (250 G): estrés −2, miedo −2, mimo +2, forma +2. Baja 1 el acostumbramiento antifatiga.
+- **Green Tea** (800 G): estrés −10, miedo −2, forma −2. **Desintoxica por constancia**: cada mes que lo toma suma 1 a la racha (máximo 10) y cada mes sin tomarlo baja 1. Al tomarlo tira para bajar 1 de intoxicación: 15 % por punto de racha, hasta 75 %.
+- **Ayudan a la racha:** el **Chicken** la mantiene si está en 2 o menos, y el **Fish** la deja en 1 si está en 0 o 1. Los dos tiran siempre con la racha que tenga (si es 1 o más), aunque no la mantengan.
+- **Meat:** como comida del mes, baja 2 el acostumbramiento antifatiga.
+- **Gustos:** cada raza tiene los suyos (están en la Kokedex, en la tabla de preferencias). Si lo que le gusta o no al monstruo en la pantalla de estado es la comida o el objeto que se le parece (Mango, Meat, Colart Tea), manda eso.
 
 ---
 

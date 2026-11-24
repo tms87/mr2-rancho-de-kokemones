@@ -105,6 +105,7 @@ public partial class Mod : ModBase
         hooks.AddHook<H_ItemUsed>(OnItemUsed).ContinueWith(r => _hookItemUsed = r.Result);
         hooks.AddHook<FrameStart>(OnFrameStart).ContinueWith(r => _hookFrameStart = r.Result);
         InstalarBaul(context.Hooks);
+        InstalarComidaNueva(context.Hooks);
         _game.OnWeekChange += OnWeekChange;
         _game.OnMonsterChanged += OnMonsterChanged;
 
@@ -115,7 +116,7 @@ public partial class Mod : ModBase
         }
         else
         {
-            Log("No se pudo enganchar el guardado: la tolerancia no se conservará entre sesiones.", Color.Orange);
+            Log("No se pudo enganchar el guardado: el acostumbramiento antifatiga no se conservará entre sesiones.", Color.Orange);
         }
 
         Log("Cargado.", Color.LightGreen);
@@ -189,7 +190,7 @@ public partial class Mod : ModBase
     {
         try
         {
-            if (_config.PruebaObjetos && EsRanuraCompetencia) RegistrarCambioPrueba(change);
+            if ((_config.PruebaObjetos || _config.PruebaComidas > 0 || _comidaReloj.IsRunning && _comidaReloj.ElapsedMilliseconds < 20000) && EsRanuraCompetencia) RegistrarCambioPrueba(change);
             var prev = change.Previous;
             var cur = change.Current;
             var c = new Change
@@ -254,6 +255,12 @@ public partial class Mod : ModBase
             PrepararPrueba();
         }
 
+        if (_pruebaComidaReloj.IsRunning && _pruebaComidaReloj.ElapsedMilliseconds > 3000)
+        {
+            _pruebaComidaReloj.Reset();
+            PrepararPruebaComidas();
+        }
+
         var p = _pending;
         if (p != null && p.Clock.ElapsedMilliseconds > EffectWindowMs)
         {
@@ -275,13 +282,9 @@ public partial class Mod : ModBase
         else if (p.Effect is { } ef && (ef.Desintoxicar != null || ef.IntoxMax > 0) && !p.Counted)
         {
             p.Counted = true;
-            // Se aplica si lo aceptó: se vio algún efecto o el juego lo marca como comido esta semana.
+            // Siempre se aplica: el objeto solo se cuenta si se dio sin haber comido en la semana, y en ese caso el
+            // monstruo nunca lo rechaza (aunque no se vea efecto, p. ej. Quack Doll con cansancio y estrés en 0).
             var m = _game!.Monster;
-            if (!p.AnyEffect && !m.ItemUsed)
-            {
-                if (_config.VerboseLog) Log($"{p.ItemName}: no lo aceptó; no cambia la intoxicación.");
-                return;
-            }
 
             var rec = _data.For(m);
             if (ef.IntoxMax > 0)
@@ -300,8 +303,13 @@ public partial class Mod : ModBase
                     : $"{p.ItemName}: esta vez no desintoxicó (intoxicación: {antes}).",
                 rec.LifetimeCount < antes ? Color.LightGreen : null);
         }
-        else if (!p.Counted && p.Kind != Tipo.Otro && _config.VerboseLog)
-            Log($"{p.ItemName}: no se detectó ningún efecto (¿lo rechazó o ya estaba a 0?). No cuenta.");
+        else if (!p.Counted && p.Kind == Tipo.NutsOil)
+        {
+            // La comió aunque no se vea efecto (cansancio en 0, miedo y mimo al tope): cuenta igual.
+            p.Counted = true;
+            if (_config.VerboseLog) Log($"{p.ItemName}: sin efecto visible, pero la comió: cuenta igual.");
+            Count(p, _game!.Monster, sumaTolerancia: true);
+        }
     }
 
     /// <summary>
@@ -390,14 +398,15 @@ public partial class Mod : ModBase
             if (target != c.CurLife) m.Lifespan = target;
             Log(ef.SinVida
                     ? $"{p.ItemName}: no resta vida (sin mod: -{c.PrevLife - c.CurLife})."
-                    : $"{p.ItemName}: vida {c.PrevLife}→{target} (-{resta}{(ef.MitadVida ? " (la mitad)" : "")} de {ef.VidaMin}-{ef.VidaMax}, vida consumida {vivida:P0}; sin mod: -{c.PrevLife - c.CurLife}).",
+                    : $"{p.ItemName}: vida {c.PrevLife}→{target} (-{resta} de {ef.VidaMin}-{ef.VidaMax}, vida consumida {vivida:P0}; sin mod: -{c.PrevLife - c.CurLife}).",
                 Color.Yellow);
         }
 
         // Los demás objetos no tienen tolerancia: el recorte y la cuenta son solo de Nuts Oil y Magic Banana.
         if (p.Kind == Tipo.Otro) return;
 
-        // 1) Efecto decreciente: solo se recorta la parte beneficiosa (bajada de cansancio y estrés).
+        // 1) Efecto decreciente: solo se recorta la bajada de cansancio. La de estrés no se toca (solo se anota, para
+        //    reconocer el resultado de la Magic Banana).
         if (!p.FatigueDone && c.CurFatigue < c.PrevFatigue)
         {
             p.FatigueDone = true;
@@ -407,19 +416,15 @@ public partial class Mod : ModBase
             var target = (byte)(c.PrevFatigue - (int)Math.Round(reduction * p.Mult));
             if (target != c.CurFatigue) m.Fatigue = target;
             Log($"{p.ItemName}: cansancio {c.PrevFatigue}→{target} (sin mod: {c.CurFatigue}), " +
-                $"efecto al {p.Mult * 100:0}% (tolerancia {p.ToleranceBefore}).", Color.Yellow);
+                $"efecto al {p.Mult * 100:0}% (acostumbramiento antifatiga {p.ToleranceBefore}).", Color.Yellow);
         }
 
         if (!p.StressDone && c.CurStress < c.PrevStress)
         {
             p.StressDone = true;
             any = true;
-            var reduction = c.PrevStress - c.CurStress;
-            p.StressDrop = reduction;
-            var target = (sbyte)(c.PrevStress - (int)Math.Round(reduction * p.Mult));
-            if (target != c.CurStress) m.Stress = target;
-            Log($"{p.ItemName}: estrés {c.PrevStress}→{target} (sin mod: {c.CurStress}), " +
-                $"efecto al {p.Mult * 100:0}% (tolerancia {p.ToleranceBefore}).", Color.Yellow);
+            p.StressDrop = c.PrevStress - c.CurStress;
+            if (_config.VerboseLog) Log($"{p.ItemName}: estrés {c.PrevStress}→{c.CurStress} (sin cambios por acostumbramiento antifatiga).");
         }
 
         // La Nuts Oil cuenta (tolerancia y riesgo) con cualquier efecto. La Magic Banana se resuelve al cerrar el
@@ -436,16 +441,15 @@ public partial class Mod : ModBase
         var rec = _data.For(m);
         var key = KeyFor(p.Kind);
 
-        // 2) Subir tolerancia y marcar uso esta semana.
-        if (sumaTolerancia)
-        {
-            rec.Tolerance[key] = Math.Min(_config.MaxTolerance, p.ToleranceBefore + 1);
-            rec.UsedThisWeek.Add(key);
-        }
+        // 2) Subir el acostumbramiento antifatiga: +2 las bajadas fuertes (Nuts Oil, -30 de la Magic Banana), +1 el -15.
+        //    Cada semana baja 1 siempre (OnWeekChange), así que en neto: +1 y 0. El tope se aplica después de esa
+        //    bajada: acá se deja pasar 1 de más.
+        var suma = sumaTolerancia ? 2 : 1;
+        rec.Tolerance[key] = Math.Min(_config.MaxTolerance + 1, p.ToleranceBefore + suma);
 
         // 3) Riesgo de acortar la vida, creciente con la intoxicación acumulada en la vida del monstruo.
         Intoxicar(p.ItemName, m, rec);
-        if (_config.VerboseLog) Log($"Tolerancia ahora: {rec.Tolerance.GetValueOrDefault(key)}.");
+        if (_config.VerboseLog) Log($"Acostumbramiento antifatiga ahora: {rec.Tolerance.GetValueOrDefault(key)}.");
     }
 
     /// <summary>
@@ -492,7 +496,6 @@ public partial class Mod : ModBase
         // Mes nuevo: los disc chips del inventario pasan al baúl.
         if (EmpiezaMes(change.OldWeek, change.NewWeek))
         {
-            if (_config.PruebaObjetos && EsRanuraCompetencia) PruebaInicioDeMes();
             try
             {
                 GuardarChipsEnBaul();
@@ -509,15 +512,12 @@ public partial class Mod : ModBase
         var rec = _data.For(m);
         foreach (var key in rec.Tolerance.Keys.ToList())
         {
-            // La semana en que se usó el objeto no cuenta como recuperación.
-            var recover = weeks - (rec.UsedThisWeek.Contains(key) ? 1 : 0);
-            rec.Tolerance[key] = Math.Max(0, rec.Tolerance[key] - recover);
+            // Baja 1 por semana, siempre (también la semana en que se usó el objeto).
+            rec.Tolerance[key] = Math.Clamp(rec.Tolerance[key] - weeks, 0, _config.MaxTolerance);
         }
 
-        rec.UsedThisWeek.Clear();
-
         if (_config.VerboseLog && rec.Tolerance.Count > 0)
-            Log("Nueva semana. Tolerancia: " +
+            Log("Nueva semana. Acostumbramiento antifatiga: " +
                 string.Join(", ", rec.Tolerance.Select(kv => $"{KeyName(kv.Key)}={kv.Value}")));
     }
 
@@ -536,8 +536,8 @@ public partial class Mod : ModBase
             _pending = null;
             Log($"Datos cargados para la ranura {_slot}.");
             if (_config.DevolverBaul) _devolverReloj.Restart(); // cuando el juego ya puso el inventario en memoria
-            _pruebaLista = false;
             if (_config.PruebaObjetos && EsRanuraCompetencia) _pruebaReloj.Restart();
+            if (_config.PruebaComidas > 0 && EsRanuraCompetencia) _pruebaComidaReloj.Restart();
         }
         catch (Exception e)
         {
@@ -548,6 +548,14 @@ public partial class Mod : ModBase
 
     private void OnSave(ISaveFileEntry file)
     {
+        // Con una grabación de competencia cargada (ranuras 8 a 14) Ranch Rules descarta el guardado: los datos del
+        // mod tampoco se guardan, así la grabación vuelve a cargar como estaba.
+        if (EsRanuraCompetencia)
+        {
+            if (_config.VerboseLog) Log($"Grabación de competencia (ranura {_slot}): datos sin guardar.");
+            return;
+        }
+
         try
         {
             _slot = file.Slot;
@@ -569,7 +577,7 @@ public partial class Mod : ModBase
         return null;
     }
 
-    private string KeyName(int key) => key == SharedKey ? "compartida" : NameOf(key) ?? key.ToString();
+    private string KeyName(int key) => key == SharedKey ? "compartido" : NameOf(key) ?? key.ToString();
 
     private void Log(string msg, Color? color = null) =>
         _logger.WriteLine($"[{_modConfig.ModId}] {msg}", color ?? Color.White);

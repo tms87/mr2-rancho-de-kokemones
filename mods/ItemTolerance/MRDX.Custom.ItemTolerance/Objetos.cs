@@ -23,8 +23,7 @@ public sealed record Efecto(
     int VidaMax = 0,
     int IntoxMin = 0,
     int IntoxMax = 0,
-    bool SinVida = false,
-    bool MitadVida = false)
+    bool SinVida = false)
 {
     /// <summary>Reemplaza la vida que resta el juego (por un rango al azar, o por nada si <see cref="SinVida" />).</summary>
     public bool CambiaVida => VidaMax > 0 || SinVida;
@@ -42,9 +41,7 @@ public sealed record Efecto(
         if (SinVida) return 0;
         var a = Math.Pow(2, 1 - 2 * Math.Clamp(vivida, 0, 1));
         var x = Math.Pow(r.NextDouble(), a);
-        var resta = Math.Min(VidaMax, VidaMin + (int)Math.Floor(x * (VidaMax - VidaMin + 1)));
-        // Mitad: la misma tirada, partida a la mitad (redondeo hacia arriba en los .5).
-        return MitadVida ? (int)Math.Round(resta / 2.0, MidpointRounding.AwayFromZero) : resta;
+        return Math.Min(VidaMax, VidaMin + (int)Math.Floor(x * (VidaMax - VidaMin + 1)));
     }
 }
 
@@ -63,9 +60,9 @@ public static class Objetos
         ["goldpeach"] = new("Gold Peach", (r, c) => c - Porcentaje(c, r.Next(2) == 0 ? 50 : 100)),
         ["silverpeach"] = new("Silver Peach", (r, c) => c - Porcentaje(c, r.Next(2) == 0 ? 25 : 50)),
 
-        // Entrenamiento: la mitad de la resta del rango, y suman intoxicación fija.
-        ["paradoxine"] = new("Paradoxine", VidaMin: 5, VidaMax: 20, MitadVida: true, IntoxMin: 6, IntoxMax: 6),
-        ["troron"] = new("Troron", VidaMin: 2, VidaMax: 6, MitadVida: true, IntoxMin: 2, IntoxMax: 2),
+        // Entrenamiento: restan menos vida y suman intoxicación fija.
+        ["paradoxine"] = new("Paradoxine", VidaMin: 3, VidaMax: 10, IntoxMin: 6, IntoxMax: 6),
+        ["troron"] = new("Troron", VidaMin: 1, VidaMax: 3, IntoxMin: 2, IntoxMax: 2),
         ["larox"] = new("Larox", VidaMin: 0, VidaMax: 4),
         ["manseitan"] = new("Manseitan", VidaMin: 0, VidaMax: 5),
         // Torneo: no restan vida; suman intoxicación al azar entre 1 y 5.

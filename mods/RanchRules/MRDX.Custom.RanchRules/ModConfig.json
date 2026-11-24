@@ -2,7 +2,7 @@
     "ModId": "MRDX.Custom.RanchRules",
     "ModName": "Reglas del rancho",
     "ModAuthor": "",
-    "ModVersion": "1.7.1",
+    "ModVersion": "1.8.0",
     "ModDescription": "Santuario limitado a 5 monstruos por año, modo ironman opcional (todo se guarda en el autoguardado) y copia automática cada año nuevo en ranuras de respaldo.",
     "ModDll": "MRDX.Custom.RanchRules.dll",
     "ModIcon": "Preview.png",

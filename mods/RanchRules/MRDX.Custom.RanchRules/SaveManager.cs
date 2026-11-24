@@ -70,6 +70,10 @@ public sealed partial class SaveManager
     private int _loadedCompetition = -1;
     private readonly Stopwatch _lastWrite = Stopwatch.StartNew();
 
+    // Guardado bloqueado en curso (grabación de competencia cargada): ranura que el juego iba a escribir.
+    private int _blockedSlot = -1;
+    private readonly Stopwatch _blockedClock = new();
+
     // Copia anual pendiente (se hace unos segundos después, cuando todos los mods ya guardaron sus datos).
     private int _pendingYear;
     private readonly Stopwatch _pendingClock = new();
@@ -116,8 +120,25 @@ public sealed partial class SaveManager
 
                 if (idx >= 0 && len - idx == SlotPrefix.Length + 2 && int.TryParse(text.AsSpan(len - 2, 2), out var slot))
                 {
-                    // Con una grabación de competencia cargada, todo guardado (también el autoguardado) va a esa misma
-                    // ranura: nunca pisa el autoguardado del jugador. Si no, con el ironman todo va al autoguardado.
+                    // Con una grabación de competencia cargada no se guarda nada (tampoco el autoguardado): el juego
+                    // escribe en NUL (se descarta) y no se registra la huella, así ninguna ranura cambia y la grabación
+                    // queda como la armó el mod.
+                    if (CompetitionBlocked)
+                    {
+                        p[0] = (byte)'N';
+                        p[1] = (byte)'U';
+                        p[2] = (byte)'L';
+                        p[3] = 0;
+                        if (_blockedSlot != slot)
+                            _log($"Grabación de competencia cargada: guardado bloqueado (ranura {slot + 1}); no se escribe nada.",
+                                Color.Orange);
+                        _blockedSlot = slot;
+                        _blockedClock.Restart();
+                        return _hookOpen!.OriginalFunction(path, mode, extra);
+                    }
+
+                    // Grabación de competencia con guardado permitido: todo va a esa misma ranura (nunca al
+                    // autoguardado del jugador). Si no, ironman: todo va al autoguardado.
                     var target = _loadedCompetition >= 0 ? _loadedCompetition : AutosaveIndex;
                     if (slot != target)
                     {
@@ -127,7 +148,7 @@ public sealed partial class SaveManager
                         p[len - 1] = (byte)digits[1];
                         if (_redirectedFrom != slot)
                             _log(_loadedCompetition >= 0
-                                ? $"Grabación de competencia cargada: el guardado en la ranura {slot + 1} se escribe en la {target + 1} (no en el autoguardado)."
+                                ? $"Grabación de competencia cargada: el guardado en la ranura {slot + 1} se escribe en la {target + 1}."
                                 : $"Guardado manual en la ranura {slot + 1} → se escribe en la 15 (autoguardado).", null);
                         _redirectedFrom = slot;
                         _redirectTo = target;
@@ -148,6 +169,14 @@ public sealed partial class SaveManager
     {
         _indexObject = self;
 
+        // Guardado bloqueado (grabación de competencia): no se registra la huella; la ranura sigue como estaba.
+        if (_blockedSlot >= 0 && slot == _blockedSlot && _blockedClock.ElapsedMilliseconds < 30_000)
+        {
+            _blockedSlot = -1;
+            if (_config().VerboseLog) _log($"Ranura {slot + 1}: huella sin registrar (guardado bloqueado).", null);
+            return 1;
+        }
+
         if (_redirectedFrom >= 0 && slot == _redirectedFrom && _redirectClock.ElapsedMilliseconds < 30_000)
             slot = _redirectTo;
         _redirectedFrom = -1;
@@ -156,7 +185,8 @@ public sealed partial class SaveManager
 
         try
         {
-            if ((ret & 0xFF) != 0 && slot == AutosaveIndex) CheckNewYear();
+            if ((ret & 0xFF) != 0 && _loadedCompetition >= 0 && slot == _loadedCompetition) AdoptCompetitionSave(slot);
+            else if ((ret & 0xFF) != 0 && slot == AutosaveIndex) CheckNewYear();
             else if ((ret & 0xFF) != 0 && _config().VerboseLog) _log($"Ranura {slot + 1} guardada.", null);
         }
         catch (Exception e)
@@ -207,8 +237,11 @@ public sealed partial class SaveManager
             ? loaded
             : -1;
         if (_loadedCompetition >= 0)
-            _log($"Grabación de competencia (ranura {_loadedCompetition + 1}): los guardados quedan en esa ranura, " +
-                 "el autoguardado no se toca.", Color.Orange);
+            _log(CompetitionBlocked
+                ? $"Grabación de competencia (ranura {_loadedCompetition + 1}): no se guarda nada (tampoco el autoguardado); " +
+                  "al volver a cargarla está igual."
+                : $"Grabación de competencia (ranura {_loadedCompetition + 1}): guardado permitido; lo que guardes queda en esta ranura.",
+                Color.Orange);
 
         // El año de referencia es el de la partida cargada (también si es una copia de un año anterior).
         var data = ReadOrNull(entry.Filename);

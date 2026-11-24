@@ -7,3 +7,6 @@ build/
 clave-issues.txt
 recibidos/
 clave-issues.dat
+
+# Archivos del juego (modelos .itm y texturas extraídas): no se suben
+modelos_items/

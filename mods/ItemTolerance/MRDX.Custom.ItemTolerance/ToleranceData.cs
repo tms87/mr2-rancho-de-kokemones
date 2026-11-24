@@ -9,11 +9,14 @@ public class MonsterRecord
     /// <summary>Puntos de tolerancia por clave (ID de objeto, o SharedKey si es compartida).</summary>
     public Dictionary<int, int> Tolerance { get; set; } = new();
 
-    /// <summary>Claves usadas durante la semana en curso (no se descuentan al pasar la semana).</summary>
-    public HashSet<int> UsedThisWeek { get; set; } = new();
-
     /// <summary>Nuts Oil + Magic Banana ingeridas en toda la vida del monstruo.</summary>
     public int LifetimeCount { get; set; }
+
+    /// <summary>Por comida nueva (nombre): meses seguidos que la comió (sube la chance de desintoxicar).</summary>
+    public Dictionary<string, int> ConstanciaComidas { get; set; } = new();
+
+    /// <summary>Por comida nueva (nombre): último mes (del contador de semanas) en que la comió.</summary>
+    public Dictionary<string, long> MesesComidas { get; set; } = new();
 }
 
 /// <summary>Datos de una ranura de guardado: un registro por monstruo.</summary>

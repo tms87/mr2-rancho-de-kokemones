@@ -39,6 +39,9 @@ public sealed partial class SaveManager
 
     private string CompetitionStatePath => Path.Combine(_stateDir, "competencias.json");
 
+    /// <summary>Hay una grabación de competencia cargada y no se permite guardarla: no se guarda nada.</summary>
+    public bool CompetitionBlocked => _loadedCompetition >= 0 && !_config().SaveCompetitions;
+
     /// <summary>Partida nueva o vuelta al título: ya no hay una grabación de competencia cargada.</summary>
     public void OnNewGame() => _loadedCompetition = -1;
 
@@ -70,6 +73,26 @@ public sealed partial class SaveManager
         {
             _log($"Error armando las grabaciones de competencia: {e.Message}", Color.Red);
         }
+    }
+
+    /// <summary>
+    ///     Guardado permitido en una grabación de competencia: la ranura nueva pasa a ser la "armada" (se anota su huella),
+    ///     así en la sesión siguiente no se regenera desde el autoguardado. Se rearma solo si cambia su JSON.
+    /// </summary>
+    private void AdoptCompetitionSave(int fileIndex)
+    {
+        var json = CompetitionFile(fileIndex + 1);
+        var dest = SlotFile(fileIndex);
+        if (json == null || !File.Exists(dest)) return;
+        var state = CompetitionState.Load(CompetitionStatePath);
+        state.Slots[(fileIndex + 1).ToString("00")] = new CompetitionDone
+        {
+            Json = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(json))),
+            Save = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(dest)))
+        };
+        state.Save(CompetitionStatePath);
+        _log($"Ranura {fileIndex + 1}: grabación de competencia guardada; queda así (no se rearma salvo que cambie su JSON).",
+            Color.LightGreen);
     }
 
     private void BuildCompetitions()

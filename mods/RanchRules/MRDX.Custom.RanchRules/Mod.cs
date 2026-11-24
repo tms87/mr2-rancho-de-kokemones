@@ -287,6 +287,10 @@ public class Mod : ModBase
 
     private void OnSave(ISaveFileEntry file)
     {
+        // Grabación de competencia cargada: el guardado se descarta (SaveManager), así que tampoco se guardan los datos
+        // del santuario ni cambia la ranura.
+        if (_saves is { CompetitionBlocked: true }) return;
+
         // Con el modo ironman, el juego informa la ranura 15 (la que realmente escribió).
         _slot = file.Slot;
         if (_newGameUnconfirmed)

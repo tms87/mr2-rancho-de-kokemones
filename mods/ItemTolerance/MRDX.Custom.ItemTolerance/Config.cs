@@ -5,33 +5,33 @@ namespace MRDX.Custom.ItemTolerance.Configuration;
 
 public class Config : Configurable<Config>
 {
-    // ---------------- Tolerancia (efecto decreciente) ----------------
+    // ---------------- Acostumbramiento antifatiga (efecto decreciente) ----------------
 
-    [Category("1. Tolerancia")]
+    [Category("1. Acostumbramiento antifatiga")]
     [DisplayName("Pérdida de efecto por semana de uso (%)")]
-    [Description("Cuánto efecto pierde el objeto por cada punto de tolerancia acumulado.\n" +
+    [Description("Cuánto pierde la bajada de cansancio por cada punto de acostumbramiento antifatiga (el estrés no cambia).\n" +
                  "Con 10: 100% → 90% → 80% → 70%...\n" +
-                 "Cada semana seguida que se da el objeto suma 1 punto de tolerancia.")]
+                 "Nuts Oil y -30 de la Magic Banana suman 2 puntos; el -15, 1. Cada semana baja 1 (también la de uso).")]
     [DefaultValue(10)]
     public int ToleranceStepPercent { get; set; } = 10;
 
-    [Category("1. Tolerancia")]
+    [Category("1. Acostumbramiento antifatiga")]
     [DisplayName("Efecto mínimo (%)")]
-    [Description("El efecto nunca baja de este porcentaje, por mucha tolerancia que haya.")]
+    [Description("El efecto nunca baja de este porcentaje, por mucho acostumbramiento que haya.")]
     [DefaultValue(40)]
     public int MinimumEffectPercent { get; set; } = 40;
 
-    [Category("1. Tolerancia")]
-    [DisplayName("Tolerancia máxima")]
-    [Description("Máximo de puntos de tolerancia acumulables. Cada semana sin dar el objeto resta 1 punto,\n" +
+    [Category("1. Acostumbramiento antifatiga")]
+    [DisplayName("Acostumbramiento máximo")]
+    [Description("Máximo de puntos de acostumbramiento antifatiga acumulables. Cada semana resta 1 punto,\n" +
                  "así que se tarda en volver a la normalidad tantas semanas como se acumularon.")]
     [DefaultValue(10)]
     public int MaxTolerance { get; set; } = 10;
 
-    [Category("1. Tolerancia")]
-    [DisplayName("Tolerancia compartida")]
-    [Description("Si está activado, la Nuts Oil y la Magic Banana comparten la misma tolerancia\n" +
-                 "(alternarlas no sirve para esquivarla). Si está desactivado, cada objeto lleva la suya.")]
+    [Category("1. Acostumbramiento antifatiga")]
+    [DisplayName("Acostumbramiento compartido")]
+    [Description("Si está activado, la Nuts Oil y la Magic Banana comparten el mismo acostumbramiento antifatiga\n" +
+                 "(alternarlas no sirve para esquivarlo). Si está desactivado, cada objeto lleva el suyo.")]
     [DefaultValue(true)]
     public bool SharedTolerance { get; set; } = true;
 
@@ -48,7 +48,7 @@ public class Config : Configurable<Config>
     [Description("Se suma por cada punto de intoxicación acumulado en la vida del monstruo (incluyendo el nuevo).\n" +
                  "Con 2: con 1 punto 2%, con 5 10%, con 10 20%... Cada punto que suma un item tóxico tira por separado.\n" +
                  "Items tóxicos: Nuts Oil y Magic Banana (1), Teromeamn, Kasseitan y Nageel (1 a 5), Troron (2) y Paradoxine (6).\n" +
-                 "Magic Banana: si no baja el cansancio desintoxica 1; con -15 suma 1 sin tolerancia; con -30 suma 1 y tolerancia.")]
+                 "Magic Banana: si no baja el cansancio desintoxica 1; con -15 suma 1 y 1 de acostumbramiento; con -30 suma 1 y 2 de acostumbramiento.")]
     [DefaultValue(2)]
     public int LifespanChancePerItemPercent { get; set; } = 2;
 
@@ -99,6 +99,16 @@ public class Config : Configurable<Config>
                  "Solo para pruebas: dejarlo desactivado.")]
     [DefaultValue(false)]
     public bool PruebaObjetos { get; set; }
+
+    [Category("4. Diagnóstico")]
+    [DisplayName("Preparar prueba de comidas (escenario)")]
+    [Description("Al cargar una grabación de competencia (ranuras 8 a 14), deja al monstruo listo para probar las\n" +
+                 "comidas del mes (estrés, miedo y mimo 50, forma 0, cansancio 60) y registra cada cambio. Escenarios:\n" +
+                 "1: base (racha del Green Tea 0, intoxicación 5).  2: racha 4.  3: racha 2.  4: racha 1.\n" +
+                 "5: racha 4 con 2 meses salteados (queda en 2).  6: acostumbramiento antifatiga 6 (Meat y Chicken).\n" +
+                 "0: desactivado. Solo para pruebas: dejarlo en 0.")]
+    [DefaultValue(0)]
+    public int PruebaComidas { get; set; }
 }
 
 public class ConfiguratorMixin : ConfiguratorMixinBase
