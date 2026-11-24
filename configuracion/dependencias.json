@@ -1,0 +1,102 @@
+{
+  "_comentario": "Programas y mods de terceros que el instalador baja de su origen (no se redistribuyen en el paquete del Rancho). Cada uno con version fija, link y huella SHA-256: si no coincide, no se instala. La liga puede cambiar el link de cualquiera en liga.json (\"dependencias\": { \"<id>\": { \"url\": \"...\" } }) si el original deja de existir; la huella tiene que seguir coincidiendo, salvo que la liga tambien la cambie. 7zr.exe (7-Zip) se usa solo para abrir los .7z.",
+  "version": 1,
+  "herramientas": [
+    {
+      "id": "7zr",
+      "nombre": "7-Zip (descompresor 7zr)",
+      "version": "26.06",
+      "url": "https://github.com/ip7z/7zip/releases/download/26.06/7zr.exe",
+      "sha256": "e80db2dad715a6c5adabe292d31ed54e11f4e9b99ca349827b50573b175891bc",
+      "tamano": 600064,
+      "pagina": "https://www.7-zip.org",
+      "licencia": "LGPL-2.1 (7-Zip)"
+    }
+  ],
+  "dependencias": [
+    {
+      "id": "Reloaded-II",
+      "tipo": "reloaded",
+      "nombre": "Reloaded-II",
+      "version": "1.31.0",
+      "url": "https://github.com/Reloaded-Project/Reloaded-II/releases/download/1.31.0/Release.zip",
+      "sha256": "c893da3ba8596d9266826bd5ca8aacd25fe3b53d09314324ab65c7b618a05f8c",
+      "tamano": 25039658,
+      "formato": "zip",
+      "pagina": "https://github.com/Reloaded-Project/Reloaded-II",
+      "licencia": "GPL-3.0"
+    },
+    {
+      "id": "reloaded.sharedlib.hooks",
+      "tipo": "mod",
+      "nombre": "Reloaded Hooks (shared library)",
+      "version": "1.16.3",
+      "url": "https://github.com/Sewer56/Reloaded.SharedLib.Hooks.ReloadedII/releases/download/1.16.3/Reloaded.Hooks.ReloadedII1.16.3.7z",
+      "sha256": "",
+      "tamano": 741775,
+      "formato": "7z",
+      "pagina": "https://github.com/Sewer56/Reloaded.SharedLib.Hooks.ReloadedII",
+      "licencia": "LGPL-3.0"
+    },
+    {
+      "id": "reloaded.universal.redirector",
+      "tipo": "mod",
+      "nombre": "Reloaded Universal File Redirector",
+      "version": "1.2.9",
+      "url": "https://github.com/Reloaded-Project/Reloaded.Universal.Redirector/releases/download/1.2.9/Reloaded.Universal.Redirector1.2.9.7z",
+      "sha256": "",
+      "tamano": 158762,
+      "formato": "7z",
+      "pagina": "https://github.com/Reloaded-Project/Reloaded.Universal.Redirector",
+      "licencia": "GPL-3.0"
+    },
+    {
+      "id": "Reloaded.Memory.SigScan.ReloadedII",
+      "tipo": "mod",
+      "nombre": "Reloaded Memory SigScan",
+      "version": "1.2.14",
+      "url": "https://github.com/Reloaded-Project/Reloaded.Memory.SigScan/releases/download/3.1.16/Reloaded.Memory.SigScan.ReloadedII1.2.14.7z",
+      "sha256": "",
+      "tamano": 173264,
+      "formato": "7z",
+      "pagina": "https://github.com/Reloaded-Project/Reloaded.Memory.SigScan",
+      "licencia": "LGPL-3.0"
+    },
+    {
+      "id": "MRDX.Base.ExtractDataBin",
+      "tipo": "mod",
+      "nombre": "MRDX Extract Data Bin",
+      "version": "1.1.6",
+      "url": "https://github.com/ranchercommunity/mrdx_reloaded/releases/download/v1.9.26/MRDX.Base.ExtractDataBin1.1.6.7z",
+      "sha256": "e8953dc7ec42e50767e2239e5261cba03caa7c54d90ce2b2f557db6cfa9c0288",
+      "tamano": 325482,
+      "formato": "7z",
+      "pagina": "https://github.com/ranchercommunity/mrdx_reloaded",
+      "licencia": "sin licencia publicada"
+    },
+    {
+      "id": "MRDX.Base.Mod",
+      "tipo": "mod",
+      "nombre": "MRDX Base Mod",
+      "version": "1.2.2",
+      "url": "https://github.com/ranchercommunity/mrdx_reloaded/releases/download/v1.9.26/MRDX.Base.Mod1.2.2.7z",
+      "sha256": "a9653bc4d805c87c28d4b98a1c63051d150bf3ec47c3471d2d98669fe0b221ce",
+      "tamano": 168332,
+      "formato": "7z",
+      "pagina": "https://github.com/ranchercommunity/mrdx_reloaded",
+      "licencia": "sin licencia publicada"
+    },
+    {
+      "id": "MRDX.Game.MoreMonsters",
+      "tipo": "mod",
+      "nombre": "More Monsters",
+      "version": "0.7.0",
+      "url": "https://github.com/ranchercommunity/mrdx_reloaded/releases/download/v1.9.26/MRDX.Game.MoreMonsters0.7.0.7z",
+      "sha256": "252cb1402bab54a9cec0d5ec0156437eff175a813644e6d5b0832749451969dc",
+      "tamano": 27103117,
+      "formato": "7z",
+      "pagina": "https://github.com/ranchercommunity/mrdx_reloaded",
+      "licencia": "sin licencia publicada"
+    }
+  ]
+}
