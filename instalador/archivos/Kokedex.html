@@ -108,155 +108,207 @@ details.sec p.lead{margin:0 0 12px;color:var(--muted);max-width:820px}
 .guia .tablewrap{max-width:520px;margin-bottom:10px}
 .aviso{background:var(--mod-soft);border:1px solid var(--mod-line);border-radius:10px;padding:8px 12px;max-width:820px;margin:0 0 10px}
 @media (max-width:520px){.grid{grid-template-columns:1fr} header.top h1{font-size:23px} header.top img{width:52px;height:52px}}
+html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-oculto]{display:none !important}
+.liga-nombre{font-size:.55em;color:var(--muted);font-weight:600}
 </style>
+<!-- Datos de la liga: los escribe el lanzador al generar la Kokedex de cada instalacion (sin ellos, valores por defecto). -->
+<script id="liga">window.LIGA = null;</script>
+<script>(function(){ var i = null; try { i = localStorage.getItem("kokedex-idioma"); } catch (e) {} document.documentElement.dataset.idioma = i || (window.LIGA && window.LIGA.idioma) || "es"; })();</script>
 </head>
 <body>
 <header class="top wrap">
   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAET3SURBVHhe7b0HlFTV1i1cnXOs7q7uqupcXVWdc440OTYNNBklGsFAUkD4VFRUQATJOeeccxIVJYhKMKNIDkoQoRvmrjf3LhrB673ff//3xhvjfo89WJyKp85Zc6+15tx7n9OaR+1Re9QetUftUXvUHrVH7VF71B61R+1Re9T+zWagZdNKaKl+Go2/fPFR+z/bHO6Zas7OzlncvEf7nHbDycnJ5uXubnNydrLx+XnaOlrHUk2pM7ey1X7/of08av99e8hpHh4esrfPponk2BjboM6P2db272/7qlsP23ctKsXBkjq2OZZ4W6dArc3PwVGCcYAI5Mjv3mtyP473tg/t+1F7uP2dcypo59NiY23LRr9nuzttBsSAgRBt20IUlUJk5UMUFEMUlkDkFeJYUhqq/AMkCLc0jo6MBk1tNPxde/D3/mr/z7YHT/4Fmq1vh46225/shxgxkg7PxipfH/RwckYDLy+0CPDHC37e2BJuhMjJIxhF3BZigDZEgiDtG9oK2mu0Nq6urvFGBhUf/7P2VyAeNNlqt/9jW+0JPkuzjX/pJZv44gv2+I7Y6huADDdXuJU3g+ntKYhdsBfGBR/Dd9gkuGQUo42Pu7iclQmRW6hAeMzbxxbj6Wlrb423mfz9ba729HSH9gNtE20UrSuDJM/T0zOUj/9VexCIB+1/XmNxbcKNbcKAATbx+RGIuo0x1tMTThExsM7diKU1Ar8JIY7WCGFaLeC6WMBrlRCahoOR5+yA37NzhMgvxClrCkpc3PBjRStUd+yC410fF6s7drINb9jQVpWRYUs2GGy+7h61kfIr7RBtHu0lWhM3jcaUoNG48vE/a/+jgFAn4eOj0XJz5tkmTW3ixAmIyjZY6OsHjSlJpHxyRiy7Tc8L8N9dbu+Kis23hOb9O0IzXQiHiQKa4A4YEuxzLwoKMMAzAB08vFgfmJpK6wjRtAVEpy4QvfvgzsCXceqVodjBKPvgmadsT1a0sJVmpNuMwcG1oNymfUvbQHuL1oVMLM/b2zuYjx9s/yOAqD349y1kM7e+/EqIgYPwoyESAV6+yNr7AyJ3Cnx/qZretzt/3+lbwmdKtXCYdEc4TKsRDrMIQNFHCHL0weW0dCGL8qdGM7I1jvgxLR0iI0fUpGRApDJN0ZCaxZrB4l1RCfHU0xCvvQ4x7gP8NmkSDo8ZI5YOG2r7r+7dbJUlpbb4yEib55/RcpH2CW0CAcnntrb9h4Ngz8O/zxn4sk1s2y7oMPR1d0NAn5eQ9S2dO6YanbbfFltOVYu3Dt0WvtPY+z+oEY6TCcLMGjhOroGm9BdovIqx3cSinF+Mi7GpqKtxwvzoWBUREpTjkcn4JDSegOThbmYOt9kQ6QQjOR13k1NwN5vFvEkFxBNPQgx+BWLkaFSPHYuTo0ZiG6NlXPsOtp6lpbY0gsLjtZHg9lHHb2//0VHQLszD03Z174dC9HoKt+PikezlibQtRxCwhgBMrIZmfLXQjLvNtFMjNBPp/Gk1cJhSDYeFd+H01jVoMn6GJqidmB0RoujpFUs6Wmrc8GaYgVS1FFP1sQhsGQa3Z0LRPSyUqaoYx62peFMXjWWRVgjp/Kxc+zaNwKRm4E5ish2osrr2aOnyOET/AUD/gRhijLoHguNT9lP4z46C10utVpv46BOI4nL8HBuHsKhYZB+4Lhzn3IVmCp09iY6nOUySqYcmAZhXA/ftgFPb76FJpQU2Fyuiw1QEnI1LEY9r3MV7Oj2ux2UitDQY7hej4XQ3FC6dA7EowITKdD2mjrGibaMAzNLH4CYjpZ8xHB11YVhqYaQQjBpGSU1GFmrSCEhyBmoS04CULFRbM9BPq1MguGqcWttP477o+49r4xtaEmxi+Wr2whycSkggANEiZf9VphjAQaYa5XgJwD0QFtxB4D4Bn8HnoEn4nBHwpXDxMIuvEy0q3ZyMSERHjStmGiNx3pgm3KqChOP1IGjOaaFro0WFUzC2TDBB7AzHyQV0ukGHPsEGjPIPxle+QWjh6ol9iSk8HoKQmStNSLvDKKnmays9wvBVcBx6BSndcdtdo6mtCbWR8H8TiAd/86+//eDjh9qDH5xe6ulnuzN2EiOgBLfZ6+Jd3WBeeQg+W5mCprHYTpd2VzjMEUw7gMu82/B++ido4g/DIZv5P3IUmvi4MbVQIefkY1dgFPI0ztgdl8DnRehqCBWap32g6eyNkaFReCk4HPNfZbTsisD8ISGoCAoVPbVMTV4BEPzee64+eD8qVojsfFTfc740ZOeJ64yAuS46zCaIn+tMaOLrJ0E4S94aZz+df3DC/+lWu/+/2j9r//S92jemlmqcbJfrkyqWM9+yB78e5AtNdAt4vXILDsNvCscxN+H47u/CceivcOr+CxyKjkFjPSgcsk5Dk7QTri7BOJTAXF5QiN+ZJt5w9EM9Nw/czMwH6MSajAKsCbZipzGJ+y/BicQM0TQqUHRrQueHBuJLazpa+QVgv7MnvnbxQB1+9/OUTMEIuO98BUBOvriUmI45LiGY7RaKBa46bPaPEKl2pnSAxmBQ7b9zyv+fVrtPaf+Q7kwmEyWMJpc2lLaDttXNyak+t/9tG5Pj4Gbb6xqCPzJYCNmDf8/ORa6jEzTefaDJOikcCn4SDtknhCb5Kxq3WT8LTc5PQhM7Q7i66LHMFGGnlkwPH/pHo0DjgAXR7MG5RbIHk+EwMqQmoE64w8/ISLmUko0Po1JwI5WFlu/tiU9GM/8ANCYQK82MnLyih5xfI79HofdNZDxmOAdjnlsY5rjrsIzbaZ564eWoFHdT+yndd9T/bqvdz9/u7542aUmbQpPaxaan0GxfVmYr9lORaXPUOD7I1v62PRHk6Gyb6KDFfl2MOknpqMsZmWjj70l6mQ2NfhhF2XKhid8sNJZl0BhfhcavXJT6+opP4pn3WXhl5Hyvt6KKub9PoJbPiwGZw5m3a2RBtedy5nBlQgItcgvsn5FsJ6cQdwlEdTZpKwuydPq99KO+dzcnDzepKZa7h2I2I24+I0DaIgIww1UnAhzU8Hgn+yn9vcP+Rfv//HlXV1cKdU1v2iraJUeNgy09IcHWr0cP26bxE2yXFy2GGDSUTC4HPbV2cclwGcjtP20R/Onqni6+tmXOOhyJMCtninz2WILxoTUWL4UFopk2RBT7hYrmAUEYxOc7LVF0FHtlIZ2flS8Oh8WLdqSe5Z6e+J78vlpSSlkTGAVqX+zRtUqZzhd3pd0DRjmaoLDIiru1Pf4B58sokmB9FW7BNIdAzGO02gHQYQkBGOcWItwdHOTJNrKf0n2H/tWpf32t9nHt6w++p5pOp/Pipg5NqvL9tDtabx9b09Iy29hh/2X7csUKcXftOogPJkB07cHzLMC1mHh8GhQNwSh/IcjO1pycNJXc/kOz/6CDZoSvg6NthGsQpmr8sMhPjy+YEs6lU8FKp5HLy/yuHCqdKYekpbHXfhuXhNe8gmCl8jWxgGY4uyHH1R25Hh4skL7oHBgk+ofpxQeR0WKN2YqDZDe/pGXiD8n7lUhT4MjfYVQUsPDmSVPp7K6MHtpdPq5melzppccsph/peAnAPG6XuYfhLdcgmwN7Is8kT53Pw86sffyv7KHm7u4eyU1X2mLazzSbJSLC9mTbdrblH4y3nduxgwRiN8SUqXR6N9xhNNdYEykoUxV9PhmTiImaAKzwMuCP6CRU2InCR7S/b2rwy0GzN5gn0S9Ej3fCwjEuTI+x5PGjaCPJzT8INWC2IQKzIqPwgcGIwYEhqHLzUkMO9Zh2hrsHYqlrGOY5h2CCYxDedAhAX40Pums8UcnIKNG48LPOSKNlO7uixN0Dzb190E2rxSDuf3xkJNaYzPg0PhEnU9JxnYpcsiDZ82V9+Tk6GXMcgrGIhXceTQIwx00nlrmFiqEuWnmCNTSLOqGHHfugo6X9QwEtLVWzeXIyaRBtF+13bzc3W1l6uu3NZ3rb9i9aZLt96CCUVpo0BeLxbqhh56m2JlEwpqImPbs2gtXxHtRbMJ0sbRozyjZPI17yDZLHJ2vEv2xjsqOjbbcGDbHndGlqwqUIfzBHn2daOZGajt1EenGcBbNjzdgYbcY35mRUkxqK9DzcYMhdSkjH6bhknIxKwDcGC44GmXCIhflDr3BsotOWsAfLNDJC44sBBKgbAaoggHUITBYtVYLk5KqiqIGXDzqyML8YHIpn3P0xyMkX4xilMu1Im+sWguVuYeIFFzUZdMlbo6kdsPur0x9yuGxeXl4h3MgCOol2nGaLCA6xdWrcxDZvxAjbzzt2CPHll0Ls3qPGqu506Cxus3ffYWa4m5yGO1Ik3otQlSolY5PRy0jeE2wiACFkaXqscNOj0slbHt9R2j+0Bw9s3xA5Gvp8X/5AOm4wrAaEhqJxYIDoHhyEIXqDGM80spbOP5ySitNZ2bieTWqYJxnOvZohZ8kkG5LASbOnLVlwJaXEHwTxalIGLlpT8UtMEr4Lj8cxnRmHA2OwzzccWz30WO0SirmMoPc0dLjGG09oPNCCALVgFNVxdEEOrZWTOyazDixhJKx014uuLv7yBOUkkIs6E3svl/ZQYwG1ciNZyXraZX7AlmW12gb17GnbOWeO7dr+TyEOfw6xmqL0tddRXdla3OaxVyemijvJaUI6XY1Z3SMQ98+baVoCcYfska+LzQFRYoYTI5WdZI27AU2dfeTx/W0KUgD4ajSB3Fxe2LOXTXR6TI3HvByqFxp/nTDE54oQczr8IhOEB0WUR5ABXgHBCPANgN7bV8R7+6LA1x8tAwLxZHAwXmXqmhQRhVWMkI/j43EiOVWcT8sUt7Il3ZT1hCAVl9FYQ0pkLeFzWWd4YneZ52+mZuPX+DScZR49abTghC4OXwZEYZ+3BMiANUxxTzp4oIxAzCcAG9nD2pJA8EzkSKls9ztVZGQkdYGzXMHxOk06oCbA29vWuLDQNnbIK7YvV60W4uAh9vJdQkyYKPDE06iuUx81jOga9vSapFR2HDI2SSDyabKDsQ6eTU/DDosZo43h6BSsY0awAkxJMgWRXGCdbwRmMv3M57GtdjOi1MlTArCG9g+t9mDznZj/v3jpZZto2IQAZKHQz19EJxUjL68Jwg3J0IcmIjYmB2ZzAcyWIlgTSmFJKkFcSgmik4uht+ZAa0qFj9EMTwVUGHz8Q6D1DRTh3n4igVbs64dKAvU0gXpdr8d05v31pjgcZN7/MSUNV+UIKVmEKJSFnhEkC/29eWc5WHc7Mw+XLWn4lL2qwsEVA5z9sMo5FEWOSojdP0FvV9d4bsbTvqPZovUGW9dWrWyLR422ndm+XYg9e4RYuFiIIUNFTUUrQcYmVBFNSIaQWqh2vptOv5mZJb5ISMDs6CjxXJhBlGl1IiJQD68QEzwis6AJz0BLbbA6RshjTM/BMk8DZjGSZQQsdzMgw9FNHt902j+0WgCeivQPsF1/cwR/vAi/0Rkm30Ck5jRESEg06lZm4OkhFWj5eDHqNMtERlECLCkmRJmioDdGQ6eL5udiEKqzQB+WhMjwdJhM+bBYi2FNqiPiU+qKWIIZHp+HUHMWAmOS4RNhUUB5afXwJ1AhjKgYbz9kEKR6zPudWJxf1OnwjsGAZbFx4mpmjl070DGnwyzoyrTko9HA7OkLPw8PwTO5xPN419nZWarRnxJNsbaXn3rKtm3mTNv1zZuEWLMW4p2REJ0fEzVFpaJGjjUl0uEsoCqdKKpcgFOZGWKzxSxGhIejSheKpMBQEaCNgrsxVXjFFoqQxMYiOr0lLFmtEZ9TBe/YQvQJCVNRLDXNteRMLGStmy0BcKVOITExO7pKAEZLR/+11QIwtUFCok28+ZYao/8iMQla/2Bk5jZGEFnR/D0v49DVqfjo3ETs/WU8tn0/Gmu/eguLPh6CqRtfwMj5PTFkfAc8M7Q5OvUpR7NOeShunIqMQiusKXGINsUKQwQBCouCjkDpmPeNhhRERWUhzpQHa3wRLIklMDGiohILYLTmKqACopLgGRYjnPyCRDbT3RUJAlPYRwQ8gyxqeZsq/NixE75o2hz9/UNt4Y4u8kRFsk5nuzl3PsTMmRD9Boi79RuJO3JCKIk0kRRYpbyiElGdk4ujycliXky0eJ4ptyRIJ4xao/AKtQjPqGwEWOuJ8NSWIi6zCtbsdsKS0UaY01qJuDS+llohLFmt4B6RhteZdiUll6ztohoq0WGOZGq0OQRB7+Asj+tfirGD/Rs2somXyIB4oCtiTPAKNiA5tRwxlmisPPwaPv55Do5e2ICvLqzHl+fW4MjZlTh8dikOnVuEA+fm4OCF2fjs3Ax8cmYKPjo9Abt/fg9bv30ba44Mx6J9gzFjS3+MWfo0hk7sgj7DW+GxFxqiRecilDbJQHpBPMxJMYiMkREVhdBQgsQQ14fFIz29DvIKmsBNG4otFisdV4ap3kHoEhtnn7ihGLzAerHcJQyTqZAjNc62bkE69ugS3JEpJSndri/Yw69l5eBTppPxUVGiCx2eFhQmtMFRwsOQKnxiS4QuqamISW8jrFnthDWzjbCkt1YON6dVKouTYNQaQbBmVQk3QxKmsBbUCsxTlhQxk0yPFJkAhImprowgu0rvYnf1n6229wfQLs8nExA9npAhieEMe5nLzaZcZJcmYvvJ93Dk3Cp8c3krTlzcKE5c2ii+vrhJfH1ps/jm0jb8eG0nvr68BScubcbxixvxzZXN+PrKJhy7tAZfXlzJ7y7F5+eW4PCFRTh0cT5tLg5enI3956Zhzy8fEKiRWEOQF374Eqas74N35nXHsImd0fm5+ggJNSI7uyH8tGHYayUAjIARLj7ol8Ge/Gwf9ugMnCDlnUXePdVJS53hipcCQtjL8wCmlqsEaCxrTZsQHeJlutPFCY+ILOFnriuMKbJ3t7U7PKPqIYfXOrrW+f8AAM3C73qEWrE61iQBUGzv25hEMc0pWMwlAItZhMe4hdruqfTGytsPtFoA0vhAHBoy1CZatlFspBNpp86cCUNoAlo8lo+PmXq+urCODt5EB68Txy6sFUcvrBPS2T/f3I1VeybhzfEv4tvftuC7q1ux/9ul2P8No+On1Th6bgO+ubQVX18iQBc307ZwH5tx7MJGtc+vzq9lRK0UR84tF4clUOcX4QiBOnxlJlYeehWhFH0pafWgZ0r8MTWNji1Cb1LSUXXrQTzxlALgoD5OCZ8JTkEwa5wwPkROjTKn0yZHR0FDLaJNaICI1AqYs9rfd/jDzq1kiqFTM5jfMwiEBCNdppuHHf8gEOaMtsI7KEbsk5GpIqAARyPi2RGCxTwq9KUswG+5hdgcHNSc9oOrBlWrBaBzmI+P7beRLFBldQECUOAXiNjUYgQGROPZ11rg0wvTcJTOPnZxgwJA2omLm3Dy912Yu34UChtk4a2xfXFZHMCG/VPR5rGGqOxcH41aleCtCX35uR1MXxK0teL4pQ00Rge/X7u/E3xNRtbXBOqby9vx/a+7cPzX1Xh/xTMIYipMSCuH1T8Iv5NliPR8PE4nL66qgujSVQGwNzga0x1DMNopkCnIEWsNclCRALBgD5DRbC5HfHZbOu/PdPKnIysJRhthSm0hgq3l8IrNh1tUrvCIzhchljowpbRgZLRRn/srALF8XRsYIU7IYn5PtR+gCp7qFCLmUCBKBjTYTan0appJeftek86vBWBksdlsEyNHQVDxXszMRLSvViRlNhABAQaMmNsNB87PUr3/KPP/MdaBb69sVT1/1up3kVMnA88O7sI0tB1TF7+Fxm3K0KBlMeq1KERF+7pYvGUMvru2RTn/2MW14sjptfjizHqVrr77jenr+jbx0+87hNzfzzf3qP1+9+t2nLi6Fq9OeQyBgeF0QgmKA4MUS/kjKROt6eS9j9H5lVVAaga2+0dgBpXncKcAAuCEQ9HxdgBIJzuHhMI/vpy9uhUedj6LKHu4iVvv2CLhyVyeYbSia3Qino9OEF2ZShLD4uCksyI4rlRYVOG1O98kjc+j+Dw8QI9zcvUHlbBMQR+SZMgImOWqE8vdjeJZVyUSL1KlB9ndbW+1zpdty5Pl9Wzi1eGqNx0gA/JnDk3NaIBQoxGzdvbDgTPzVG7/6vx65vet+OrcRkxd+ibqtyxCUf1sDBv1LBZuHKUc36iyFC061ENzOn/th5Nw8o+d/N46grdOfPfbVtH3tZ5o3rEuHn+mEs8M7IyBb/TC62Oew6hpL2PywuGYufJtHPhxJb69uRa9GX1B2hgYE/LRThZWquyzcclopHHGsaefhdQsd8ja1vuEg3kXA5z8EMv3fjIlq0Viskc2CA5FcHJDmNP/dL5ZFlCmGX1CQ+GkTxLNIq3YmUoOL9lRHjWAEl0l4iYL+ZzkDOhDooR3VA4s6RWo7f0yNRmSW4ikAB1uprMeEQCKMbE9MEp1htluoWIFAejkogbiTmT+qdJVUwCYNGoW5+SErt1sos/zDO8MzIuKpsiIRFJSGbl+DNYcHY5DZ5cwXWzED9e3Y9+JxejwRHPqgQLUa16M1l0aoUFFEUoa5aJx6zI0a1sX9fl8zpp32fO3qqg5ep7p68ImVajfmTQQPZ6vQuenKtD68UZoUlWH+ylAaaNs5NdJR05pKrYfmo/vbq9G2yeLEBaaKILjMkXfUHJtCrPPw01o6u6NW8OGQdStr1jbMo9Q1oAgPOXojXSNC361UMESgNvZucikcjemNXsIAGtGJYIs5cKHBXlaYiaVLp2eV0Q1m4/q7HxRw55ck8uiKgUgddHxzFxEkZUFxBTKSFIAyHSmS2okirTsGOT/UoTJeQ+pgpUIYw1Y4R4umtmHIfZJfz/Y7BFgHxu5s3vgAJuoas8d5WAwT9SfrCI2OgdFDVOw69T7ZDGrmSp2Yv3H09G2R1OU02FNqsowbflwfH5mNbZ8NpN5vzEaVharKOj6TGt8dGKJAkz1fgIg7ThBOPXHXppMNXvw/W9MNawFR35Zg09YuLd/Pgcb90/HV2c3kSXNogBMR0x0FgIiEzFGUr3CUmzVRaKMgm1r/SZYFhqBZUwBc0g/FxOASgdP1HP0wJ1E9kimoPMZGYgJikA0Hf5nz6+ELr6u8AuJE9vTqCvY09VwMp2nhJ5U4gTgrh0I++sEYkdKJtxCzCIquTH3w2JOQAOsddBSRmZuoZAA3MzIwXJPI2bLUWECsNLdiCJnNQwhFyrfbw/m/1a+bm62U8PfEKKcvYmFpG1QEPTxOQjTJaDdk2X45MJk5cRfbu3FiEkDUFAvC2WNc7Fk8xjs+3oheg/phJ1HFmDV7sl0fhFBKEHV400wevrL+OLsWkVHZer69tdt2PXlfDzZrwP6vdoDQ0f1xsjJA5l2XsO8daOwatcEbD04iwxquao3H56aiJxyKm5zIfz1JiyNjFbpYVNwFHwcHFFO9dnSbEaJXo8sNw90dvJGnqM7Ojv7QKTkEIBCHE9Ogi44VsRlyQJMlsOcH53SFE6hFixPYs9nipFOVk5nTz+QkoX5pngcoJrla0p5SwDUAFx+sWgdaRVeMQVkR3YAvEyF6BUcKpW0XDCAa/z+IlLPOWqySA/WAKQ4uUsA5Ijr/fYgAK+mGMJtd95lAeZByB/K8Q9EXFodMqBIvPh2K/HZpVn46ffdWEiHy14v08t7MwczJa1HF+bxtLxEbDs8F5sPzECdJnloWlXOVFSHKSVXpaNF/N4P17eRnm4nQ5qGyi4N0Lwd005FIdNWDvLrZiCvThoK6qYjrSARXXu3Jp3diu3fjYMlLRqJCWUIDDbiIzMLKwGY4q5FdzNp34BBEM0qcLG0PkZ6hCDN0Q0eBGa4WyBrGQGgQ3dTN/jqrFSsEoAWsGa2hGtkFp5khMuUI3u+zPcXsvNEM0aKzpSOhOKm8DLEix4RFnsKkrN+1BRyZHepJRVOhnRVhGUNcOe+BusN/BzBou8uMfLmu+ox1y0MCxgBiwhAtJMahpDL9O+3BwFY2D4/3yZGvKOGIM6yBhj9tEjOqo/AID1GL+mFQ+eZj8lKPv5mGallA9Rl+lm9ZzJOXN6Ifq/3wJsf9MWhk6sx4M1ezOWFpJ6lKGmYg1ZdGmLsnCH45LsljILNqnhLJf0lo+Ir2pdn1+PTH1Zgz9EF2PTpNKzY+YEq7Ct2TlC1Y/mnr8IYZURSaj0YqYJPpsjZpgIM07hjdGmZXYSlpONwqAmzNFpMofq0ODhjimeoWo8qHbZE1jNjMqRiZdoQkcmNERJmpZ7IUnoHdO4fdHJOUBQaPv4Mjn7zjbh69arYtW+/8InLFu/ExIvPCc68hHS8HGlBPTIcX30yYlOaIY46wc2QhrEGo4oAOUp6mp+b7SyHofVYSJtFEIId1TDEM3Z321ut8+X28Ih27WxyQa5kQB9Z4+EXGEoGROETYcT8fS9RwS6liNqK70kz357Yn87NZe8twswVI3D07DpxgE58YWg31GlagMZ0vkw/kxe/xpy+hPyfCpnOP3F5Ez76egnrwHrl3A+PLcLEBcMYHe9j3b6p2Pn5XKaeZThyaq0C6viv66iIn6MKDheJWQ2FNSAI1zKzVYp8jixnSoNGalZK8LV9ulhMddRiFOuAycEFS3xZrCUnp2PfCw9XI5ZyWEGmDM/YIvQykbMXkaLKns00NdoQi9jixrh67Rqd/6s4d+6cWoQ87M33oHEMhsYzDJpgM/yteYjJrIMgAhqb0gRm1hL3sEQsjKHmkCKM+/renEIGZAdgiasBE91D4WlfrdFGefwvLYx2fc3zL9pE117sNZmYzTzrExaDBIZ9UlYcNn/zthqCkAzmx+u7cPCnNSpFlDWWqaYOKjs1UJSzLhlR03Z1yf2L8MSL7fHdlS1MO1tVLv+W0SMj5bFnKkhlN6laMm7uUGTmJ4mC++knQ0VNEQXdgo2j8VPNFoyY3R1abaSIS6+LQqkBSCmRnovO1ACrq6jYJWkgADu0UeTdQdQATJ0EZ1dgpN0hBGCQIRzepgI6qyXTagU8I7LQK9KMyZZkPGm0oNjfABeXEIwcNxXV1bfEmTNnxdmzZ0UNHw8eOgKJmeVYsmIdtu3YI9/Dhk3b4Rlkhim1KRV1K3jq4rAtziyPTY01HWVqkxR0HtPQcoLwtlTB9rnqAuXxv7RiFwcH27HX37KJFpU8mVwMCdNDG5uK6KhslFdk4MPTH+CL82uVaDpwchXemtiPPfdVtO3WRLEdyXpk0W1C8SUBkSap6QuvPIZvCcI3v27FOyy0Mm01Y95fuv19xYw++XaxWPfxZLFsx1jMWfsOJi16HaOmv4Sho/tg71eL8cOtDRgwugrawGgYqAFaBYUoCnqNId6KAHzWsyfkNQd30rOxyU9OfoRgMDWAhQAcZkRIsKRDeoQZ4Ec1G8f8Ly0kMhPuwTHwiU1HfGlzVHTrg1BTFkaNmYQ7d6rFWQJw+fIlcfPmTZGW21C8+c5YyAsjZGTgbo14d9QHcPW3KD1gYlQFBMeIz+Pl6r98VS8+VUMi9ghY4WbEIFc1F/wPKri2PRkZEGC78e5o++wUc1hbbRDCEwsUA+r8fDkZ0FQ1ZPAzqeNzr3RDRmESXnm3N6Yve0fxfun4B00C0KxtOcqaZGP8vGFY8+EUpYjLmZ46PVGBjZ9MU+NFX1/ZKL6/vln8cGOr+JFpSg5p1Nr3v+3AV1eXomv/BmQwZoSYM/Es1aw8xlOxiahwdMWPzzD/16uPP9KyscpLTn6E4FlHXyQRgO/Zs1Xx5Pk0JVPSJjRSajc2tTk8guIxdsJU/HzqlEw1yrlDX38HYVEp+OHkT6ipvi1+u/obuvd6HqakYnHql9PiwoULKi3duH5d1GtSBX9DJrVASzVqqtdGCFWb7jGpvawRM1gD5riGiZXuBjxtn6u+4KNRF8Dcb7U1YHIdq4UF+C32/izU5OYiiwwoPr0cwUHRGPh+K3x2YQ5+uLoLo6e9pBxZSAraqWcLPDe4K8qZdqTwqnW+ZD1jZr2MNXsniXaMkDpN89WwROPW9qI8YcFruCT224cb/pDDDjvETzd3Kn0hGZKkqVKoyXpz+PJcNOucA6MxFYExKXjLYFQAfG4wo5mnD648/yKfl+AquflSMg5Z+Do5eiFX44aL0UkqH9/JzkEeiURYcnM6X7KWlsLF14QJk6eLOzW3lVMvXDgvJBjlDdsxtyeiftO2wpJagqT0Euz/7KC4zrpw5swZcfP3G2Lrtp1MP3GISWlGOlspIuXQRGCY+FXOL0iayqjbJlWwnAtwCxOrCUBHZ6WCj/+zq0b3PVun3CaGvqoK8OnUdMWAUrMaIkRnxLhVT+LwxcXKIU/374hGTDeTFr6OxVvGsadLtVt8HwCZjoa91wfDxz2H/uT4Y2YMVo6v37yI75VgIrn+jzd2YAW5/rBRffABo4NFXCzaNAard0/E1gOzsJsa4dPvV6gh7/3npqOgYRKimAr96fQFsUwrxXWwURuBKl0Y7vbtr4roeaakBVSdcii6uaMnGpEhXZNFlgD8RkZnIbUMvzeBIrm7hzYRHbo8gerbtyAdK+3KlcviPHv5hMkzRd/+r4hpM+aLM2fP4drVqzh9+rS4ePGCuHbtKsrqt4SPLpUFXY6SVgo99URWgE5UZ2QpDXA3Kx/rfKiCneVyGTkMoReNndVqiL12dz/QdBqNXO11ekqXx2zyui05B7wvPhH+pHupafUQFReFZZ+9Ajk8LAuwpIwHflyF76hcf2IP7v58O5XXpZNlDZCFeOm2sWgox4LIhOS4kOz99Rgl4+YO4Xd20XazHlDIseAWMyKKG2QLOfSQXZLK1zLVEMTzw7riZ2qO3T9OQEJWLOLiCuAfEoFdZGdyIma2ZzCelkO/zzECWIB/IuuYzfw/mxS0nAq4PZXwbWu6AuDHpBQYgqPJXKoIQAtpiLQ2EFpDEvZ9/Im4ccPeu6WdP39O9fLbt/4Qv9+4riJDvn7x4kVGS7V4YcBQofGMoPiSQxotlAgLSmiIuoE6irVcORUp5Fzwck8DVbAdgOVuBlFgn4xfppz+Z+ZRTS7lrtnTf6BNtCWbIIKzoshxDSZYrcUURGZs/34kvji3Wo3bH7+0Xnx9WY5ebsf6fdPw2FOtyV7SUUpFLFNPYf1sDB3ZG4NGPKWioUPPZujVrx22Hp7FQrxF7UMCefjUajWWtPXgbGzeP0Os3jORrGcMpi9/G2NmDsGSLWMVTV11+E1EmyORmFIOHdPI8ST2agqnd6h2B2eRjj7VmwDk4ES0nIgJYREORpaDG/o4+4L0TRXg/fHxCNCZyVba0fkVqg5YM1oJL9aB7ML6kDXgj5u/K9YjnS23tXb+/HnB93CdPf+F/q/AyTsSUYkN6PjmLObNWYQr4Weug7aSHDD/SwDksvnF5P0PquBEuwoeqzx+D4BaFBr5uLjYflmyTIh2HQhALl4ODVX5NtyYjspuhfjyj9n44YbMz8zNV+QY/nrx7W/blJPemdwfo8laXnv/OQykAJM6oNcL7VSvl/k+uyiVQE3BL7d3q8G4r86vE1IDyIkYyfN/ub1HzF07En0Gd8Gb4/tiPJnV1CVv4ZMTy/H1tY2Yt3cw9EYjEtLqwhQYgssyz2bmo4/GBWOlBuguaXM2DhssmOUYgolOWsTzvXfcSFdTCRBV8AaTCd76RFgyW0sGpIaf7ZHQjEzGhNySpti1Zx9usMffvv2H+OOP38WtP26q9PTrlSti/cYtoqReBZx8ouj8htLp9n2wnlioAbxiCvGsnAuWBZ9i7XJiBlVwqFLBZEFiPmuA0T5H3dfu8ocB6JcQprfd+fo7YNYcdU1WG20wDIm5iIpMRX69BIxb9gJW7h6PPczNh35axgjYQDG2DRfFJ7guDuEq7Yo4iPMsrBfEp9hNRTvwzSfw4qvd0evFdtjw8RQ1O/bV+TVqLuDoeWn2QbmTN3ar4efGbUrRuKqMBTuPUZeEuatH4lTNdoxb2QdBwUb2uHLkaEMAMpq7ydlor3HAchmx7TspAPaRdUx3CFYTMVIDzPRgj2QqkPMA06iCPcPTCUAlAaBypfPkpIs0S0YL5vNkeLJoNm/9mHjj7TFi8rTZYtyEaXiePb6grBncA2PhG5oCcxo5v3Q+o6h2KFru040C77Uwg1wJp6LgjCVVTcbPcw3DAgIwhYU4wFHNBbdVHv8LAHMqCgpt4vQZ3Fm1mgedjVwvH4SnFCEvvwlMsZkIC41DeASrvsmCpJRk5BZkoV7jUrTq0AhP9GmLl17viXcn9ScllcMHH2DPVwtUqvmWIJ2i2Pqlei9O087e2SvO1OwRP9/aQcq5TRBE8Z1iPJtZW9bhsx+WYy+V8ebPZuLwT1TCN9Zj8IQOionFprLIEwA6VFzjCbagBtjXjRqgWQsecxa2+odjGtXqm44BiCEAa3zYI+VKaqag4QajHDgjAFKE1QJAOprSnEWUTkyvEJHxdeGtS5PsSLj6mVRkuAVYoI3IQWxyIzV2pByvzO58lYIkAIYUTA6PkADIYQjxfWwSZlIDyLGgRcz/77nqau8SIFdWy1bre9U+frlzF5u48iuqJ0yGSEzDB1IF+wZBG25FcGwKQq1ZMFITRCYVISq5GFEJNAufm3JgiEhHGItZqD4eYXoLjOFxiI61ID45Edn5magvgWrfCN2frVKs6O0J/TGFYmvZ1vex9bPpYv83i3GUhf0HgnWmZq+KqiviALef4SexEc++0Rw6nQWG+Dx0C5YirASnYxLVRMzXvZ6EkKvXSBzWehswjSp4EAGI1ThhXwBVsJoaLMQzoXr4msuoglso5RrHnq+cqHoyjQCYMyrI6eXIpiysFGu1RifHkuVEJTYREfFNRbi1kTBaGoqIhIYEkftiDXAPtWBVTAyLsASgQByTF47cV8EGvO4aLFfrgb5OtLv8HgBarZa6QHN27quvEYAruDVkmFrlK4vc0eQ0sYLSemJMDF6PiMRzegPa80QaUAjlButFYki4iA2LIj83ibCoBKGjag61ZBKsXBgTChBOi4wvQoQ5XwEVEZUBgzEFYWEEKswMvSGOr5mFyWIVyRnJKKqTK5q1LhePP9kKfYd0x9sfDMS4hf2RXdeM6OgMqvIUvCLzbHEZjpAgNPTwwaXezylAbqZmYbmHXs2EPUMVLEXYiRC5OkECkIfWpKuB8fVV4ZROi0luguikxohMaIQI6VDl1AYwmOtCTzNa6vP1BvxMI/WdhOxKpsV2Iqe0M+taN9LwZ0m9n4YppRli00lJQ2LFR3EWAqAmbsRBCkA5Ly0jYKWrEQNcAiUA1+lrvXL8/ebiksr/xcezZtvEmdO41a2HqE5IETXZufZwkqui5QJbtTr6nlHlgYX6N4b9yeRUHIpPwlazVcyPjhXvhUdioN6IbpT9zUP0KNEZkMKtKTRShBtjoItgREUnI0Rerkqg9AmFIjyxhD2riLSwABEmgheVroDSM6JCdQQpIhH5hc3U6rkpERFKdG3RGtE6WIe7z/VVouc3so6FriGYTgbUxckHeRRhp1mUZTpATg5KyJ5C6XBTajNlibmtkFHUDgX1H0fdZk+hWdULol3XQej+zHD07j8KA18Zj9dGzMTIsQswfsoKTJ25RsxbtFksXbULK9d+iG27jmD0+EWIiG+ImIyWCNJGiuMJ7Lgy4kh7P+JxqwggA1pFBtRTLhh20JwJ1Miltw+3Vn5ubrYzW7YKcewYbjdugTsswnJpda3dyc6XU3riHAXax3FxOB6fgPN0/B/qgg35gwRFzZ8SMDWHKldCl0jwxF2GpFxG+BP3eYQHuMViwfzoGLwfHoEhVLQ9WLgqQ8JEKUFKCzEgLjRCGMJiRIgxDkFR8dDFEYzEPOiYAl28/HBYnmRhCWZ5B+OxGPbwZxgBWTk4l5CBuUw/8nqxFs5eaEAAfotMVMd3PSMLiUFGhKc2R0RCA/QdNAaLlu/EomU7sWrtR1i/aT82bP5MbN35Obbv/gI76NzN2w9iw5bPsHr9x1i2ag/mL9mKWfM3YvKMVXh/4mLaUnR5YhjCrfURRVEXqTXgrBoil0vSC8QObbR9GIIFeKW7QbSxT0V+8V9/s0r7pSRjhO3ul1/i7s5duJ1bhBqKGjnzo9a6y3HyvCLxbWq6SApm6imog9y0bORbE1EWZ0F9XajYRI7NLlr7eTWHeoeheEcqwhy1OuBeKpCjkkVqIE2U1LEbFa2af+Vnr6Vn4hTT3pHEFLHNHI+FpjiMjYhC/zAjeun0WMPf42dVnn2dGqAvHa+EI7XAT3Epahn7VOcglFGEdXLwxq04OoS/+UtqGsKDSR/TKlTqeef9+ViwdBsmTluFUeMWYvg7MzHotYl4bsBo9Oz9Bjr3eAWVHfsxzfRGWZOeyCvvgrTCdkxDrVT6kjQ0zFSu0pSMJiPTUJJWj9/tk/HqXDb416pgCYBR1HP2kgBssbtc5f/7RXhy89w8m/j5Z1G9aAlup6TdW9tOQUGnqek39rh3dKHIa9Eeffq9i47dBqB9t354/NkhCEkrQqqzq7r8VK6Hr40au+XK9ZbysQJSAiIZycmMdDE1PBwjWVPWxcQqWinDVo2hqB7EiJMrkql2lfE76n1GmryWjBpA9Na4YmrDhvfWAmXhJ/b2Bexx05y1yKUI600RVhPPCCUvP5KUhMCQOOZqOQzB9JPTSjEh6Uh9XDlCYkoRGFEEf2MB/Az5tAJoI4uhiy3j+/Vk8WXRbo5EApBe2F4BUt70SSTntUEMi7MusREKmOJAFSzP4TaZ10ovo31B7r2R0GwntWJ7lt3lDwOwqW/b9jZx8RJuvz8W1QkMWykmCotwk6Err0aUAHTy80Prni+ibv0OyM9vhqKiChSXtoZ7mAl1nT1I9/g5ftZ+9bpyOiPhPhh25xcWi5mRkSIqOFRklDVFZt0WiCCdLAnU4gcCr4CQUULhtN9KUWUwYCWL/6UMOpKvyUtT78jjSc9DFdNMtocvOrr7oZ2LN1qx1w91CsB0irBUB1e86qrF3SQ5l1vI+hQH77AEshW57qcpkghAbnlnFDXsrgppi/Yvol3Xl9H1qVfx1PMj8CJT1ODXJmH4u7Mw8v0FGDdpmZg6ay1mLdjEyNmuUtLWHYdZN55jCmoAbXw9NA+WK6LZOXi+N6k9Fnuw91MHSBW8iIXYZBdhb9tdfg+AhIQEeSOkb6cMfIkAXMStF/vjbmIKzmZmoSpMLxpa4kVzkxkdmbMzmW+ffeE1FBW3RGlZG9SpU4U69dpD46VFM0cn/JicgnNyRRgBkE6853ghrwOWAMg0s9dsEYFh4aLjU0NQ2eZpNG3eDRWtnuAJZKHc20d95npmDtoEBMBsTUZ6KRlIWj4s2iCxzBQnU5lgDhS/J2WhoYMLXiC7WdeyFVaRhg5JTkOSsxvSHV0Rzvfm0AFqLpj7nEUW504RFpXUTDGYJStZSNftw+qNn2Dj1gPYsv0Qtu86jB27D6vttl2HsHnbZ1i/+ROs2fARVqzeg8WsF3MXbcXMuRswbdYajGEBzi7tyJTWTMg5hsflMhnZeXjOv6VkCqWCKcIIgJhF09unIp+T3me7HwFG2u87Jky0iZM/4lbbDuzJWRgaEiIS6leIJ/q+Kdp06y9a9+iLp194Fe079kZBYQXqlLcVZeV2ABo0bof83FJkJ2ehgE6rT/bzEYu0TF+1l5XaL6ouwmOBgSho3knQ8aKwsAVKSipoLVFQ2go+nr44Q/3xuF8A4us0RZceA9Gy1ZOoqOyFrDot4ebmIb5kfZAi7DRFTnM6+Vz/fhBNK1R0HI2UwicE9Rw94U+FvNPHaI9KAvA2mZkUYZEJcqnMM5hMB8rc/zp7+CD29L6D3sezfd8lA3odHboPRssOfdG0TW/Ub/4Uihv1YMp5HJnFHZBa0JZpyK6kZfqSWzm96RVbiH5hBEANQ+TjbEK6kMvQ1WQ8nT/ZTSfkVaf09YMqWAGQ7055/N2adTbxxZe4Xb+xnMBGZVAQ2vTsJ+qUt0dxSWuyvlbs+dIqIR1fXredKKvTRm2bsRe3qnoWLds9h3bdXoJLTBJaenkxHbEoc18SgLtSjWbloy4BqFvZTTCCRGlpJUrp+PLytsguaIYgN08sZ8G1xFjR8fG+yMtrzDTXHMXFFajPtOdpNON11iFRVCyOh1tQ6eaNS8+SAbGI32Ux3uATrmjfcEd/WAjOHjkVqQAoQG85E6ZEmBRZzSkiG1GfNGB+r8s8X4dsq5Q5v4RWhMDwQlUP5PPgqBLWhzKEmuoofRDB70QlNlaT8GpfFGjWrNZqnvlt1jMFADveSXMK6bBOzHULxWKq4NGuITZn+4poeXmUbPcB6BgeEGi7ceAgQAakFh6RMhbpwkTbHv3ZO1vRSfaUIx1eWqc1e38VgamSTlSRILcyLSmQWBM0/qHo6ulHh6ur2++bjIDuWi18qQHqN+iEenWraO1Rh+YRFot6Hp5YFxVD52SheUU37pPporRC/X79+h3hHByOV3U6uwYIjkAFGdmdAQNZowrUxX6rKMLkKGhvaoBEFuhjOinCCAB7ZKuQMASRfkpFKxVwUm4bpOS3QVZJBxTW70qm8wQateyDinYvoqrLQHTpNRS9er+F3v1GMTo+wMuvTsCwt6ZhxOi5jJxFmD5nPV55YyqiWZwtma3gbkjG9MgopiBJwwvwNTuhnIyfy/y/hBEw1D4V+eBls/fbK3nWeJv4/gfULFiolnX8zBqQEhOHx58czN7Xkr28NY0AlLWWANx3vjKCUsZaUAuQAsArEK/5B8uDue98eTsCuTb/GAttgJMzHAKNMFpzSOOyoAkIhRtTxsfs+Rf4+1rfAJFJ0VWXANXl79ar1xYJaWWU8E7YL+8ZQSa0gBqgp7wgo+8A3E3PxrWUTJ6ojr0uBB3VTJgrzhjkEnF5oV8OCkkRw8hWIuMb4YWX3sNCFtJ5i7awmO7CqnV7sW7jx9i09VNpYuuOg9gq6wA1gdQFW3Yc4uufUSd8irX83JoN+1gzDhCAKQgnDVUAhFqxSl4TILUQ2doRik25PF5S0OW03q4BUoTJy2YfWpAr26z2ZeU2ce48qkeOhkhIxs+p6fDz9oN3VCJ8qCRDTemItWQjL78xC28rpiCZPhgZZXysgGhN57dWaSKf9UHj4on5eqpVWYiZGqTzZRFWhZjOO05B1ikgEBY3D0SzYFa4+2B/rFxkxYOnDWfx1zCFeButCIvLgDePQT5/0VfL3iyLXAHed/HFy5Jzy3kAUtDzpJvygvCpcibMwRP1KcKuSBHG3nglLR1WirAIaoBoaoDX3p7JYrpZCaoPJi/Dex8sxNvvzcGrI6aS+UxE/0FjWQ9GolefEXis16tUx4NFZcf+aN72eVU/yps+wULeQw5LqGEIc2YbeAXHYg8FZi0A+9VkfAjmuocpFdz5HxfkqvQj2+5B3braxG+/4lafvqg286DppGVxFlHl5SNKXD1FspOr8HFyQcuqJxgJsve3VgCUl7eByZwJZ/8QpodIBEQlwyc8nj3VAZ/GypUBEoA/I+A+CCyKSoDxQO9myBQhhzbsQkxpDp7EcgqwCj9/pBCkeu5emBXGfJ4hb3XD95nX+5Pnvy8vyOhmnwf40ZSCmQ5/irCOBOF3E0UYAf2GGiA0OBomNQ/QDMm5rZUOsGZWKBEVk9yY7KiRUshS1UpxZTDXFwZzQ1ojYTQ3FuGWRiLcWo/vNxKRCU1oTUVssrxOoAJxjAC/wAgcSaRClyyI5yWXpMvFwXI96GoC0NiuguUV97XtPgDH3+tCAK7fQM3zfVEjL7WXilU6Seaz7EJUM8TLmEMrH3uB6deek8vKpLWGZ4Ae6Q5O6MScX+zigUTSwOcCdKimk+SNNpQeoPPlzTVqQbhLB3+RnIpdVNLfMdouMEpuygvaZO+RvytFl7oklQJM3thDvkaT4CiA0nPRQeOMBa2rINp1IiA5OB6VhGlUwZNdgpDp6I5+Tn6oViJMUl8zfJki5HJEOQETk9JEjWyqUUwCIk0WU7lUUS7WVZYut3+unpYmpzDj5BU16jP3XufnYtIrERqgFydJg+0jrwX4MCgKMxiRdhFmQL59KlLeC1W2+86XD79r6eptO9rxCdyYOgOivFzdl0067A5NVvTLaRlIj4hGu8f7oZCsRBbGsrJKFJVUQuPuj0lBkn6xF2eygMtragma7Kns+eoOJ3YQ7L2fJhcsib7BIQhxcITJwQEWRwekubig2N0drXx88QwL9RtkLXJKdIvZisNMi38wj6v7CvF4biZnoiHrwcGnmX7atFMn/C3T1Rymn/GMgHiKsJEugaiRIoxgzo+JhkdEpojP6yLMWW2E7LFxWa1gJnuRi6ni5DaT4GS2U9eH1ZqZz6XZH9cav8eUY86sumfthDG9NcKZBeSkvyr6jPwd/mRkJATzSUNZhBFvvy74XbvTHwRA4zDeT+NgG6dxxyqtCYcsaexlFC/c0f1bwrCnxsVaUNXxBTKTCpV6GjbsgJzC5tA4eWCtMZYAMJ2wh0sH0VF2p/P7D6Yf9dq9oYrvUzPlHbBwgL1mZ3wSVtDRE+jwYRQzvQKD0MLLRwGSzIJtdXLC8aSU+73roiUFdR2Zgho2wrC4OLxAavq0txZDnQMx2pkaQkMR5q7DXbUgt1iNJzn7hVEAxiNQFwct2VGQLk4E68y0OCgLtQhlOjOCQ+JEEN+TJj9z7zE/Z+Z349SQRqC8NkBZHDy1UWgXEqp0j+x41Uyra+RdXFxC1XpQyYT+RoTdb/IPLnyT6ORmk7d9mcIw3kr+/BsdpIoiT/gUHwd6ekPjHUT2YoAnC4xWXq+rNzPfO+Jra4oaA6/t8dLBqrc/kPf5WAEiD/IKXy9zd4PV2Rl5bu5owV7fUxuMoeTR46kDFpGBbTFZ8Al7/n5LEo4RJNkZ5Pdlfv0hNhEGpr1k1pq2Gi90dfBDpbM30p3dkeIkVbAz1koRRrDv8vhvEjh55f1+azw+i4/n43gcSkgQh2mfxyeKzxMSZf4Wn9NkHpfXRN9/TuC/SEqxf47i8hA/e+jePg7y8cF4q3p+IyNHXT8gU+T11Bxy/zDMdQnDYlcDJrmGCi+7CGuuPP4XADTOGucibu40cva2rXbXq9BZ6BGGH+PkehoWlYJC7OWPD2VP60720sjTBxmu7ohmYe7nFyzuZvGH2eul8+kodZuWB4uvvFGTfKyMz+8wLXxBurmezGexyYzx4VEYTE7f3S8QTby8ke/mhhSmpFhHR4QxRfXyD2RkFdpTIh36Y0QCeb4L3mC+3+1mxHrm2E0sdBtoZc5eMDA9HQmQnLxA1TNJf2sZFk0tGaztXGryRK1kls9rP3OvDqnaYycI6j0ZgdyfMvs+5XflPvieqk9qPejVlGzMcaYGcJW3JTDibYowelwCkKIc/hcA7E8cNb35yNbH2V+s4RflKN5slxB8FhqLa6SN6u8D1B6YOrgCwO4QdRDIzlUgyMIrgXgIgHuOV8MRPME9TGnJdHJTDy90D9RiMMN3vCEcy6NN2GGOVz3/UEIqPktMxcfMq8dYqO+ooi6/z4gMs2Kgg7e6S0pjJy9bE3YcaRlO7jZ5n7hRLgE4xXQhhyfuO5uRo7ZKKNWeQ+178jkdLUdfpRWSAPydyf2pz97fH0mKWoKizk+OgP6alo0dZFyzWIDnuoZiDTtFfftiLHmPitobCP7TNteDoTLKPQRrmLfkZfUzSKVmcrvIU49VvgZsZnraq4vFIWMc1V4Cvo9LFqetqeJyUgZ+T81i/suxU0XVSyRo7B1y+0DPOUtePj0yGiOYcvqwGLfx9UOpuydSXVyEmb0+mmktjj0/08UVuZ6eKiXJO4+oGkPnfeQXgY3k2DEOToLHfEweN03e+OINdqLf3nfTihuhZtykQ67Rrqbn4AqZ3GVuL0rNwOM8k5KBU8kZOJmUhu8J9jfxKThuTcaX5iR8HpdIGm3FvhgL9kSasc1owkZDNNaSCq/UhWMpFfkCrQEz/MMwgYJwjGcQRnoEYoSbPwZRBA7SeGIaO+86RuYgVy01jRqCaEeT7eH0c6/VvujJR5/rnVxsk9xCsIQcdgFRXMhokNv5LgwrnvhMso3pjsFq7lUKH6k+58kbL3kascqHzgmMwm7y4P16E74It+C7mET8wsIp75kgL9mR99hRPU7dnubeeH9BCe7QuZfZo74j6/qEOVveHuEdvVFFBCSQ7HVfUmHOYafYxg6SzrrFY+5nP/T7bVkTFy/bUR77y05eGODsg5doA/m4P53T10GaN57nto/GA08pc6e5oRe3vbjtQRXdnSmu1rrxeTfSXvm4B+0JfkZ+/lll7niO++hHp/envaLxxivc/zuOPhjjGiQC7ctQltoP7V83BYKbRhPDRz/7OjjZEkid8pw8bI2dvWwdXXxtT7v624io7S3ueBwRnkGnyyq/lCbvXLiM22WuehYevs4cOJtgzZAAKZCCMUveWI+OWUqGsNo3HJvJHj6U0USQZDRJkK4kZqjbu6h78siIeSCFHCOQkx20WMCOMNMtVITYmUWVPG622mm+jgFOTrZpjALpkIEs0gPvbV+myRs+SSe95uCD4Q6+GOHoR2f54V0nf7xHG0f9MJHbaWRUM521zOVaKuxALCK9XcbzWEVbz3PbxE65hdutzA7beb6beUybWXS38vwnOmtFZ0cPG2m2HH44otVo5KIH2f6299c2+ab6gIf9T1PJO3nIP9gj/8LFEdppvvs7zebEkPLmzqUDTE6utnRnN1uZs6etFdVeDxd/24suATY5+DTSLViMd9MJCdR81hUJzBLaYjlJwQiaTZvlEIwZ96JJmlzXr25q4aETK3z02EA+vTM4BtsJlgRRLbzl/pJl73fQnHxgmbcCIECj8ePm8lM8hgOu4dhDp+xy0WMnf38nO8hOFsVtdJKMoC3uBrGRto62yl1vW+4WalvqorMtcNXZ+Bu2yW4htnEsoCNdtLbhLoG2V7jPATy/3s5+tp7OvrYO7JgtafUpsmRHlTVI3oYmWPZ6B428Xc4GT/tFL7Ld9+8/a7Vv/u2H5Ey+m8Ytig/ln7CSN0PtThtGm0yTN0aSd586QZN/xuoW92KTF3v48WDCHF1sZjosmwdYjwfbmkB1d/Gz9XUNsA1jRI10DRGTXGWEyEVMOuVkGUEL5ViKE3u7IyOJIC3n6zP4vlle5Oag+cFbo+7XKZt0/v0T5JMBspYV8PcK6ZgcbjP5+6m0BGd3Wxy/H0OLYKoNc3Chw5xtcsWaLODyoj4edzU72Q3u7TfaJdpZ7vYk7Wua7Iyf0nbS5J/rWkibRpMi62WavHt7K1oSrbbVHtvf+vaftX/7C2xONKkrYmjyj7tJ3tuTNpR7msjtctoemgTqAu02X7cDRYcZ6Agre5B0WH2ymyonH/Y0f1s/9r7hrsG2N9gTo+3TesdIJ+RtJGV70PkPHrP8q0/ySkRpg2kyouWaTPk3cXrR5A1dZfpqTJMr1SQVz6Al08y0CJr8OwoywmRUsTP/y78E9c/aX4/r3261X3xwR39n/05z4hnJW+JIoOTdrJrRutGG0N6nyV5FoBy+4p5l77sp0949NrHdS62mV+3vnP/vHsv/bvu73/+r/Uc3uYhJ9sZ0Wpp84VF71B61R+1Re9QetUftUXvUHrVH7VF71B61/8ym0fwvfqJCiflT7J8AAAAASUVORK5CYII=" alt="">
   <div>
-    <h1>Kokedex</h1>
-    <p>Todo lo que hay que saber para jugar al Rancho de Kokemones (Monster Rancher 2 DX con mods): cómo se instala, qué reglas cambian y qué hace cada objeto, con los números que usa el juego.</p>
+    <h1>Kokedex <span class="liga-nombre" id="ligaTitulo"></span></h1>
+    <p lang="es">Todo lo que hay que saber para jugar al Rancho de Kokemones (Monster Rancher 2 DX con mods) en tu liga: cómo se instala, qué reglas cambian y qué hace cada objeto, con los números que usa el juego.</p>
+    <p lang="en">Everything you need to know to play Rancho de Kokemones (Monster Rancher 2 DX with mods) in your league: how to install it, which rules change and what each item does, with the numbers the game uses.</p>
   </div>
 </header>
 
 <div class="bar">
   <div class="wrap">
     <div class="row">
-      <input type="search" id="q" placeholder="Buscar (ej.: guardado, Champions, cansancio, Tiger)…" aria-label="Buscar">
-      <button class="icon-btn" id="abrirTodo">Expandir todo</button>
-      <button class="icon-btn" id="cerrarTodo">Contraer todo</button>
-      <button class="icon-btn" id="tema" title="Cambiar tema">◐ Tema</button>
+      <input type="search" id="q" aria-label="Buscar">
+      <button class="icon-btn" id="abrirTodo"><span lang="es">Expandir todo</span><span lang="en">Expand all</span></button>
+      <button class="icon-btn" id="cerrarTodo"><span lang="es">Contraer todo</span><span lang="en">Collapse all</span></button>
+      <button class="icon-btn" id="tema"><span lang="es">◐ Tema</span><span lang="en">◐ Theme</span></button>
+      <button class="icon-btn" id="idioma" title="Español / English">ES · EN</button>
     </div>
   </div>
 </div>
 
 <main class="wrap">
-  <h2 class="grupo">Cómo se juega</h2>
+  <details class="sec guia hidden" id="tuLiga">
+    <summary><h2>🏟️ <span lang="es">Tu liga</span><span lang="en">Your league</span>: <span id="ligaNombre"></span></h2></summary>
+    <div class="cuerpo" id="ligaCuerpo"></div>
+  </details>
+
+  <h2 class="grupo"><span lang="es">Cómo se juega</span><span lang="en">How to play</span></h2>
 
   <details class="sec guia" id="instalacion">
-    <summary><h2>💻 Instalación y actualizaciones</h2></summary>
+    <summary><h2>💻 <span lang="es">Instalación y actualizaciones</span><span lang="en">Installation and updates</span></h2></summary>
     <div class="cuerpo">
-      <ol>
-        <li>Instalá <b>Monster Rancher 1 &amp; 2 DX</b> desde Steam.</li>
-        <li>Descargá <b>MR2-Rancho-de-Kokemones.zip</b> de <a href="https://github.com/tms87/mr2-rancho-de-kokemones/releases/latest">la última versión</a>.</li>
-        <li>Descomprimilo y hacé doble clic en <b>Instalar.bat</b>.
-          <ul>
-            <li>Busca el juego solo; si no lo encuentra, te pide que elijas <code>MF2.exe</code>.</li>
-            <li>Si te falta algo que el juego necesita (.NET 9 o Visual C++), lo instala.</li>
-            <li>Si Windows muestra <i>"Windows protegió su PC"</i>: <b>Más información</b> → <b>Ejecutar de todas formas</b>.</li>
-          </ul>
-        </li>
-      </ol>
-      <p>Después de instalar, la carpeta descomprimida se puede borrar. En el escritorio quedan los accesos directos <b>MR2 Rancho de Kokemones</b> (para jugar), <b>MR2 Subir exportados</b> y <b>Kokedex</b> (esta guía).</p>
-      <p><b>Actualizaciones:</b> cada vez que abrís el juego con el acceso directo, se actualiza solo: rivales, torneos, banners, esta guía y las versiones nuevas. Sin internet arranca igual. Tus partidas no se tocan.</p>
+      <div lang="es">
+        <ol>
+          <li>Instalá <b>Monster Rancher 1 &amp; 2 DX</b> desde Steam.</li>
+          <li>Descargá el instalador de tu liga<span data-si="liga.repo"> desde <a data-href="instalador">la página de la liga</a></span> (te lo pasa el administrador).</li>
+          <li>Descomprimilo y hacé doble clic en <b>Instalar.bat</b>.
+            <ul>
+              <li>Busca el juego solo; si no lo encuentra, te pide que elijas <code>MF2.exe</code>.</li>
+              <li>Si te falta algo que el juego necesita (.NET 9 o Visual C++), lo instala.</li>
+              <li>Baja Reloaded-II y los mods de la comunidad (unos 55 MB) de sus páginas oficiales.</li>
+              <li>Si Windows muestra <i>"Windows protegió su PC"</i>: <b>Más información</b> → <b>Ejecutar de todas formas</b>.</li>
+            </ul>
+          </li>
+        </ol>
+        <p>Después de instalar, la carpeta descomprimida se puede borrar. En el escritorio quedan los accesos directos <b>MR2 Rancho de Kokemones</b> (para jugar), <b>MR2 Subir exportados</b> y <b>Kokedex</b> (esta guía).</p>
+        <p><b>Actualizaciones:</b> cada vez que abrís el juego con el acceso directo, se pone al día con tu liga: rivales, torneos, banners, competencias, reglas, esta guía y la versión del Rancho que usa la liga. Sin internet arranca igual. Tus partidas no se tocan.</p>
+      </div>
+      <div lang="en">
+        <ol>
+          <li>Install <b>Monster Rancher 1 &amp; 2 DX</b> from Steam.</li>
+          <li>Download your league's installer<span data-si="liga.repo"> from <a data-href="instalador">the league's page</a></span> (your admin will share it).</li>
+          <li>Unzip it and double-click <b>Instalar.bat</b>.
+            <ul>
+              <li>It finds the game by itself; if it can't, it asks you to pick <code>MF2.exe</code>.</li>
+              <li>If something the game needs is missing (.NET 9 or Visual C++), it installs it.</li>
+              <li>It downloads Reloaded-II and the community mods (about 55 MB) from their official pages.</li>
+              <li>If Windows shows <i>"Windows protected your PC"</i>: <b>More info</b> → <b>Run anyway</b>.</li>
+            </ul>
+          </li>
+        </ol>
+        <p>After installing you can delete the unzipped folder. Your desktop gets the shortcuts <b>MR2 Rancho de Kokemones</b> (to play), <b>MR2 Subir exportados</b> (upload exports) and <b>Kokedex</b> (this guide).</p>
+        <p><b>Updates:</b> every time you open the game with the shortcut, it syncs with your league: rivals, tournaments, banners, competitions, rules, this guide and the Rancho version the league uses. It still starts without internet. Your saves are never touched.</p>
+      </div>
     </div>
   </details>
 
   <details class="sec guia" id="jugar">
-    <summary><h2>▶️ Para jugar</h2></summary>
+    <summary><h2>▶️ <span lang="es">Para jugar</span><span lang="en">Playing</span></h2></summary>
     <div class="cuerpo">
-      <ol>
-        <li>Abrí el juego <b>siempre</b> con el acceso directo <b>MR2 Rancho de Kokemones</b>. Si no lo abrís así, los mods no se cargan.</li>
-        <li>Steam tiene que estar abierto; si no lo está, el acceso directo lo abre.</li>
-        <li><b>La primera vez puede tardar varios minutos</b> en aparecer y no se ve nada mientras tanto. Esperá y no lo abras dos veces.</li>
-      </ol>
-      <p>Si algo falla, mandá los registros de la carpeta <code>%APPDATA%\Reloaded-Mod-Loader-II\Logs</code>.</p>
+      <div lang="es">
+        <ol>
+          <li>Abrí el juego <b>siempre</b> con el acceso directo <b>MR2 Rancho de Kokemones</b>. Si no lo abrís así, los mods no se cargan.</li>
+          <li>Steam tiene que estar abierto; si no lo está, el acceso directo lo abre.</li>
+          <li><b>La primera vez puede tardar varios minutos</b> en aparecer y no se ve nada mientras tanto. Esperá y no lo abras dos veces.</li>
+        </ol>
+        <p>Si algo falla, mandá los registros de la carpeta <code>%APPDATA%\Reloaded-Mod-Loader-II\Logs</code>.</p>
+      </div>
+      <div lang="en">
+        <ol>
+          <li><b>Always</b> open the game with the <b>MR2 Rancho de Kokemones</b> shortcut. Otherwise the mods are not loaded.</li>
+          <li>Steam has to be running; if it isn't, the shortcut opens it.</li>
+          <li><b>The first time it can take several minutes</b> to show up, with nothing on screen meanwhile. Wait and don't open it twice.</li>
+        </ol>
+        <p>If something fails, send the logs in <code>%APPDATA%\Reloaded-Mod-Loader-II\Logs</code>.</p>
+      </div>
     </div>
   </details>
 
   <details class="sec guia" id="discos">
-    <summary><h2>🎲 Discos del santuario</h2></summary>
+    <summary><h2>🎲 <span lang="es">Discos del santuario</span><span lang="en">Shrine discs</span></h2></summary>
     <div class="cuerpo">
-      <ul>
-        <li><b>Cada disco da una raza al azar, pero siempre la misma.</b> El mismo disco te da la misma raza a vos y a cualquier otro jugador del grupo, así que conviene compartir qué sale de cada uno.</li>
-        <li>Se incluyen las <b>más de 240 especies nuevas de More Monsters</b>.</li>
-        <li>Aunque la raza sea fija, <b>cada monstruo creado sale distinto</b>: stats iniciales ±20 %, crecimiento de cada stat ±1 nivel, esperanza de vida ±10 % y naturaleza ±30 puntos.</li>
+      <ul lang="es">
+        <li data-si="DiscRandomizer.RandomizeBreed"><b>Cada disco da una raza al azar, pero siempre la misma.</b> El mismo disco te da la misma raza a vos y a cualquier otro jugador de la liga, así que conviene compartir qué sale de cada uno.</li>
+        <li data-si="DiscRandomizer.RandomizeBreed,DiscRandomizer.IncludeMoreMonsters">Se incluyen las <b>más de 240 especies nuevas de More Monsters</b>.</li>
+        <li><b>Cada monstruo creado sale distinto</b>: stats iniciales ±<span data-c="DiscRandomizer.StatVariancePercent"></span> %, crecimiento de cada stat ±<span data-c="DiscRandomizer.GrowthVarianceSteps"></span> nivel(es), esperanza de vida ±<span data-c="DiscRandomizer.LifespanVariancePercent"></span> % y naturaleza ±<span data-c="DiscRandomizer.NatureVariance"></span> puntos.</li>
         <li>Si la raza está bloqueada, el disco se rechaza como en el juego original.</li>
-        <li><b>Máximo 5 monstruos creados por año</b> en el santuario. El juego avisa cuántos te quedan, pero ese número se actualiza recién <b>cuando volvés al rancho</b>.</li>
+        <li data-si="RanchRules.ShrineLimitEnabled"><b>Máximo <span data-c="RanchRules.ShrinePerYear"></span> monstruos creados por año</b> en el santuario. El juego avisa cuántos te quedan, pero ese número se actualiza recién <b>cuando volvés al rancho</b>.</li>
+      </ul>
+      <ul lang="en">
+        <li data-si="DiscRandomizer.RandomizeBreed"><b>Each disc gives a random breed, but always the same one.</b> The same disc gives you and every other player in the league the same breed, so it pays to share what each one gives.</li>
+        <li data-si="DiscRandomizer.RandomizeBreed,DiscRandomizer.IncludeMoreMonsters">The <b>240+ new More Monsters species</b> are included.</li>
+        <li><b>Every created monster is different</b>: starting stats ±<span data-c="DiscRandomizer.StatVariancePercent"></span> %, each stat's growth ±<span data-c="DiscRandomizer.GrowthVarianceSteps"></span> level(s), lifespan ±<span data-c="DiscRandomizer.LifespanVariancePercent"></span> % and nature ±<span data-c="DiscRandomizer.NatureVariance"></span> points.</li>
+        <li>If the breed is locked, the disc is rejected as in the original game.</li>
+        <li data-si="RanchRules.ShrineLimitEnabled"><b>At most <span data-c="RanchRules.ShrinePerYear"></span> monsters created per year</b> at the shrine. The game tells you how many are left, but that number only updates <b>when you go back to the ranch</b>.</li>
       </ul>
     </div>
   </details>
 
   <details class="sec guia" id="guardado">
-    <summary><h2>💾 Guardado (modo ironman)</h2></summary>
+    <summary><h2>💾 <span lang="es">Guardado (modo ironman)</span><span lang="en">Saving (ironman mode)</span></h2></summary>
     <div class="cuerpo">
-      <ul>
+      <ul lang="es">
         <li>Elijas la ranura que elijas, <b>siempre se guarda en la ranura Auto</b>, así que no se puede guardar antes de algo y recargar.</li>
-        <li>Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.</li>
-        <li><b>Las copias anuales son las que se usan para competir en el modo versus.</b></li>
+        <li data-si="RanchRules.YearlyBackup">Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.</li>
+        <li data-si="RanchRules.YearlyBackup"><b>Las copias anuales son las que se usan para competir en el modo versus.</b></li>
         <li><b>Las ranuras 8 a 14 son para competencias:</b> tienen los participantes de cada competencia (en el congelador, con el entrenador "Kokemon"). Las carga el Administrador de la Liga Kokemon, llegan con las actualizaciones y aparecen después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, no se guarda nada (tampoco el autoguardado): la próxima vez que la cargues está igual, y tu partida (Auto) no se toca.</li>
+      </ul>
+      <ul lang="en">
+        <li>Whatever slot you pick, <b>the game always saves to the Auto slot</b>, so you can't save before something and reload.</li>
+        <li data-si="RanchRules.YearlyBackup">Every January an automatic copy goes to slots 1 to 7, rotating. They are a safety net, not a way to cheat.</li>
+        <li data-si="RanchRules.YearlyBackup"><b>The yearly copies are the ones used to compete in versus mode.</b></li>
+        <li><b>Slots 8 to 14 are for competitions:</b> they hold each competition's participants (in the freezer, with the trainer "Kokemon"). The Kokemon League admin loads them; they arrive with the updates and appear after the first save of each session. In VS mode you pick that slot and they get registered. If you load one to play, nothing is saved (not even the autosave): next time you load it, it's the same, and your game (Auto) is not touched.</li>
       </ul>
     </div>
   </details>
 
   <details class="sec guia" id="torneos">
-    <summary><h2>🏆 Torneos y batallas</h2></summary>
+    <summary><h2>🏆 <span lang="es">Torneos y batallas</span><span lang="en">Tournaments and battles</span></h2></summary>
     <div class="cuerpo">
-      <ul>
-        <li><b>Un monstruo no puede entrar a torneos de un rango más bajo que el suyo.</b> Un monstruo B no puede ir a torneos C, D ni E. Los torneos libres (F) siempre están abiertos.</li>
+      <ul lang="es">
+        <li data-si="RanchRules.BlockLowerRankTournaments,!RanchRules.LowerRanksAllowed"><b>Un monstruo no puede entrar a torneos de un rango más bajo que el suyo.</b> Un monstruo B no puede ir a torneos C, D ni E. Los torneos libres (F) siempre están abiertos.</li>
+        <li data-si="RanchRules.BlockLowerRankTournaments,RanchRules.LowerRanksAllowed"><b>Un monstruo puede entrar a torneos de hasta <span data-c="RanchRules.LowerRanksAllowed"></span> rango(s) por debajo del suyo</b>, no más abajo. Los torneos libres (F) siempre están abiertos.</li>
         <li><b>Batallas automáticas:</b> en torneos y batallas, <b>tu monstruo pelea solo</b>, con su propia inteligencia. Respondas lo que respondas antes de la pelea, se pone en automático.</li>
         <li>El modo VS (contra otra persona) no cambia.</li>
+      </ul>
+      <ul lang="en">
+        <li data-si="RanchRules.BlockLowerRankTournaments,!RanchRules.LowerRanksAllowed"><b>A monster cannot enter tournaments of a lower rank than its own.</b> A B monster can't go to C, D or E tournaments. Free (F) tournaments are always open.</li>
+        <li data-si="RanchRules.BlockLowerRankTournaments,RanchRules.LowerRanksAllowed"><b>A monster can enter tournaments up to <span data-c="RanchRules.LowerRanksAllowed"></span> rank(s) below its own</b>, no lower. Free (F) tournaments are always open.</li>
+        <li><b>Auto battles:</b> in tournaments and battles <b>your monster fights by itself</b>, with its own intelligence. Whatever you answer before the fight, it goes automatic.</li>
+        <li>VS mode (against another person) doesn't change.</li>
       </ul>
     </div>
   </details>
 
   <details class="sec guia" id="rivales">
-    <summary><h2>👥 Rivales Kokemon</h2></summary>
+    <summary><h2>👥 <span lang="es">Rivales Kokemon</span><span lang="en">Kokemon Rivals</span></h2></summary>
     <div class="cuerpo">
-      <ul>
-        <li>En los torneos de liga (E a S), <b>los rivales se sortean cada semana</b> de una lista por liga: los 50 originales más <b>monstruos de jugadores del grupo</b>.</li>
+      <ul lang="es">
+        <li>En los torneos de liga (E a S), <b>los rivales se sortean cada semana</b> de una lista por liga: los 50 originales más <b>monstruos de jugadores de tu liga</b>.</li>
         <li>El sorteo es <b>el mismo para todos</b> en la misma semana del juego.</li>
-        <li><b>Al empezar cada año, tu monstruo y los del congelador se exportan</b> (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo <code>1021-01-1 Gareth.json</code>.</li>
-        <li><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y llegan al editor del grupo, donde pueden pasar a ser rivales o entrar en una competencia. La primera vez te pide la clave que te pasan por privado (es personal: no la compartas).</li>
-        <li><b>Con el paso del tiempo, los monstruos más débiles de cada rango van a bajar de rango o salir de la lista</b>, a medida que entren rivales más fuertes.</li>
+        <li data-si="Leagues.ExportOnSave"><b>Al empezar cada año, tu monstruo y los del congelador se exportan</b> (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo <code>1021-01-1 Gareth.json</code>.</li>
+        <li data-si="Leagues.ExportOnSave,liga.repo"><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y le llegan al administrador de la liga, que puede sumarlos como rivales o a una competencia. La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas).</li>
         <li>FIMBA, los 4 grandes y los torneos especiales no cambian.</li>
+      </ul>
+      <ul lang="en">
+        <li>In league tournaments (E to S), <b>rivals are drawn every week</b> from a list per league: the 50 originals plus <b>monsters from players in your league</b>.</li>
+        <li>The draw is <b>the same for everyone</b> in the same game week.</li>
+        <li data-si="Leagues.ExportOnSave"><b>At the start of each year your monster and the ones in the freezer are exported</b> (along with the yearly copy) to a file named with the game date and your trainer, for example <code>1021-01-1 Gareth.json</code>.</li>
+        <li data-si="Leagues.ExportOnSave,liga.repo"><b>To share them, use "MR2 Subir exportados"</b> (desktop shortcut): pick which exports to upload and they reach the league admin, who can add them as rivals or to a competition. The first time it asks for the key the admin sends you privately (it's personal: don't share it).</li>
+        <li>FIMBA, the big 4 and the special tournaments don't change.</li>
       </ul>
     </div>
   </details>
 
   <details class="sec guia" id="liga">
-    <summary><h2>📅 Calendario Kokemon</h2></summary>
+    <summary><h2>📅 <span lang="es">Calendario Kokemon</span><span lang="en">Kokemon Calendar</span></h2></summary>
     <div class="cuerpo">
-      <ul>
-        <li><b>El calendario cambia todos los años.</b> Los torneos chicos de A a E se sortean, tanto cuántos hay como en qué fecha, de un pozo con los originales y <b>25 torneos nuevos</b>.</li>
-        <li>En el calendario <b>ves 7 meses hacia adelante</b>, y se va actualizando mes a mes. Los otros meses muestran lo que se jugó el año anterior, así que un torneo chico puede aparecer dos veces.</li>
-        <li>El sorteo es <b>el mismo para todos</b> en el mismo año del juego.</li>
-        <li><b>Rookie Cup</b> (3 ediciones por año, rango E): los rivales están <b>entre los más débiles</b> de la liga E.</li>
-        <li>Los torneos nuevos tienen premio y objeto bonus propios, y sus rivales salen al azar de su liga.</li>
+      <ul lang="es">
+        <li data-si="CalendarioKokemon.ShuffleSmall"><b>El calendario cambia todos los años.</b> Los torneos chicos de A a E se sortean, tanto cuántos hay como en qué fecha, de un pozo con los originales y los <b>torneos nuevos de la liga</b>.</li>
+        <li data-si="!CalendarioKokemon.ShuffleSmall">Los torneos chicos tienen sus fechas originales, más los <b>torneos nuevos de la liga</b>.</li>
+        <li data-si="CalendarioKokemon.ShuffleSmall">En el calendario <b>ves 7 meses hacia adelante</b>, y se va actualizando mes a mes. Los otros meses muestran lo que se jugó el año anterior, así que un torneo chico puede aparecer dos veces.</li>
+        <li data-si="CalendarioKokemon.ShuffleSmall">El sorteo es <b>el mismo para todos</b> en el mismo año del juego.</li>
+        <li>Los torneos nuevos tienen premio y objeto bonus propios, y sus rivales salen de su liga.</li>
         <li>Los torneos oficiales y los especiales siguen como siempre.</li>
       </ul>
-      <div class="tablewrap"><table><thead><tr><th>Rango</th><th>Torneos por año</th></tr></thead><tbody>
-        <tr><td>A</td><td>entre 4 y 7</td></tr><tr><td>B</td><td>entre 6 y 10</td></tr><tr><td>C</td><td>entre 7 y 11</td></tr>
-        <tr><td>D</td><td>entre 6 y 10</td></tr><tr><td>E</td><td>entre 5 y 8</td></tr></tbody></table></div>
-    </div>
-  </details>
-
-  <details class="sec guia" id="champions">
-    <summary><h2>👑 Champions Cup (diciembre, semana 2)</h2></summary>
-    <div class="cuerpo">
-      <p>Es la <b>liga de los campeones de cada rango</b>, de S a E: tu monstruo enfrenta a los campeones de ese rango, todos contra todos.</p>
-      <p class="aviso">⚠️ <b>Todavía no está disponible:</b> se habilita cuando haya campeones.</p>
-      <ul>
-        <li><b>Premio en dinero:</b> 50 % más que un torneo normal de ese rango.</li>
-        <li><b>Bonus sorpresa</b> (en el calendario dice <i>"Aleatorio"</i>): mitad de chance de un objeto de la lista de su rango y mitad de chance de un <b>disc chip</b>.</li>
+      <ul lang="en">
+        <li data-si="CalendarioKokemon.ShuffleSmall"><b>The calendar changes every year.</b> Small A to E tournaments are drawn, both how many and when, from a pool with the originals and <b>the league's new tournaments</b>.</li>
+        <li data-si="!CalendarioKokemon.ShuffleSmall">Small tournaments keep their original dates, plus <b>the league's new tournaments</b>.</li>
+        <li data-si="CalendarioKokemon.ShuffleSmall">The calendar <b>shows 7 months ahead</b> and updates month by month. The other months show what was played the previous year, so a small tournament can appear twice.</li>
+        <li data-si="CalendarioKokemon.ShuffleSmall">The draw is <b>the same for everyone</b> in the same game year.</li>
+        <li>New tournaments have their own prize and bonus item, and their rivals come from their league.</li>
+        <li>Official and special tournaments stay as always.</li>
       </ul>
-      <div class="tablewrap" style="max-width:820px"><table><thead><tr><th>Rango</th><th>Objetos posibles</th></tr></thead><tbody>
-        <tr><td>S</td><td>Dragon Tusk, Fire Feather, Undine Slate, God Slate, Double-edged, Mystic Seed, Gold Peach, Silver Peach</td></tr>
-        <tr><td>A</td><td>Taurus' Horn, Dino's Tail, Zilla Beard, Big Footstep, Gali Mask, Crystal, Gold Peach, Silver Peach</td></tr>
-        <tr><td>B</td><td>Pure Platina, Pure Gold, Pure Silver, Fire Stone, Paradoxine, Teromeamn, Gemini's Pot, Sculpture</td></tr>
-        <tr><td>C</td><td>Pure Gold, Pure Silver, Torles Water, Manseitan, Larox, Nageel, Gemini's Pot, Sculpture</td></tr>
-        <tr><td>D</td><td>Pure Silver, Bay Shrimp, Shoes, Perfume, Olive Oil, Star Prune, Kasseitan, Troron, Gemini's Pot, Sculpture</td></tr>
-        <tr><td>E</td><td>Pure Silver, Bay Shrimp, Star Prune, Incense, Fun Can, Smoked Snake, Apple Cake, Crab's Claw, Sculpture</td></tr>
-      </tbody></table></div>
     </div>
   </details>
 
-  <h2 class="grupo">Objetos</h2>
+  <h2 class="grupo"><span lang="es">Objetos</span><span lang="en">Items</span></h2>
 
   <details class="sec guia" id="guia">
-    <summary><h2>📖 Cómo leer las fichas</h2></summary>
+    <summary><h2>📖 <span lang="es">Cómo leer las fichas</span><span lang="en">How to read the cards</span></h2></summary>
     <div class="cuerpo">
-    <div class="intro-grid">
+    <div class="intro-grid" lang="es">
       <div class="box">
         <h3>Cómo leer los números</h3>
         <ul>
@@ -276,21 +328,42 @@ details.sec p.lead{margin:0 0 12px;color:var(--muted);max-width:820px}
         </ul>
       </div>
     </div>
+    <div class="intro-grid" lang="en">
+      <div class="box">
+        <h3>Reading the numbers</h3>
+        <ul>
+          <li><b>Fixed number</b> (−10): adds or subtracts that amount.</li>
+          <li><b>Percentage</b> (−3 %): proportional to the monster's current value.</li>
+          <li><b>Lifespan</b>: in weeks.</li>
+          <li>Green is good for the monster, red is bad and blue depends on how you are raising it (fear, spoil, form, nature).</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Glossary</h3>
+        <ul>
+          <li><b>Fatigue</b> and <b>stress</b>: the lower, the better.</li>
+          <li><b>Fear</b> and <b>spoil</b>: the two halves of loyalty.</li>
+          <li><b>Form</b>: the weight; positive fattens, negative slims.</li>
+          <li><b>Nature</b>: positive is good, negative is bad.</li>
+        </ul>
+      </div>
+    </div>
     </div>
   </details>
 
   <details class="sec guia" id="modReglas">
-    <summary><h2>📜 Reglas generales de los objetos</h2></summary>
+    <summary><h2>📜 <span lang="es">Reglas generales de los objetos</span><span lang="en">General item rules</span></h2></summary>
     <div class="cuerpo">
-    <p class="lead">Valen para los objetos que las mencionan en su ficha.</p>
-    <div class="intro-grid">
+    <p class="lead"><span lang="es">Valen para los objetos que las mencionan en su ficha.</span><span lang="en">They apply to the items that mention them on their card.</span></p>
+    <div class="intro-grid" lang="es">
       <div class="box">
         <h3>Acostumbramiento antifatiga (Nuts Oil y Magic Banana)</h3>
         <ul>
-          <li>Estos objetos le sacan la fatiga salteando el descanso. Cada uno suma <b>acostumbramiento antifatiga</b>: la <a href="#o23">Nuts Oil</a> y el resultado A de la <a href="#o28">Magic Banana</a>, <b>2 puntos</b>; el resultado B, <b>1</b> (máximo 10).</li>
-          <li>Cada punto le quita un <b>10 %</b> a lo que <b>baja el cansancio</b>: 100 % → 90 % → 80 %… hasta un mínimo de <b>40 %</b>. El estrés y lo demás no cambian.</li>
+          <li>Estos objetos le sacan la fatiga salteando el descanso. Cada uno suma <b>acostumbramiento antifatiga</b>: la <a href="#o23">Nuts Oil</a> y el resultado A de la <a href="#o28">Magic Banana</a>, <b>2 puntos</b>; el resultado B, <b>1</b> (máximo <span data-c="ItemTolerance.MaxTolerance"></span>).</li>
+          <li>Cada punto le quita un <b><span data-c="ItemTolerance.ToleranceStepPercent"></span> %</b> a lo que <b>baja el cansancio</b>, hasta un mínimo de <b><span data-c="ItemTolerance.MinimumEffectPercent"></span> %</b>. El estrés y lo demás no cambian.</li>
           <li>Cada semana el acostumbramiento baja <b>1 punto</b>, también la semana en que se lo das: una Nuts Oil por semana suma 1 en neto, y descansar es la forma de recuperarlo.</li>
-          <li>Es <b>compartido</b>: alternar Nuts Oil y Magic Banana no sirve para esquivarlo.</li>
+          <li data-si="ItemTolerance.SharedTolerance">Es <b>compartido</b>: alternar Nuts Oil y Magic Banana no sirve para esquivarlo.</li>
+          <li data-si="!ItemTolerance.SharedTolerance">Cada objeto lleva <b>su propio</b> acostumbramiento.</li>
           <li>Como comida del mes, la <a href="#o2">Meat</a> lo baja <b>2 puntos</b> y el <a href="#o40">Chicken</a>, <b>1</b>.</li>
         </ul>
       </div>
@@ -298,7 +371,7 @@ details.sec p.lead{margin:0 0 12px;color:var(--muted);max-width:820px}
         <h3>Intoxicación y riesgo de vida</h3>
         <ul>
           <li>Los <b>items tóxicos</b> le suman <b>intoxicación</b>, que se acumula en toda su vida: <a href="#o23">Nuts Oil</a> y <a href="#o28">Magic Banana</a> (1), <a href="#o34">Teromeamn</a>, <a href="#o37">Kasseitan</a> y <a href="#o39">Nageel</a> (de 1 a 5 al azar), <a href="#o38">Troron</a> (2) y <a href="#o41">Paradoxine</a> (6).</li>
-          <li><b>Cada punto que sube tira por separado</b> la chance de perder <b>1 semana de vida</b>: <b>2 % por punto</b> de intoxicación (con 5: 10 %, con 10: 20 %), con un tope de <b>50 %</b>. Si suma 6, son 6 tiradas.</li>
+          <li><b>Cada punto que sube tira por separado</b> la chance de perder <b><span data-c="ItemTolerance.LifespanWeeksLost"></span> semana(s) de vida</b>: <span data-si="ItemTolerance.LifespanBaseChancePercent"><b><span data-c="ItemTolerance.LifespanBaseChancePercent"></span> %</b> fijo más </span><b><span data-c="ItemTolerance.LifespanChancePerItemPercent"></span> % por punto</b> de intoxicación, con un tope de <b><span data-c="ItemTolerance.LifespanMaxChancePercent"></span> %</b>. Si suma 6, son 6 tiradas.</li>
           <li>Los desintoxicantes la bajan: <a href="#o26">Gold Peach</a>, <a href="#o27">Silver Peach</a>, <a href="#o177">Quack Doll</a>, <a href="#o75">Rock Candy</a>, <a href="#o32">Irritater</a>, <a href="#o33">Griever</a>, <a href="#o31">Half-Eaten</a>, el resultado C de la <a href="#o28">Magic Banana</a> y, como comida del mes, el <a href="#o66">Green Tea</a>, el <a href="#o40">Chicken</a> y el <a href="#o1">Fish</a> (ver <a href="#reglaTe">racha del Green Tea</a>).</li>
         </ul>
       </div>
@@ -330,16 +403,65 @@ details.sec p.lead{margin:0 0 12px;color:var(--muted);max-width:820px}
         </ul>
       </div>
     </div>
+    <div class="intro-grid" lang="en">
+      <div class="box">
+        <h3>Anti-fatigue habit (Nuts Oil and Magic Banana)</h3>
+        <ul>
+          <li>These items remove fatigue by skipping rest. Each one adds <b>anti-fatigue habit</b>: <a href="#o23">Nuts Oil</a> and <a href="#o28">Magic Banana</a> result A, <b>2 points</b>; result B, <b>1</b> (maximum <span data-c="ItemTolerance.MaxTolerance"></span>).</li>
+          <li>Each point takes <b><span data-c="ItemTolerance.ToleranceStepPercent"></span> %</b> off <b>how much fatigue drops</b>, down to a minimum of <b><span data-c="ItemTolerance.MinimumEffectPercent"></span> %</b>. Stress and everything else don't change.</li>
+          <li>The habit drops <b>1 point</b> every week, including the week you give the item: one Nuts Oil a week adds 1 net, and resting is how to recover.</li>
+          <li data-si="ItemTolerance.SharedTolerance">It is <b>shared</b>: alternating Nuts Oil and Magic Banana doesn't dodge it.</li>
+          <li data-si="!ItemTolerance.SharedTolerance">Each item has <b>its own</b> habit.</li>
+          <li>As monthly food, <a href="#o2">Meat</a> lowers it <b>2 points</b> and <a href="#o40">Chicken</a>, <b>1</b>.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Toxicity and lifespan risk</h3>
+        <ul>
+          <li><b>Toxic items</b> add <b>toxicity</b>, which accumulates over the monster's whole life: <a href="#o23">Nuts Oil</a> and <a href="#o28">Magic Banana</a> (1), <a href="#o34">Teromeamn</a>, <a href="#o37">Kasseitan</a> and <a href="#o39">Nageel</a> (1 to 5 at random), <a href="#o38">Troron</a> (2) and <a href="#o41">Paradoxine</a> (6).</li>
+          <li><b>Each point gained rolls separately</b> the chance of losing <b><span data-c="ItemTolerance.LifespanWeeksLost"></span> week(s) of lifespan</b>: <span data-si="ItemTolerance.LifespanBaseChancePercent">a fixed <b><span data-c="ItemTolerance.LifespanBaseChancePercent"></span> %</b> plus </span><b><span data-c="ItemTolerance.LifespanChancePerItemPercent"></span> % per toxicity point</b>, capped at <b><span data-c="ItemTolerance.LifespanMaxChancePercent"></span> %</b>. If it adds 6, that's 6 rolls.</li>
+          <li>Detox items lower it: <a href="#o26">Gold Peach</a>, <a href="#o27">Silver Peach</a>, <a href="#o177">Quack Doll</a>, <a href="#o75">Rock Candy</a>, <a href="#o32">Irritater</a>, <a href="#o33">Griever</a>, <a href="#o31">Half-Eaten</a>, <a href="#o28">Magic Banana</a> result C and, as monthly food, <a href="#o66">Green Tea</a>, <a href="#o40">Chicken</a> and <a href="#o1">Fish</a> (see <a href="#reglaTe">Green Tea streak</a>).</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Green Tea streak (monthly food)</h3>
+        <ul>
+          <li>Each month the monster eats <a href="#o66">Green Tea</a>, the streak goes up <b>1</b> (maximum 10). Each month it doesn't, it goes down <b>1</b>.</li>
+          <li>Eating it rolls to remove <b>1 toxicity</b>: <b>15 % per streak point</b>, up to <b>75 %</b> (at 5). From 5 to 10 the chance doesn't grow, but the streak survives more months without tea.</li>
+          <li><a href="#o40">Chicken</a>: if the streak is 2 or less, it doesn't drop that month. <a href="#o1">Fish</a>: if it is 0 or 1, it sets it to 1.</li>
+          <li>Chicken and Fish <b>always roll</b> with the current streak (if it is 1 or more), even when they don't keep it.</li>
+          <li>Each monster has its own streak, saved with the game.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Items that take lifespan</h3>
+        <ul>
+          <li>They take a <b>random</b> number of weeks within a range.</li>
+          <li>It depends on age: <b>young monsters get small losses more often</b>, at mid-life it's even and old monsters get the big ones more often.</li>
+          <li>The averages on each card are for a young monster, one at mid-life and one at the end of its life.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Disc chip chest</h3>
+        <ul>
+          <li>When you get a disc chip it goes to the inventory as usual (it needs a free slot) and <b>you can sell it</b>.</li>
+          <li><b>At the start of each month</b>, every disc chip in the inventory moves to the <b>chest</b>: <b>they stop taking space</b> and <b>can no longer be sold</b>.</li>
+          <li>In the lab, <b>one of each kind</b> in the chest shows up, with no slot limit. Using it takes it from the chest.</li>
+          <li>The chest is saved with the game.</li>
+        </ul>
+      </div>
+    </div>
     </div>
   </details>
 
   <div id="secciones"></div>
-  <p class="empty hidden" id="vacio">No hay nada que coincida con la búsqueda.</p>
+  <p class="empty hidden" id="vacio"><span lang="es">No hay nada que coincida con la búsqueda.</span><span lang="en">Nothing matches the search.</span></p>
 
 </main>
 
 <footer class="wrap">
-  Kokedex del Rancho de Kokemones. Datos: tablas de objetos del juego (Monster Rancher 2 DX, <code>item_dat.bin</code>) con las reglas del Rancho de Kokemones. Observaciones de juego reunidas por la comunidad en LegendCup.com, escritas con nuestras palabras.
+  <span lang="es">Kokedex del Rancho de Kokemones<span id="pieVersion"></span>. Datos: tablas de objetos del juego (Monster Rancher 2 DX, <code>item_dat.bin</code>) con las reglas del Rancho de Kokemones. Observaciones de juego reunidas por la comunidad en LegendCup.com, escritas con nuestras palabras.</span>
+  <span lang="en">Rancho de Kokemones Kokedex<span id="pieVersionEn"></span>. Data: the game's item tables (Monster Rancher 2 DX, <code>item_dat.bin</code>) with the Rancho de Kokemones rules. Gameplay notes gathered by the community at LegendCup.com, written in our own words.</span>
 </footer>
 
 <script>
@@ -347,77 +469,137 @@ const DATA =
 {"items":[{"id":0,"n":"Potato","buy":10,"sel":-1,"on":8,"fx":[[1,0,20,-1]]},{"id":1,"n":"Fish","buy":100,"sel":-1,"on":8,"fx":[[1,0,20,2]]},{"id":2,"n":"Meat","buy":300,"sel":-1,"on":8,"fx":[[1,0,20,6]]},{"id":3,"n":"Milk","buy":50,"sel":-1,"on":8,"fx":[[1,0,20,1]]},{"id":4,"n":"Cup jelly","buy":150,"sel":-1,"on":8,"fx":[[1,0,20,-3]]},{"id":5,"n":"Tablets","buy":500,"sel":-1,"on":8,"fx":[[1,0,20,3]]},{"id":6,"n":"Sculpture","buy":-1,"sel":1500,"on":131,"fx":[[1,1,15,-3],[1,1,18,1]]},{"id":7,"n":"Gemini\u0027s Pot","buy":-1,"sel":1500,"on":131,"fx":[[1,0,19,1],[1,1,17,-3]]},{"id":8,"n":"Lump of Ice","buy":-1,"sel":150,"on":133,"fx":[[1,1,15,-3],[1,1,17,-2]]},{"id":9,"n":"Fire Stone","buy":-1,"sel":5000,"on":135,"fx":[[1,1,15,-3]]},{"id":10,"n":"Pure Gold","buy":-1,"sel":6000,"on":131,"fx":[[1,1,15,-1],[1,1,17,-1]]},{"id":11,"n":"Pure Gold","buy":-1,"sel":6000,"on":128,"fx":[[10000,10000,1]]},{"id":12,"n":"Pure Silver","buy":-1,"sel":4000,"on":128,"fx":[[0,0,0]]},{"id":13,"n":"Pure Platina","buy":-1,"sel":8000,"on":128,"fx":[[0,0,0]]},{"id":14,"n":"Mango","buy":60,"sel":10,"on":8,"fx":[[1,0,15,-10],[1,0,19,1],[1,0,18,1],[1,0,20,1]]},{"id":15,"n":"Candy","buy":120,"sel":60,"on":8,"fx":[[1,0,18,1],[1,0,20,10],[1,0,17,-2]]},{"id":16,"n":"Smoked Snake","buy":600,"sel":300,"on":8,"fx":[[5,5,27],[1,1,19,40],[1,1,18,-20],[1,0,20,-10]]},{"id":17,"n":"Apple Cake","buy":600,"sel":300,"on":8,"fx":[[5,5,25],[1,1,19,-10],[1,0,18,10],[1,0,20,10]]},{"id":18,"n":"Mint Leaf","buy":200,"sel":100,"on":8,"fx":[[1,1,17,-50],[1,0,18,-2],[1,0,20,-5]]},{"id":19,"n":"Powder","buy":100,"sel":50,"on":8,"fx":[[1,0,15,5],[1,0,20,-24]]},{"id":20,"n":"Sweet Jellies","buy":200,"sel":100,"on":8,"fx":[[1,0,20,5],[1,0,25,-5]]},{"id":21,"n":"Sour Jellies","buy":200,"sel":100,"on":8,"fx":[[1,0,20,5],[1,0,25,5]]},{"id":22,"n":"Crab\u0027s Claw","buy":-1,"sel":2000,"on":2,"fx":[[-1,5,50],[-1,7,50]]},{"id":23,"n":"Nuts oil","buy":200,"sel":100,"on":8,"fx":[[10000,10000,0],[1,0,15,-28],[1,0,19,1],[1,0,18,1]]},{"id":24,"n":"Nuts oil","buy":200,"sel":100,"on":8,"fx":[[1,0,15,-28],[1,1,17,-20],[1,0,19,1],[1,0,18,1]]},{"id":25,"n":"Star Prune","buy":1000,"sel":500,"on":8,"fx":[[5,5,25],[1,0,20,1],[1,0,18,5],[1,0,16,20]]},{"id":26,"n":"Gold Peach","buy":-1,"sel":4500,"on":8,"fx":[[1,0,21,50]]},{"id":27,"n":"Silver Peach","buy":-1,"sel":5000,"on":8,"fx":[[1,0,21,25]]},{"id":28,"n":"Magic Banana","buy":150,"sel":100,"on":8,"fx":[[10000,10000,2],[1,0,20,1],[1,0,19,-10],[1,0,18,-10],[1,0,15,-30]]},{"id":29,"n":"Magic Banana","buy":150,"sel":100,"on":8,"fx":[[1,0,19,-10],[1,0,18,10],[1,0,15,-15],[1,0,17,-5]]},{"id":30,"n":"Magic Banana","buy":150,"sel":100,"on":8,"fx":[[1,0,20,-1],[1,0,19,10],[1,0,18,10],[1,0,17,-10]]},{"id":31,"n":"Half-Eaten","buy":-1,"sel":10,"on":8,"fx":[[1,0,20,1]]},{"id":32,"n":"Irritater","buy":-1,"sel":50,"on":8,"fx":[[5,5,28],[1,0,20,-1],[1,0,15,10],[1,0,17,15]]},{"id":33,"n":"Griever","buy":-1,"sel":50,"on":8,"fx":[[5,5,31],[1,0,20,-1],[1,0,15,10],[1,1,17,-40]]},{"id":34,"n":"Teromeamn","buy":-1,"sel":2000,"on":10,"fx":[[5,5,28],[1,0,21,-20],[1,1,11,100],[1,1,8,20],[1,1,10,20]]},{"id":35,"n":"Manseitan","buy":3000,"sel":1500,"on":1,"fx":[[5,5,29],[1,0,21,-5],[1,0,7,10],[1,0,10,10],[1,0,11,-10]]},{"id":36,"n":"Larox","buy":2200,"sel":1000,"on":1,"fx":[[1,0,21,-4],[1,0,7,-10],[1,0,8,10],[1,0,9,10]]},{"id":37,"n":"Kasseitan","buy":1500,"sel":750,"on":10,"fx":[[1,0,21,-20],[1,1,11,50],[1,1,8,50]]},{"id":38,"n":"Troron","buy":1200,"sel":600,"on":13,"fx":[[1,0,21,-6],[4,0,8,10],[4,0,10,5]]},{"id":39,"n":"Nageel","buy":1000,"sel":500,"on":10,"fx":[[1,0,21,-20],[1,1,10,50],[1,1,9,50]]},{"id":41,"n":"Paradoxine","buy":-1,"sel":1500,"on":13,"fx":[[1,0,21,-18],[4,0,8,30],[4,0,10,30],[4,1,11,-10],[4,1,9,-10]]},{"id":42,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,11],[-1,17,0]]},{"id":43,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,12],[-1,10,-50]]},{"id":44,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,13],[-1,16,0]]},{"id":45,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,16],[-1,32,0]]},{"id":46,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,23],[-1,20,0]]},{"id":47,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,37],[-1,5,50]]},{"id":48,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,27],[-1,21,0]]},{"id":49,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,28],[-1,34,0]]},{"id":50,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,30],[-1,36,0]]},{"id":51,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,33],[-1,13,10]]},{"id":52,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,19],[-1,19,0]]},{"id":53,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,25],[-1,11,50]]},{"id":54,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,8],[-1,30,0]]},{"id":55,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,10],[-1,15,0]]},{"id":56,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,35],[-1,26,0]]},{"id":57,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,34],[-1,7,50]]},{"id":58,"n":"Bay Shrimp","buy":20,"sel":10,"on":8,"fx":[[1,0,20,1]]},{"id":59,"n":"Incense","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":60,"n":"Shoes","buy":80,"sel":40,"on":1,"fx":[[1,0,17,-1]]},{"id":61,"n":"Rice Cracker","buy":20,"sel":10,"on":8,"fx":[[1,0,20,1]]},{"id":63,"n":"Olive Oil","buy":200,"sel":100,"on":8,"fx":[[1,0,20,1],[1,0,17,-1]]},{"id":64,"n":"Kaleidoscope","buy":1000,"sel":500,"on":1,"fx":[[1,0,17,-1]]},{"id":65,"n":"Torles Water","buy":120,"sel":60,"on":8,"fx":[[1,0,17,-1]]},{"id":67,"n":"Perfume","buy":300,"sel":150,"on":1,"fx":[[1,0,17,-1]]},{"id":68,"n":"Stick","buy":500,"sel":250,"on":1,"fx":[[1,0,17,-1]]},{"id":69,"n":"Bone","buy":20,"sel":10,"on":8,"fx":[[1,0,20,1]]},{"id":70,"n":"Perfume Oil","buy":400,"sel":200,"on":8,"fx":[[1,0,20,10],[1,0,17,-2]]},{"id":71,"n":"Wool Ball","buy":700,"sel":350,"on":1,"fx":[[1,0,17,-1]]},{"id":72,"n":"Cedar Log","buy":300,"sel":150,"on":1,"fx":[[1,0,17,-1]]},{"id":73,"n":"Pile of Meat","buy":900,"sel":450,"on":8,"fx":[[1,0,20,12]]},{"id":74,"n":"Soil","buy":250,"sel":100,"on":1,"fx":[[1,0,17,-1]]},{"id":75,"n":"Rock Candy","buy":700,"sel":350,"on":8,"fx":[[1,0,20,1]]},{"id":76,"n":"Dummy","buy":200,"sel":100,"on":1,"fx":[[1,0,17,-1]]},{"id":77,"n":"Ice of Papas","buy":200,"sel":100,"on":8,"fx":[[1,0,17,-1]]},{"id":78,"n":"Grease","buy":100,"sel":50,"on":1,"fx":[[1,0,17,-1]]},{"id":79,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,0],[-1,38,0]]},{"id":80,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,0],[-1,40,0]]},{"id":81,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,25],[-1,38,0]]},{"id":82,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,1],[-1,38,0]]},{"id":83,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,25],[-1,40,0]]},{"id":84,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,23],[-1,38,0]]},{"id":85,"n":"DNA Capsule","buy":-1,"sel":50,"on":2,"fx":[[-1,0,7],[-1,38,0]]},{"id":86,"n":"God Slate","buy":-1,"sel":50,"on":128,"fx":[]},{"id":87,"n":"Hero Badge","buy":-1,"sel":5000,"on":3,"fx":[[1,0,25,1]]},{"id":88,"n":"Heel Badge","buy":-1,"sel":5000,"on":3,"fx":[[1,0,25,-1]]},{"id":89,"n":"Quack Doll","buy":-1,"sel":-1,"on":128,"fx":[]},{"id":90,"n":"Dragon Tusk","buy":-1,"sel":3000,"on":2,"fx":[[-1,0,1],[-1,1,0]]},{"id":91,"n":"Old Sheath","buy":-1,"sel":50,"on":2,"fx":[[-1,7,-10]]},{"id":92,"n":"Double-edged","buy":-1,"sel":5000,"on":2,"fx":[[-1,0,9],[-1,9,0]]},{"id":93,"n":"Magic Pot","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,18],[-1,18,0]]},{"id":94,"n":"Mask","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,26],[-1,26,0]]},{"id":95,"n":"Big Footstep","buy":-1,"sel":1000,"on":2,"fx":[[-1,2,10],[-1,7,10]]},{"id":96,"n":"Big Boots","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,24],[-1,24,0]]},{"id":97,"n":"Fire Feather","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,20],[-1,20,0]]},{"id":98,"n":"Taurus\u0027 Horn","buy":-1,"sel":2000,"on":2,"fx":[[-1,1,2],[-1,12,25]]},{"id":99,"n":"Dino\u0027s Tail","buy":-1,"sel":250,"on":3,"fx":[[1,1,15,-1]]},{"id":100,"n":"Zilla Beard","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,17],[-1,17,0]]},{"id":101,"n":"Fun Can","buy":-1,"sel":-1,"on":128,"fx":[[0,0,0]]},{"id":102,"n":"Strong Glue","buy":-1,"sel":-1,"on":128,"fx":[[0,0,0]]},{"id":103,"n":"Quack Doll","buy":-1,"sel":3000,"on":2,"fx":[[-1,0,32],[-1,32,0]]},{"id":104,"n":"Mystic Seed","buy":-1,"sel":-1,"on":128,"fx":[]},{"id":105,"n":"Parepare Tea","buy":80,"sel":40,"on":8,"fx":[[1,0,17,-1],[1,0,20,1]]},{"id":106,"n":"Match","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":107,"n":"Toothpick","buy":100,"sel":50,"on":1,"fx":[[1,0,17,-1]]},{"id":108,"n":"Playmate","buy":500,"sel":250,"on":1,"fx":[[1,0,17,-1]]},{"id":109,"n":"Whetstone","buy":200,"sel":100,"on":1,"fx":[[1,0,17,-1]]},{"id":110,"n":"Polish","buy":300,"sel":150,"on":1,"fx":[[1,0,17,-1]]},{"id":111,"n":"Silk Cloth","buy":200,"sel":100,"on":1,"fx":[[1,0,17,-1]]},{"id":112,"n":"Disc Dish","buy":700,"sel":350,"on":8,"fx":[[1,0,20,1]]},{"id":113,"n":"Gramophone","buy":700,"sel":350,"on":1,"fx":[[1,0,17,-1]]},{"id":114,"n":"Shiny Stone","buy":1500,"sel":750,"on":128,"fx":[[0,0,0]]},{"id":115,"n":"Meteorite","buy":800,"sel":400,"on":128,"fx":[[0,0,0]]},{"id":116,"n":"Steamed Bun","buy":100,"sel":50,"on":8,"fx":[[1,0,20,2]]},{"id":117,"n":"Razor Blade","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":118,"n":"Ice Candy","buy":40,"sel":20,"on":8,"fx":[[1,0,20,1]]},{"id":119,"n":"Fish Bone","buy":20,"sel":10,"on":8,"fx":[[1,0,20,1]]},{"id":120,"n":"Sun Lamp","buy":1000,"sel":500,"on":1,"fx":[[1,0,17,-1]]},{"id":121,"n":"Silk Hat","buy":700,"sel":350,"on":1,"fx":[[1,0,17,-1]]},{"id":122,"n":"Half Cake","buy":300,"sel":150,"on":8,"fx":[[1,1,19,-5],[1,0,18,5],[1,0,20,5]]},{"id":123,"n":"Shaved Ice","buy":300,"sel":150,"on":8,"fx":[[1,0,20,1],[1,1,17,-25]]},{"id":124,"n":"Sweet Potato","buy":300,"sel":150,"on":8,"fx":[[1,0,20,10],[1,1,17,-10]]},{"id":125,"n":"Medal","buy":200,"sel":100,"on":128,"fx":[[0,0,0]]},{"id":126,"n":"Gold Medal","buy":800,"sel":400,"on":128,"fx":[[0,0,0]]},{"id":127,"n":"Silver Medal","buy":400,"sel":200,"on":128,"fx":[[0,0,0]]},{"id":128,"n":"Music Box","buy":5000,"sel":2500,"on":128,"fx":[[0,0,0]]},{"id":129,"n":"Medallion","buy":9000,"sel":4500,"on":128,"fx":[[0,0,0]]},{"id":134,"n":"Mirror","buy":700,"sel":350,"on":128,"fx":[[0,0,0]]},{"id":135,"n":"Colart Tea","buy":400,"sel":200,"on":8,"fx":[[1,0,17,-5],[1,0,20,5]]},{"id":136,"n":"Galoe Nut","buy":60,"sel":30,"on":8,"fx":[[1,0,20,-1]]},{"id":137,"n":"Stick of Ice","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":138,"n":"Ocean Stone","buy":2000,"sel":1000,"on":128,"fx":[[0,0,0]]},{"id":139,"n":"Seaweed","buy":40,"sel":20,"on":8,"fx":[[1,0,20,-2]]},{"id":140,"n":"Clay Doll","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":141,"n":"Clay Doll","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":142,"n":"Clay Doll","buy":20,"sel":10,"on":1,"fx":[[1,0,17,-1]]},{"id":143,"n":"Clay Doll","buy":100,"sel":50,"on":8,"fx":[[1,0,20,1]]},{"id":144,"n":"Colt\u0027s Cake","buy":20,"sel":10,"on":8,"fx":[[1,0,20,15]]},{"id":145,"n":"Flower","buy":30,"sel":10,"on":131,"fx":[[1,1,17,-2]]},{"id":146,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,0],[-1,4,50]]},{"id":147,"n":"Disc Chips","buy":-1,"sel":2000,"on":2,"fx":[[-1,1,1],[-1,14,0]]},{"id":148,"n":"Disc Chips","buy":-1,"sel":2000,"on":2,"fx":[[-1,1,2],[-1,22,0]]},{"id":149,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,3],[-1,8,50]]},{"id":150,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,4],[-1,27,0]]},{"id":151,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,5],[-1,28,0]]},{"id":152,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,6],[-1,29,0]]},{"id":153,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,7],[-1,3,50]]},{"id":154,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,9],[-1,31,0]]},{"id":155,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,14],[-1,10,50]]},{"id":156,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,15],[-1,12,50]]},{"id":157,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,17],[-1,23,0]]},{"id":158,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,18],[-1,18,0]]},{"id":159,"n":"Disc Chips","buy":-1,"sel":2000,"on":2,"fx":[[-1,1,20],[-1,24,0]]},{"id":160,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,21],[-1,33,0]]},{"id":161,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,22],[-1,9,50]]},{"id":162,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,24],[-1,25,0]]},{"id":163,"n":"Disc Chips","buy":-1,"sel":1500,"on":2,"fx":[[-1,1,26],[-1,12,-50]]},{"id":164,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,29],[-1,35,0]]},{"id":165,"n":"Disc Chips","buy":-1,"sel":2000,"on":2,"fx":[[-1,1,31],[-1,13,10]]},{"id":166,"n":"Disc Chips","buy":-1,"sel":1000,"on":2,"fx":[[-1,1,32],[-1,6,50]]},{"id":167,"n":"Disc Chips","buy":-1,"sel":500,"on":2,"fx":[[-1,1,36],[-1,2,50]]},{"id":168,"n":"Gali Mask","buy":-1,"sel":-1,"on":128,"fx":[[0,0,0]]},{"id":169,"n":"Crystal","buy":-1,"sel":-1,"on":128,"fx":[[-1,0,22],[-1,22,0]]},{"id":170,"n":"Undine Slate","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,29],[-1,29,0]]},{"id":173,"n":"Stick","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,21],[-1,21,0]]},{"id":174,"n":"Cup jelly","buy":150,"sel":-1,"on":8,"fx":[[1,0,20,-3]]},{"id":175,"n":"Spear","buy":-1,"sel":-1,"on":2,"fx":[[-1,0,2],[-1,2,0]]},{"id":176,"n":"Wracky Doll","buy":-1,"sel":-1,"on":128,"fx":[]},{"id":177,"n":"Quack Doll","buy":-1,"sel":3000,"on":1,"fx":[[1,1,15,50],[1,1,17,-50]]}],"likes":[9828,8480,2373,4177,4165,257,10580,9545,9536,8481,9793,8513,8528,9297,5450,8485,9258,9280,8449,9296,9568,8276,5,8516,1384,9285,10528,8277,9289,9802,9728,1104,5461,1617,8260,10576,2629,9577],"food":[0,0,1,4,3,-4,16,4,-10,-6,0,3,-3,0,2,2,1,-2,-8,0,6,-6,0,4,0,1,1,-3,0,3,-2,0,1,4,-4,-4,-7,1,2,-5,1,1,1,1,-1,-15,2,3,-13,2,1,-10,2,-1]}
 ;
 
+// ---------- Idioma ----------
+// Cada texto es "texto" (igual en los dos idiomas) o {es, en}.
+let IDIOMA = document.documentElement.dataset.idioma || "es";
+const L = o => o == null ? "" : typeof o === "string" ? o : (o[IDIOMA] ?? o.es);
+const num = n => n.toLocaleString(IDIOMA === "en" ? "en-US" : "es-AR");
+
+// ---------- Configuracion de la liga ----------
+// LIGA la escribe el lanzador al generar esta guia; sin ella (la plantilla del Rancho) se usan los valores por defecto.
+const DEF = {
+  RanchRules:{ShrineLimitEnabled:true,ShrinePerYear:5,YearlyBackup:true,BlockLowerRankTournaments:true,LowerRanksAllowed:0},
+  DiscRandomizer:{RandomizeBreed:true,IncludeMoreMonsters:true,StatVariancePercent:20,GrowthVarianceSteps:1,LifespanVariancePercent:10,NatureVariance:30},
+  ItemTolerance:{ToleranceStepPercent:10,MinimumEffectPercent:40,MaxTolerance:10,SharedTolerance:true,LifespanBaseChancePercent:0,
+    LifespanChancePerItemPercent:2,LifespanMaxChancePercent:50,LifespanWeeksLost:1},
+  Leagues:{ExportOnSave:true}, CalendarioKokemon:{ShuffleSmall:true}};
+function cfg(k){
+  const [m, c] = k.split(".");
+  if (m === "liga") return window.LIGA?.[c];
+  return window.LIGA?.config?.["MRDX.Custom." + m]?.[c] ?? DEF[m]?.[c];
+}
+function aplicarConfig(raiz){
+  raiz.querySelectorAll("[data-c]").forEach(e => e.textContent = cfg(e.dataset.c));
+  raiz.querySelectorAll("[data-si]").forEach(e => {
+    const ok = e.dataset.si.split(",").every(k => k.startsWith("!") ? !cfg(k.slice(1)) : !!cfg(k));
+    e.toggleAttribute("data-oculto", !ok);
+  });
+  if (window.LIGA?.repo) raiz.querySelectorAll('[data-href="instalador"]').forEach(a => a.href = `https://github.com/${LIGA.repo}/releases/latest`);
+}
+
 const RAZAS = ["Pixie","Dragon","Centaur","ColorPandora","Beaclon","Henger","Wracky","Golem","Zuum","Durahan",
   "Arrowhead","Tiger","Hopper","Hare","Baku","Gali","Kato","Zilla","Bajarl","Mew","Phoenix","Ghost",
   "Metalner","Suezo","Jill","Mocchi","Joker","Gaboo","Jell","Undine","Niton","Mock","Ducken","Plant",
   "Monol","Ape","Worm","Naga"];
 // Parámetros de los efectos (número interno → nombre, y qué signo es bueno: 1 = subir, -1 = bajar, 0 = depende).
-const PARAM = {7:["Vida",1],8:["Poder",1],9:["Defensa",1],10:["Habilidad",1],11:["Velocidad",1],15:["Cansancio",-1],
-  16:["Fama",1],17:["Estrés",-1],18:["Mimo",0],19:["Miedo",0],20:["Forma",0],21:["Esperanza de vida",1],25:["Naturaleza",0]};
-const REACCION = {25:"se pone contento",27:"se arrepiente",28:"se enoja",29:"se decepciona",31:"se deprime"};
-const UP = {2:"Vida",3:"Poder",4:"Inteligencia",5:"Habilidad",6:"Velocidad",7:"Defensa",8:"Mimo",9:"Miedo",10:"Forma",
-  11:"Fama",12:"Naturaleza",13:"Esperanza de vida"};
+const PARAM = {7:[{es:"Vida",en:"Life"},1],8:[{es:"Poder",en:"Power"},1],9:[{es:"Defensa",en:"Defense"},1],10:[{es:"Habilidad",en:"Skill"},1],
+  11:[{es:"Velocidad",en:"Speed"},1],15:[{es:"Cansancio",en:"Fatigue"},-1],16:[{es:"Fama",en:"Fame"},1],17:[{es:"Estrés",en:"Stress"},-1],
+  18:[{es:"Mimo",en:"Spoil"},0],19:[{es:"Miedo",en:"Fear"},0],20:[{es:"Forma",en:"Form"},0],21:[{es:"Esperanza de vida",en:"Lifespan"},1],
+  25:[{es:"Naturaleza",en:"Nature"},0]};
+const REACCION = {25:{es:"se pone contento",en:"it gets happy"},27:{es:"se arrepiente",en:"it feels sorry"},28:{es:"se enoja",en:"it gets angry"},
+  29:{es:"se decepciona",en:"it gets disappointed"},31:{es:"se deprime",en:"it gets depressed"}};
+const UP = {2:PARAM[7][0],3:PARAM[8][0],4:{es:"Inteligencia",en:"Intelligence"},5:PARAM[10][0],6:PARAM[11][0],7:PARAM[9][0],8:PARAM[18][0],
+  9:PARAM[19][0],10:PARAM[20][0],11:PARAM[16][0],12:PARAM[25][0],13:PARAM[21][0]};
 const ESPECIAL = {14:"Fury",15:"Guard",16:"Grit",17:"Will",18:"Vigor",19:"Hurry",20:"Ease",21:"Fight"};
 const EXPEDICION = {22:"Mandy Desert",23:"Torble Sea",24:"Kawrea Volcano",25:"Papas Mountain",26:"Parepare Jungle"};
 const DRILL = {27:"Pull",28:"Shoot",29:"Leap",30:"Run",31:"Domino",32:"Meditate",33:"Dodge",34:"Endure",35:"Study",36:"Swim"};
-const ESPECIAL_DNA = {"0/38":"Poison (cápsula roja)","0/40":"Mia (cápsula amarilla)","25/38":"Gentle Mocchi (cápsula rosa)",
-  "1/38":"Moo (cápsula gris)","25/40":"White Mocchi (cápsula blanca)","23/38":"Gold Suezo (cápsula dorada)","7/38":"Dream Golem (cápsula negra)"};
+const cap = (es, en) => ({es:`cápsula ${es}`, en:`${en} capsule`});
+const ESPECIAL_DNA = {"0/38":["Poison",cap("roja","red")],"0/40":["Mia",cap("amarilla","yellow")],"25/38":["Gentle Mocchi",cap("rosa","pink")],
+  "1/38":["Moo",cap("gris","grey")],"25/40":["White Mocchi",cap("blanca","white")],"23/38":["Gold Suezo",cap("dorada","gold")],
+  "7/38":["Dream Golem",cap("negra","black")]};
+const dna = k => ESPECIAL_DNA[k] ? `${ESPECIAL_DNA[k][0]} (${L(ESPECIAL_DNA[k][1])})` : null;
 
 // Observaciones de juego por objeto (de la comunidad, con nuestras palabras).
-const TIENDA = "Los objetos nuevos de la tienda aparecen cada 200 semanas desde la primera vez que entrás; esa es la fecha más temprana.";
-const PIDE = "Si te lo pide el monstruo para entrenar, solo cambia la forma; la tabla de gustos es para la comida del mes.";
+const TIENDA = {es:"Los objetos nuevos de la tienda aparecen cada 200 semanas desde la primera vez que entrás; esa es la fecha más temprana.",
+  en:"New shop items appear every 200 weeks from your first visit; that's the earliest date."};
+const PIDE = {es:"Si te lo pide el monstruo para entrenar, solo cambia la forma; la tabla de gustos es para la comida del mes.",
+  en:"If the monster asks for it to train, it only changes form; the likes table is for the monthly food."};
+const enTienda = (es, en) => ({es:`En la tienda desde ${es}. ${TIENDA.es}`, en:`In the shop from ${en}. ${TIENDA.en}`});
+const SEMANA_TORNEO = {es:"Se da la semana del torneo.", en:"Given on the tournament week."};
+const UNA_POR = {es:"Solo se le puede dar una por monstruo; las que sobran se pueden guardar para otro.",
+  en:"Only one per monster; spare ones can be kept for another."};
+const SEMANAS_PEACH = {es:"Las semanas se suman en el momento y la etapa de vida se acomoda a la semana siguiente. Nunca lo devuelve a la etapa 1.",
+  en:"The weeks are added at once and the life stage adjusts the next week. It never sends it back to stage 1."};
+const BADGE = {es:"El torneo te da el badge que corresponde a la naturaleza de tu monstruo. Se acumulan, y uno de cada tipo se anulan.",
+  en:"The tournament gives the badge matching your monster's nature. They stack, and one of each kind cancel out."};
+const DESBLOQUEO = {es:"Encontrarlo ya activa el evento de desbloqueo: después lo podés vender, tirar o usar para combinar.",
+  en:"Finding it already triggers the unlock event: afterwards you can sell it, throw it away or use it to combine."};
 const NOTAS = {
   0:[PIDE],3:[PIDE],4:[PIDE],5:[PIDE],
-  1:[PIDE,`Como comida del mes ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 0 o 1 la deja en 1, y tira para desintoxicar con la racha que tenga.`],
-  2:[PIDE,`Como comida del mes baja <b>2 puntos</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`],
-  23:["Si te la pide el monstruo para entrenar, baja el cansancio completo, pero Henger, Arrowhead y Durahan no reciben la bajada extra de estrés."],
-  28:["Para saber qué resultado salió, mirá la lealtad (mitad del miedo más mitad del mimo): el A la baja, el B casi no la mueve y el C la sube.",
-      "En la tienda desde junio de 1004. " + TIENDA],
-  39:["Se da la semana del torneo.","En la tienda desde agosto de 1008. " + TIENDA],
-  38:["Las ganancias son permanentes y se suman sin aviso (no aparecen en la pantalla de resultado) en cada entrenamiento o expedición que no sea un fracaso.","En la tienda desde octubre de 1012. " + TIENDA],
-  37:["Se da la semana del torneo.","En la tienda desde diciembre de 1016. " + TIENDA],
-  36:["Los cambios de stats son permanentes.","En la tienda desde febrero de 1021. " + TIENDA],
-  35:["Los cambios de stats son permanentes.","En la tienda desde abril de 1025. " + TIENDA],
-  41:["Los cambios son permanentes y se aplican sin aviso en cada entrenamiento o expedición que no sea un fracaso.","Se consigue en la expedición a Torles Mountains."],
-  34:["Se da la semana del torneo.","Premio del Telomeann Cup (septiembre, semana 1). En el juego también aparece escrito Teromeann o Telomeann."],
-  26:["Solo se le puede dar una por monstruo; las que sobran se pueden guardar para otro.","Las semanas se suman en el momento y la etapa de vida se acomoda a la semana siguiente. Nunca lo devuelve a la etapa 1.","Se consigue en la expedición a Parepare."],
-  27:["Solo se le puede dar una por monstruo; las que sobran se pueden guardar para otro.","Las semanas se suman en el momento y la etapa de vida se acomoda a la semana siguiente. Nunca lo devuelve a la etapa 1.","Premio del Elder's Tournament."],
-  87:["El torneo te da el badge que corresponde a la naturaleza de tu monstruo. Se acumulan, y uno de cada tipo se anulan."],
-  88:["El torneo te da el badge que corresponde a la naturaleza de tu monstruo. Se acumulan, y uno de cada tipo se anulan."],
-  95:["Encontrarlo ya activa el evento de desbloqueo: después lo podés vender, tirar o usar para combinar."],
-  91:["Encontrarlo ya activa el evento de desbloqueo: después lo podés vender, tirar o usar para combinar."],
-  68:["No es el Stick que desbloquea a Ghost: este tiene la joya roja y el otro, verde."],
-  173:["Es el Stick de la joya verde, distinto del que se usa en la semana."],
-  86:["No hace nada."],
-  102:["Aunque te deshagas de él, seguís armando los Quack Doll pegados."],
+  1:[PIDE,{es:`Como comida del mes ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 0 o 1 la deja en 1, y tira para desintoxicar con la racha que tenga.`,
+    en:`As monthly food it helps the <a href="#reglaTe">Green Tea streak</a>: if it is 0 or 1 it sets it to 1, and rolls to detox with the current streak.`}],
+  2:[PIDE,{es:`Como comida del mes baja <b>2 puntos</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`,
+    en:`As monthly food it lowers the anti-fatigue habit by <b>2 points</b>. <a href="#modReglas">Rules</a>.`}],
+  23:[{es:"Si te la pide el monstruo para entrenar, baja el cansancio completo, pero Henger, Arrowhead y Durahan no reciben la bajada extra de estrés.",
+    en:"If the monster asks for it to train, it removes the full fatigue, but Henger, Arrowhead and Durahan don't get the extra stress drop."}],
+  28:[{es:"Para saber qué resultado salió, mirá la lealtad (mitad del miedo más mitad del mimo): el A la baja, el B casi no la mueve y el C la sube.",
+    en:"To tell which result came out, check loyalty (half fear plus half spoil): A lowers it, B barely moves it and C raises it."},
+    enTienda("junio de 1004","June 1004")],
+  39:[SEMANA_TORNEO, enTienda("agosto de 1008","August 1008")],
+  38:[{es:"Las ganancias son permanentes y se suman sin aviso (no aparecen en la pantalla de resultado) en cada entrenamiento o expedición que no sea un fracaso.",
+    en:"The gains are permanent and are added silently (not shown on the result screen) on every drill or expedition that isn't a failure."},
+    enTienda("octubre de 1012","October 1012")],
+  37:[SEMANA_TORNEO, enTienda("diciembre de 1016","December 1016")],
+  36:[{es:"Los cambios de stats son permanentes.",en:"The stat changes are permanent."}, enTienda("febrero de 1021","February 1021")],
+  35:[{es:"Los cambios de stats son permanentes.",en:"The stat changes are permanent."}, enTienda("abril de 1025","April 1025")],
+  41:[{es:"Los cambios son permanentes y se aplican sin aviso en cada entrenamiento o expedición que no sea un fracaso.",
+    en:"The changes are permanent and apply silently on every drill or expedition that isn't a failure."},
+    {es:"Se consigue en la expedición a Torles Mountains.",en:"Found on the Torles Mountains expedition."}],
+  34:[SEMANA_TORNEO,{es:"Premio del Telomeann Cup (septiembre, semana 1). En el juego también aparece escrito Teromeann o Telomeann.",
+    en:"Prize of the Telomeann Cup (September, week 1). The game also spells it Teromeann or Telomeann."}],
+  26:[UNA_POR, SEMANAS_PEACH, {es:"Se consigue en la expedición a Parepare.",en:"Found on the Parepare expedition."}],
+  27:[UNA_POR, SEMANAS_PEACH, {es:"Premio del Elder's Tournament.",en:"Prize of the Elder's Tournament."}],
+  87:[BADGE], 88:[BADGE], 95:[DESBLOQUEO], 91:[DESBLOQUEO],
+  68:[{es:"No es el Stick que desbloquea a Ghost: este tiene la joya roja y el otro, verde.",en:"It's not the Stick that unlocks Ghost: this one has the red gem and the other, green."}],
+  173:[{es:"Es el Stick de la joya verde, distinto del que se usa en la semana.",en:"It's the green-gem Stick, different from the one used during the week."}],
+  86:[{es:"No hace nada.",en:"It does nothing."}],
+  102:[{es:"Aunque te deshagas de él, seguís armando los Quack Doll pegados.",en:"Even if you get rid of it, you keep assembling the glued Quack Dolls."}],
 };
 
 const CATS = [
-  {k:"mensual", t:"🍚 Comida del mes", d:"Se ofrece en la semana 1 de cada mes, aparte del objeto de la semana. Cambia la forma igual para todos; el estrés, el miedo y el mimo dependen de si le gusta."},
-  {k:"comida", t:"🍎 Comida y golosinas", d:"Se dan en la semana y el monstruo se las come."},
-  {k:"uso", t:"🧸 De uso", d:"Se usan en la semana y se gastan. Muchos son los que el monstruo te pide para entrenar: tienen efectos mínimos, y decirle que no le sube el estrés."},
-  {k:"pasivo", t:"🗿 Pasivos", d:"Actúan en la semana 1 de cada mes, solo si el monstruo está en el rancho cuando empieza el mes, y no hace falta dárselos. Se acumulan, pero cada uno se calcula por separado sobre el valor que dejó el anterior, y los porcentajes se redondean para abajo: con valores bajos no hacen nada."},
-  {k:"torneo", t:"⚔️ Para torneos", d:"Se dan la semana del torneo y el efecto dura ese torneo. No restan vida, pero son items tóxicos."},
-  {k:"entrenamiento", t:"🏋️ Para entrenar", d:"Suman a lo que gana en cada entrenamiento o expedición que no sea un fracaso, durante 4 semanas. La resta de vida es inmediata."},
-  {k:"combinacion", t:"💿 Combinación", d:"Se usan en el laboratorio al combinar dos monstruos."},
-  {k:"coleccion", t:"💰 Para vender o coleccionar", d:"No tienen efecto en el monstruo."},
+  {k:"mensual", t:{es:"🍚 Comida del mes",en:"🍚 Monthly food"}, d:{es:"Se ofrece en la semana 1 de cada mes, aparte del objeto de la semana. Cambia la forma igual para todos; el estrés, el miedo y el mimo dependen de si le gusta.",
+    en:"Offered on week 1 of each month, besides the week's item. Form changes the same for everyone; stress, fear and spoil depend on whether it likes it."}},
+  {k:"comida", t:{es:"🍎 Comida y golosinas",en:"🍎 Food and treats"}, d:{es:"Se dan en la semana y el monstruo se las come.",en:"Given during the week and the monster eats them."}},
+  {k:"uso", t:{es:"🧸 De uso",en:"🧸 Usable"}, d:{es:"Se usan en la semana y se gastan. Muchos son los que el monstruo te pide para entrenar: tienen efectos mínimos, y decirle que no le sube el estrés.",
+    en:"Used during the week and consumed. Many are the ones the monster asks for to train: they have minimal effects, and saying no raises its stress."}},
+  {k:"pasivo", t:{es:"🗿 Pasivos",en:"🗿 Passive"}, d:{es:"Actúan en la semana 1 de cada mes, solo si el monstruo está en el rancho cuando empieza el mes, y no hace falta dárselos. Se acumulan, pero cada uno se calcula por separado sobre el valor que dejó el anterior, y los porcentajes se redondean para abajo: con valores bajos no hacen nada.",
+    en:"They act on week 1 of each month, only if the monster is at the ranch when the month starts, and you don't need to give them. They stack, but each one is computed separately on the value the previous left, and percentages round down: with low values they do nothing."}},
+  {k:"torneo", t:{es:"⚔️ Para torneos",en:"⚔️ For tournaments"}, d:{es:"Se dan la semana del torneo y el efecto dura ese torneo. No restan vida, pero son items tóxicos.",
+    en:"Given on the tournament week and the effect lasts that tournament. They don't take lifespan, but they are toxic items."}},
+  {k:"entrenamiento", t:{es:"🏋️ Para entrenar",en:"🏋️ For training"}, d:{es:"Suman a lo que gana en cada entrenamiento o expedición que no sea un fracaso, durante 4 semanas. La resta de vida es inmediata.",
+    en:"They add to the gains of every drill or expedition that isn't a failure, for 4 weeks. The lifespan loss is immediate."}},
+  {k:"combinacion", t:{es:"💿 Combinación",en:"💿 Combining"}, d:{es:"Se usan en el laboratorio al combinar dos monstruos.",en:"Used in the lab when combining two monsters."}},
+  {k:"coleccion", t:{es:"💰 Para vender o coleccionar",en:"💰 To sell or collect"}, d:{es:"No tienen efecto en el monstruo.",en:"They have no effect on the monster."}},
 ];
 
 // ---------- Reglas del rancho ----------
-// v: lo que muestra la línea de la ficha; r: la explicación de la tabla.
+const AZAR = {es:"al azar",en:"random"};
 const DETOX = {
-  177:{t:"Quack Doll",v:"−1 a −5 (al azar)",r:"La baja entre 1 y 5, al azar."},
-  75:{t:"Rock Candy",v:"−3 (50 % de chance)",r:"50 % de chance de bajarla 3."},
-  32:{t:"Irritater",v:"−1 (30 % de chance)",r:"30 % de chance de bajarla 1."},
-  33:{t:"Griever",v:"−1 (30 % de chance)",r:"30 % de chance de bajarla 1."},
-  31:{t:"Half-Eaten",v:"−1",r:"Siempre la baja 1."},
-  26:{t:"Gold Peach",v:"−50 % o −100 %",r:"50 %: la baja a la mitad. 50 %: la deja en 0."},
-  27:{t:"Silver Peach",v:"−25 % o −50 %",r:"50 %: le saca un cuarto. 50 %: la baja a la mitad."},
+  177:{es:"−1 a −5 (al azar)",en:"−1 to −5 (random)"},
+  75:{es:"−3 (50 % de chance)",en:"−3 (50 % chance)"},
+  32:{es:"−1 (30 % de chance)",en:"−1 (30 % chance)"},
+  33:{es:"−1 (30 % de chance)",en:"−1 (30 % chance)"},
+  31:"−1",
+  26:{es:"−50 % o −100 %",en:"−50 % or −100 %"},
+  27:{es:"−25 % o −50 %",en:"−25 % or −50 %"},
 };
 // Resta de vida al azar: [mínimo, máximo] en semanas.
 const VIDA = {41:[3,10],38:[1,3],36:[0,4],35:[0,5]};
 const SIN_VIDA = new Set([34, 37, 39]); // los de torneo no restan vida
-const INTOX = {34:"+1 a +5 (al azar)",37:"+1 a +5 (al azar)",39:"+1 a +5 (al azar)",38:"+2",41:"+6"};
+const INTOX_AZAR = {es:"+1 a +5 (al azar)",en:"+1 to +5 (random)"};
+const INTOX = {34:INTOX_AZAR,37:INTOX_AZAR,39:INTOX_AZAR,38:"+2",41:"+6"};
+const T_INTOX = {es:"Intoxicación",en:"Toxicity"}, T_ACOST = {es:"Acostumbramiento antifatiga",en:"Anti-fatigue habit"};
+const SEM = {es:"sem.",en:"wk."};
 
 // Promedio de semanas restadas: x = u^a, a = 2^(1-2·vivida); resta = min + floor(x·n).
 function promedioVida([min, max], vivida){
@@ -425,18 +607,20 @@ function promedioVida([min, max], vivida){
   for (let k = 0; k < n; k++) e += k * (Math.pow((k+1)/n, 1/a) - Math.pow(k/n, 1/a));
   return min + e;
 }
-const fmt1 = x => x.toLocaleString("es-AR",{maximumFractionDigits:1});
+const fmt1 = x => x.toLocaleString(IDIOMA === "en" ? "en-US" : "es-AR",{maximumFractionDigits:1});
 
 // ---------- Utilidades ----------
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const signo = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v);
 function clase(bueno, v){ if (!bueno) return "neu"; return (v * bueno > 0) ? "pos" : "neg"; }
 function precio(it){
-  const c = it.buy >= 0 ? `Compra <b>${it.buy.toLocaleString("es-AR")} G</b>` : "No se compra";
-  const v = it.sel >= 0 ? `Venta <b>${it.sel.toLocaleString("es-AR")} G</b>` : "No se vende";
+  const c = it.buy >= 0 ? `${L({es:"Compra",en:"Buy"})} <b>${num(it.buy)} G</b>` : L({es:"No se compra",en:"Not sold in shops"});
+  const v = it.sel >= 0 ? `${L({es:"Venta",en:"Sell"})} <b>${num(it.sel)} G</b>` : L({es:"No se vende",en:"Can't be sold"});
   return `<div class="price"><span>${c}</span><span>${v}</span></div>`;
 }
-function linea(nombre, valor, cls, extra){ return `<li><span>${nombre}</span><span class="v ${cls}">${extra||""}${valor}</span></li>`; }
+function linea(nombre, valor, cls, extra){ return `<li><span>${L(nombre)}</span><span class="v ${cls}">${extra||""}${L(valor)}</span></li>`; }
+const nota = t => `<div class="note">${L(t)}</div>`;
+const REGLAS = {es:"Reglas",en:"Rules"};
 
 function categoria(it){
   const on = it.on & 0x7f;
@@ -445,9 +629,9 @@ function categoria(it){
 }
 function cuando(it){
   const on = it.on & 0x7f;
-  if (on === 3) return "Cada mes, mientras lo tengas";
-  if (on === 5) return "Cada mes de verano (junio a agosto), mientras lo tengas";
-  if (on === 7) return "Cada mes de invierno (diciembre a febrero), mientras lo tengas";
+  if (on === 3) return L({es:"Cada mes, mientras lo tengas",en:"Every month, while you have it"});
+  if (on === 5) return L({es:"Cada mes de verano (junio a agosto), mientras lo tengas",en:"Every summer month (June to August), while you have it"});
+  if (on === 7) return L({es:"Cada mes de invierno (diciembre a febrero), mientras lo tengas",en:"Every winter month (December to February), while you have it"});
   return "";
 }
 
@@ -457,31 +641,33 @@ function listaEfectos(it){
   for (const f of it.fx){
     if (f[0] === 1 || f[0] === 4){
       const [t, ind, p, v] = f; const par = PARAM[p] || ["#"+p, 0];
-      let val = signo(v) + (ind ? " %" : (p === 21 ? " sem." : ""));
+      let val = signo(v) + (ind ? " %" : (p === 21 ? " " + L(SEM) : ""));
       if (p === 21 && SIN_VIDA.has(it.id)) continue;
-      if (p === 21 && VIDA[it.id]){ const [a,b] = VIDA[it.id]; val = `${a ? "−"+a : "0"} a −${b} sem. (al azar)`; }
+      if (p === 21 && VIDA[it.id]){ const [a,b] = VIDA[it.id]; val = `${a ? "−"+a : "0"} ${L({es:"a",en:"to"})} −${b} ${L(SEM)} (${L(AZAR)})`; }
       const li = linea(par[0], val, clase(par[1], v));
       (t === 4 ? entreno : out).push(li);
-    } else if (f[0] === 5) reac = REACCION[f[2]] || "";
+    } else if (f[0] === 5) reac = L(REACCION[f[2]]);
   }
-  if (DETOX[it.id]) out.push(linea("Intoxicación", DETOX[it.id].v, "pos"));
-  if (INTOX[it.id]) out.push(linea("Intoxicación", INTOX[it.id], "neg"));
-  if (it.id === 23){ out.push(linea("Intoxicación", "+1", "neg")); out.push(linea("Acostumbramiento antifatiga", "+2", "neg")); }
+  if (DETOX[it.id]) out.push(linea(T_INTOX, DETOX[it.id], "pos"));
+  if (INTOX[it.id]) out.push(linea(T_INTOX, INTOX[it.id], "neg"));
+  if (it.id === 23){ out.push(linea(T_INTOX, "+1", "neg")); out.push(linea(T_ACOST, "+2", "neg")); }
   return {out, entreno, reac};
 }
+
+const GUSTOS = [{es:"Le gusta",en:"Likes it"},{es:"Normal",en:"Neutral"},{es:"No le gusta",en:"Dislikes it"}];
+const celda = (v, bueno) => `<td class="num ${clase(bueno, v)}">${v === 0 ? "0" : signo(v)}</td>`;
+const cabeceraComida = cans => `<thead><tr><th>${L({es:"Si…",en:"If…"})}</th><th class="num">${L(PARAM[17][0])}</th><th class="num">${L(PARAM[19][0])}</th><th class="num">${L(PARAM[18][0])}</th><th class="num">${L(PARAM[20][0])}</th>${cans ? `<th class="num">${L(PARAM[15][0])}</th>` : ""}</tr></thead>`;
 
 // Comida del mes: la forma es igual para todos; estrés, miedo y mimo dependen del gusto.
 function fichaMensual(it){
   const f = it.id === 174 ? 4 : it.id, forma = it.fx[0][3];
-  const celda = (v, bueno) => `<td class="num ${clase(bueno, v)}">${v === 0 ? "0" : signo(v)}</td>`;
-  const gustos = ["Le gusta","Normal","No le gusta"];
   let filas = "";
   for (let g = 0; g < 3; g++){
     const o = (f*3+g)*3, [st, mi, mo] = DATA.food.slice(o, o+3);
-    filas += `<tr><td>${gustos[g]}</td>${celda(st,-1)}${celda(mi,0)}${celda(mo,0)}${celda(forma,0)}</tr>`;
+    filas += `<tr><td>${L(GUSTOS[g])}</td>${celda(st,-1)}${celda(mi,0)}${celda(mo,0)}${celda(forma,0)}</tr>`;
   }
-  return `<div class="tablewrap"><table><thead><tr><th>Si…</th><th class="num">Estrés</th><th class="num">Miedo</th><th class="num">Mimo</th><th class="num">Forma</th></tr></thead><tbody>${filas}</tbody></table></div>` +
-    (f === 3 ? `<div class="note">En las etapas de vida 1 y 10 cuenta otro gusto (columna aparte en la tabla de preferencias).</div>` : "");
+  return `<div class="tablewrap"><table>${cabeceraComida(false)}<tbody>${filas}</tbody></table></div>` +
+    (f === 3 ? nota({es:"En las etapas de vida 1 y 10 cuenta otro gusto (columna aparte en la tabla de preferencias).",en:"At life stages 1 and 10 a different like counts (separate column in the preferences table)."}) : "");
 }
 
 // ---------- Comidas del mes nuevas (del Rancho) ----------
@@ -489,10 +675,12 @@ function fichaMensual(it){
 const NUEVAS = [
   {id:62, n:"Squash", modelo:"Mango", buy:500, est:0, mie:-2, mim:-2, forma:5, cans:-10, notas:[]},
   {id:40, n:"Chicken", modelo:"Meat", buy:250, est:-2, mie:-2, mim:2, forma:2, cans:0, notas:[
-    `Baja <b>1 punto</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`,
-    `Ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 2 o menos, ese mes no baja. Tira para desintoxicar con la racha que tenga.`]},
+    {es:`Baja <b>1 punto</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`,en:`Lowers the anti-fatigue habit by <b>1 point</b>. <a href="#modReglas">Rules</a>.`},
+    {es:`Ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 2 o menos, ese mes no baja. Tira para desintoxicar con la racha que tenga.`,
+     en:`Helps the <a href="#reglaTe">Green Tea streak</a>: if it is 2 or less, it doesn't drop that month. Rolls to detox with the current streak.`}]},
   {id:66, n:"Green Tea", modelo:"Colart Tea", buy:800, est:-10, mie:-2, mim:0, forma:-2, cans:0, notas:[
-    `Suma 1 a la <a href="#reglaTe">racha</a> (máximo 10) y tira para bajar <b>1 de intoxicación</b>: 15 % por punto de racha, hasta 75 %. Cada mes sin tomarlo, la racha baja 1.`]},
+    {es:`Suma 1 a la <a href="#reglaTe">racha</a> (máximo 10) y tira para bajar <b>1 de intoxicación</b>: 15 % por punto de racha, hasta 75 %. Cada mes sin tomarlo, la racha baja 1.`,
+     en:`Adds 1 to the <a href="#reglaTe">streak</a> (maximum 10) and rolls to remove <b>1 toxicity</b>: 15 % per streak point, up to 75 %. Each month without it, the streak drops 1.`}]},
 ];
 const AJUSTE_GUSTO = [[-2,0,2],[0,0,0],[3,1,-3]]; // le gusta, normal, no le gusta: estrés, miedo, mimo
 // Gustos de cada raza por Squash, Chicken y Green Tea: L le gusta, D no le gusta, - normal.
@@ -500,24 +688,23 @@ const GUSTOS_NUEVAS = ["-DL","-LD","L--","--L","LD-","--D","LD-","L-D","-L-","DL
   "-LD","-L-","--L","DL-","-DL","L-D","--L","L--","-LD","-DL","L-D","-L-","D-L","-DL","L--","-DL","LD-","-DL","---","L-D","L--","DL-"];
 
 function fichaNueva(c){
-  const celda = (v, bueno) => `<td class="num ${clase(bueno, v)}">${v === 0 ? "0" : signo(v)}</td>`;
-  const gustos = ["Le gusta","Normal","No le gusta"];
   let filas = "";
   for (let g = 0; g < 3; g++){
     const [a, b, d] = AJUSTE_GUSTO[g];
-    filas += `<tr><td>${gustos[g]}</td>${celda(c.est+a,-1)}${celda(c.mie+b,0)}${celda(c.mim+d,0)}${celda(c.forma,0)}${c.cans ? celda(c.cans,-1) : ""}</tr>`;
+    filas += `<tr><td>${L(GUSTOS[g])}</td>${celda(c.est+a,-1)}${celda(c.mie+b,0)}${celda(c.mim+d,0)}${celda(c.forma,0)}${c.cans ? celda(c.cans,-1) : ""}</tr>`;
   }
-  const tabla = `<div class="tablewrap"><table><thead><tr><th>Si…</th><th class="num">Estrés</th><th class="num">Miedo</th><th class="num">Mimo</th><th class="num">Forma</th>${c.cans ? `<th class="num">Cansancio</th>` : ""}</tr></thead><tbody>${filas}</tbody></table></div>`;
-  const notas = [`Comida nueva del Rancho: se ofrece como las demás comidas del mes. Usa el modelo del objeto ${c.modelo}, con otra textura.`, ...c.notas];
+  const tabla = `<div class="tablewrap"><table>${cabeceraComida(c.cans)}<tbody>${filas}</tbody></table></div>`;
+  const notas = [{es:`Comida nueva del Rancho: se ofrece como las demás comidas del mes. Usa el modelo del objeto ${c.modelo}, con otra textura.`,
+    en:`New Rancho food: offered like the other monthly foods. It uses the ${c.modelo} item's model with another texture.`}, ...c.notas];
   return `<article class="card" id="o${c.id}">
-    <h3>${esc(c.n)} <span class="ids">nueva</span></h3>
-    ${precio({buy:c.buy, sel:-1})}${tabla}${notas.map(t => `<div class="note">${t}</div>`).join("")}</article>`;
+    <h3>${esc(c.n)} <span class="ids">${L({es:"nueva",en:"new"})}</span></h3>
+    ${precio({buy:c.buy, sel:-1})}${tabla}${notas.map(nota).join("")}</article>`;
 }
 
 function tarjetaGustos(){
-  const cols = ["Potato","Fish","Meat","Milk (etapas 1 y 10)","Milk","Cup jelly","Tablets", ...NUEVAS.map(c => c.n)];
-  const celdaGusto = g => g === 1 ? `<td class="c like" title="Le gusta">♥</td>` : g === 2 ? `<td class="c dislike" title="No le gusta">✗</td>` : `<td class="c meh" title="Normal">–</td>`;
-  let tg = `<table><thead><tr><th>Raza</th>${cols.map(c => `<th class="c">${c}</th>`).join("")}</tr></thead><tbody>`;
+  const cols = ["Potato","Fish","Meat",L({es:"Milk (etapas 1 y 10)",en:"Milk (stages 1 and 10)"}),"Milk","Cup jelly","Tablets", ...NUEVAS.map(c => c.n)];
+  const celdaGusto = g => g === 1 ? `<td class="c like" title="${L(GUSTOS[0])}">♥</td>` : g === 2 ? `<td class="c dislike" title="${L(GUSTOS[2])}">✗</td>` : `<td class="c meh" title="${L(GUSTOS[1])}">–</td>`;
+  let tg = `<table><thead><tr><th>${L({es:"Raza",en:"Breed"})}</th>${cols.map(c => `<th class="c">${c}</th>`).join("")}</tr></thead><tbody>`;
   DATA.likes.forEach((v, r) => {
     tg += `<tr><td><b>${RAZAS[r]}</b></td>`;
     for (let k = 0; k < 7; k++) tg += celdaGusto((v >> (12 - 2*k)) & 3);
@@ -525,9 +712,11 @@ function tarjetaGustos(){
     tg += `</tr>`;
   });
   return `<article class="card" id="gustos" style="grid-column:1/-1">
-    <h3>Preferencias naturales de cada raza</h3>
-    <div class="note">Son los gustos de la raza. Los que muestra la pantalla de estado se sortean al nacer y les ganan a estos si no coinciden; si le gusta en los dos lados, no suma doble. Las razas de More Monsters usan los gustos de su raza principal.</div>
-    <div class="note">Squash, Chicken y Green Tea son comidas nuevas del Rancho. Para ellas, el gusto de la pantalla de estado manda si es la comida o el objeto que se le parece (Mango, Meat y Colart Tea).</div>
+    <h3>${L({es:"Preferencias naturales de cada raza",en:"Natural preferences of each breed"})}</h3>
+    ${nota({es:"Son los gustos de la raza. Los que muestra la pantalla de estado se sortean al nacer y les ganan a estos si no coinciden; si le gusta en los dos lados, no suma doble. Las razas de More Monsters usan los gustos de su raza principal.",
+      en:"These are the breed's tastes. The ones shown on the status screen are rolled at birth and win over these if they differ; liking it on both sides doesn't count twice. More Monsters breeds use their main breed's tastes."})}
+    ${nota({es:"Squash, Chicken y Green Tea son comidas nuevas del Rancho. Para ellas, el gusto de la pantalla de estado manda si es la comida o el objeto que se le parece (Mango, Meat y Colart Tea).",
+      en:"Squash, Chicken and Green Tea are new Rancho foods. For them, the status screen's like wins if it is the food or the item it resembles (Mango, Meat and Colart Tea)."})}
     <div class="tablewrap">${tg}</tbody></table></div></article>`;
 }
 
@@ -537,9 +726,9 @@ function fichaNormal(it){
   let h = "";
   const w = cuando(it); if (w) h += `<div class="sub">${w}</div>`;
   if (out.length) h += `<ul class="fx">${out.join("")}</ul>`;
-  if (entreno.length) h += `<div class="sub">En cada entrenamiento (4 semanas)</div><ul class="fx">${entreno.join("")}</ul>`;
-  if (!out.length && !entreno.length && categoria(it) !== "coleccion") h += `<div class="note">Sin efecto en los números.</div>`;
-  if (reac) h += `<div class="note">Al dárselo ${reac}.</div>`;
+  if (entreno.length) h += `<div class="sub">${L({es:"En cada entrenamiento (4 semanas)",en:"On every drill (4 weeks)"})}</div><ul class="fx">${entreno.join("")}</ul>`;
+  if (!out.length && !entreno.length && categoria(it) !== "coleccion") h += nota({es:"Sin efecto en los números.",en:"No effect on the numbers."});
+  if (reac) h += nota({es:`Al dárselo ${reac}.`,en:`When given, ${reac}.`});
   return h;
 }
 
@@ -549,14 +738,14 @@ function fichaCombinacion(it){
   for (let i = 0; i < fx.length; i++){
     const [a, b] = fx[i];
     if (a === 0 && fx[i+1]){ const sub = fx[i+1][0]; i++;
-      const esp = ESPECIAL_DNA[b+"/"+sub];
-      out.push(linea("Nace", esp ? esp : (sub === b ? RAZAS[b] + " puro" : RAZAS[b] + " / " + (RAZAS[sub]||"#"+sub)), "pos", "100 % "));
+      const esp = dna(b+"/"+sub);
+      out.push(linea({es:"Nace",en:"Born"}, esp ? esp : (sub === b ? RAZAS[b] + L({es:" puro",en:" (pure)"}) : RAZAS[b] + " / " + (RAZAS[sub]||"#"+sub)), "pos", "100 % "));
     }
-    else if (a === 1) out.push(linea("Favorece que nazca", RAZAS[b] || "#"+b, "neu"));
+    else if (a === 1) out.push(linea({es:"Favorece que nazca",en:"Favors"}, RAZAS[b] || "#"+b, "neu"));
     else if (UP[a]) out.push(linea(UP[a], signo(b), clase(a===9||a===8||a===10||a===12 ? 0 : 1, b)));
-    else if (ESPECIAL[a]) out.push(linea("Especialidad de batalla", ESPECIAL[a], "neu"));
-    else if (EXPEDICION[a]) out.push(linea("Expedición a " + EXPEDICION[a], "+1", "pos"));
-    else if (DRILL[a]) out.push(linea("Entrenamiento " + DRILL[a], "+1", "pos"));
+    else if (ESPECIAL[a]) out.push(linea({es:"Especialidad de batalla",en:"Battle specialty"}, ESPECIAL[a], "neu"));
+    else if (EXPEDICION[a]) out.push(linea(L({es:"Expedición a ",en:"Expedition to "}) + EXPEDICION[a], "+1", "pos"));
+    else if (DRILL[a]) out.push(linea(L({es:"Entrenamiento ",en:"Drill "}) + DRILL[a], "+1", "pos"));
   }
   return out.length ? `<ul class="fx">${out.join("")}</ul>` : "";
 }
@@ -564,35 +753,46 @@ function fichaCombinacion(it){
 // Notas de las reglas generales, como texto normal de la ficha.
 function notasReglas(it){
   const n = [];
+  const r = `<a href="#modReglas">${L(REGLAS)}</a>.`;
   if (VIDA[it.id]){ const v = VIDA[it.id];
-    n.push(`Semanas que resta en promedio: joven ${fmt1(promedioVida(v,0))}, a mitad de vida ${fmt1(promedioVida(v,.5))}, al final ${fmt1(promedioVida(v,1))}. <a href="#modVida">Cómo funciona</a>.`); }
-  if (INTOX[it.id]) n.push(`Item tóxico: cada punto de intoxicación tira por separado la chance de perder 1 semana de vida. <a href="#modReglas">Reglas</a>.`);
-  if (it.id === 23) n.push(`Item tóxico: cada intoxicación puede costarle 1 semana de vida, y con acostumbramiento antifatiga baja menos el cansancio (hasta −11). <a href="#modReglas">Reglas</a>.`);
-  if (DETOX[it.id]) n.push(`Baja la intoxicación y con eso el riesgo de perder vida. <a href="#modReglas">Reglas</a>.`);
-  if (it.isChip) n.push(`<b>Se guardan en el baúl:</b> al empezar cada mes pasan del inventario al baúl, dejan de ocupar lugar y ya no se pueden vender. <a href="#reglaBaul">Reglas</a>.`);
-  return n.map(t => `<div class="note">${t}</div>`).join("");
+    n.push({es:`Semanas que resta en promedio: joven ${fmt1(promedioVida(v,0))}, a mitad de vida ${fmt1(promedioVida(v,.5))}, al final ${fmt1(promedioVida(v,1))}. <a href="#modVida">Cómo funciona</a>.`,
+      en:`Average weeks taken: young ${fmt1(promedioVida(v,0))}, mid-life ${fmt1(promedioVida(v,.5))}, at the end ${fmt1(promedioVida(v,1))}. <a href="#modVida">How it works</a>.`}); }
+  const semanas = cfg("ItemTolerance.LifespanWeeksLost");
+  if (INTOX[it.id]) n.push({es:`Item tóxico: cada punto de intoxicación tira por separado la chance de perder ${semanas} semana(s) de vida. ${r}`,
+    en:`Toxic item: each toxicity point rolls separately the chance of losing ${semanas} week(s) of lifespan. ${r}`});
+  if (it.id === 23) n.push({es:`Item tóxico: cada intoxicación puede costarle ${semanas} semana(s) de vida, y con acostumbramiento antifatiga baja menos el cansancio. ${r}`,
+    en:`Toxic item: each toxicity can cost ${semanas} week(s) of lifespan, and with anti-fatigue habit it lowers fatigue less. ${r}`});
+  if (DETOX[it.id]) n.push({es:`Baja la intoxicación y con eso el riesgo de perder vida. ${r}`,en:`Lowers toxicity, and with it the risk of losing lifespan. ${r}`});
+  if (it.isChip) n.push({es:`<b>Se guardan en el baúl:</b> al empezar cada mes pasan del inventario al baúl, dejan de ocupar lugar y ya no se pueden vender. <a href="#reglaBaul">Reglas</a>.`,
+    en:`<b>They go to the chest:</b> at the start of each month they move from the inventory to the chest, stop taking space and can no longer be sold. <a href="#reglaBaul">Rules</a>.`});
+  return n.map(nota).join("");
 }
 
 // ---------- Fichas especiales ----------
 function fichaBanana(base){
   const outs = [28, 29, 30].map(id => DATA.items.find(i => i.id === id));
   const extra = {
-    28:[["Intoxicación","+1","neg"],["Acostumbramiento antifatiga","+2","neg"]],
-    29:[["Intoxicación","+1","neg"],["Acostumbramiento antifatiga","+1","neg"]],
-    30:[["Intoxicación","−1","pos"]],
+    28:[[T_INTOX,"+1","neg"],[T_ACOST,"+2","neg"]],
+    29:[[T_INTOX,"+1","neg"],[T_ACOST,"+1","neg"]],
+    30:[[T_INTOX,"−1","pos"]],
   };
-  const titulos = {28:"Resultado A", 29:"Resultado B", 30:"Resultado C"};
-  let h = `<div class="note">Al dársela sale uno de 3 resultados al azar.</div><div class="outcomes">`;
+  const res = L({es:"Resultado",en:"Result"});
+  const titulos = {28:res+" A", 29:res+" B", 30:res+" C"};
+  let h = nota({es:"Al dársela sale uno de 3 resultados al azar.",en:"When given, one of 3 random results comes out."}) + `<div class="outcomes">`;
   for (const o of outs){
     const {out} = listaEfectos(o);
     for (const [a,b,c] of extra[o.id]) out.push(linea(a, b, c));
     h += `<div class="outcome"><div class="sub">${titulos[o.id]}</div><ul class="fx">${out.join("")}</ul></div>`;
   }
-  h += `</div><div class="note">Item tóxico: cada intoxicación puede costarle 1 semana de vida, y con acostumbramiento antifatiga baja menos el cansancio (hasta el 40 %). <a href="#modReglas">Reglas</a>.</div>`;
+  const minimo = cfg("ItemTolerance.MinimumEffectPercent"), semanas = cfg("ItemTolerance.LifespanWeeksLost");
+  h += `</div>` + nota({es:`Item tóxico: cada intoxicación puede costarle ${semanas} semana(s) de vida, y con acostumbramiento antifatiga baja menos el cansancio (hasta el ${minimo} %). <a href="#modReglas">Reglas</a>.`,
+    en:`Toxic item: each toxicity can cost ${semanas} week(s) of lifespan, and with anti-fatigue habit it lowers fatigue less (down to ${minimo} %). <a href="#modReglas">Rules</a>.`});
   return h;
 }
 
 // ---------- Armado ----------
+const SUFIJOS = {89:{es:" (piezas)",en:" (pieces)"},103:{es:" (armado)",en:" (assembled)"},177:{es:" (armado con plano)",en:" (assembled with blueprint)"},
+  143:{es:" (fruto)",en:" (fruit)"},173:{es:" (de combinación)",en:" (for combining)"}};
 function agrupar(items){
   const omitir = new Set([10, 24, 29, 30]); // se muestran dentro de otra ficha
   const grupos = new Map();
@@ -609,14 +809,19 @@ function agrupar(items){
   for (const g of lista){
     g.isChip = g.n === "Disc Chips";
     g.titulo = g.n;
-    if (porNombre[g.n].length > 1 && !g.isChip && g.n !== "DNA Capsule"){
-      g.titulo = g.n + ({89:" (piezas)",103:" (armado)",177:" (armado con plano)",4:"",143:" (fruto)",68:"",173:" (de combinación)"}[g.id] ?? "");
-    }
+    if (porNombre[g.n].length > 1 && !g.isChip && g.n !== "DNA Capsule") g.titulo = g.n + L(SUFIJOS[g.id]);
   }
   return lista;
 }
 
-function textoBusqueda(el){ return el.textContent.toLowerCase(); }
+// Texto para buscar: solo el del idioma elegido y lo que la liga no oculta.
+function textoBusqueda(el){
+  let t = "";
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {acceptNode: n =>
+    n.nodeType === 1 && ((n.lang && n.lang !== IDIOMA) || n.hasAttribute("data-oculto")) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  for (let n = w.nextNode(); n; n = w.nextNode()) if (n.nodeType === 3) t += n.nodeValue;
+  return t.toLowerCase();
+}
 
 // Pasivos: los porcentajes se redondean para abajo, así que solo actúan desde cierto valor.
 function notasPasivo(it){
@@ -625,13 +830,17 @@ function notasPasivo(it){
   const n = [];
   for (const f of fx){
     if (f[0] !== 1 || !f[1]) continue;
-    const p = f[2], v = Math.abs(f[3]), desde = Math.ceil(100 / v), nombre = PARAM[p][0].toLowerCase();
-    if (it.id === 7 && p === 17) { n.push("Baja siempre al menos 1 de estrés, aunque el 3 % redondee a 0. Es el mejor pasivo para acumular."); continue; }
-    const accion = f[3] < 0 ? "baja" : "sube";
-    n.push(desde >= 100 ? `Por el redondeo, el ${nombre} solo ${accion} si está en 100: en la práctica casi nunca.`
-                        : `Por el redondeo, el ${nombre} solo ${accion} si está en ${desde} o más.`);
+    const p = f[2], v = Math.abs(f[3]), desde = Math.ceil(100 / v), nombre = PARAM[p][0];
+    if (it.id === 7 && p === 17) { n.push({es:"Baja siempre al menos 1 de estrés, aunque el 3 % redondee a 0. Es el mejor pasivo para acumular.",
+      en:"It always lowers stress by at least 1, even when 3 % rounds to 0. It's the best passive to stack."}); continue; }
+    const baja = f[3] < 0;
+    n.push(desde >= 100
+      ? {es:`Por el redondeo, el ${nombre.es.toLowerCase()} solo ${baja ? "baja" : "sube"} si está en 100: en la práctica casi nunca.`,
+         en:`Because of rounding, ${nombre.en.toLowerCase()} only ${baja ? "drops" : "rises"} at 100: in practice almost never.`}
+      : {es:`Por el redondeo, el ${nombre.es.toLowerCase()} solo ${baja ? "baja" : "sube"} si está en ${desde} o más.`,
+         en:`Because of rounding, ${nombre.en.toLowerCase()} only ${baja ? "drops" : "rises"} at ${desde} or more.`});
   }
-  return n.map(t => `<div class="note">${t}</div>`).join("");
+  return n.map(nota).join("");
 }
 
 function ficha(g){
@@ -641,11 +850,13 @@ function ficha(g){
   else if (cat === "combinacion") cuerpo = fichaCombinacion(g);
   else cuerpo = fichaNormal(g);
   let notas = "";
-  if (g.id === 23) notas += `<div class="note">Si el monstruo es <b>Henger</b>, <b>Arrowhead</b> o <b>Durahan</b> (como raza principal o secundaria), además baja el estrés 20 %.</div>`;
-  if (g.id === 11) notas += `<div class="note">Si tu monstruo es un <b>Gold Suezo</b>, actúa como pasivo: cada mes cansancio −1 % y estrés −1 %.</div>`;
-  if (g.id === 89) notas += `<div class="note">Las piezas sueltas: no tienen efecto ni se venden.</div>`;
+  if (g.id === 23) notas += nota({es:"Si el monstruo es <b>Henger</b>, <b>Arrowhead</b> o <b>Durahan</b> (como raza principal o secundaria), además baja el estrés 20 %.",
+    en:"If the monster is a <b>Henger</b>, <b>Arrowhead</b> or <b>Durahan</b> (main or sub breed), it also lowers stress 20 %."});
+  if (g.id === 11) notas += nota({es:"Si tu monstruo es un <b>Gold Suezo</b>, actúa como pasivo: cada mes cansancio −1 % y estrés −1 %.",
+    en:"If your monster is a <b>Gold Suezo</b>, it works as a passive: every month fatigue −1 % and stress −1 %."});
+  if (g.id === 89) notas += nota({es:"Las piezas sueltas: no tienen efecto ni se venden.",en:"The loose pieces: no effect and can't be sold."});
   notas += notasPasivo(g);
-  for (const t of (NOTAS[g.id] || [])) notas += `<div class="note">${t}</div>`;
+  for (const t of (NOTAS[g.id] || [])) notas += nota(t);
   const seguidos = g.ids.every((v, i) => i === 0 || v === g.ids[i-1] + 1);
   const ids = g.ids.length > 1 ? (seguidos ? `#${g.ids[0]}–${g.ids[g.ids.length-1]}` : g.ids.map(i => "#"+i).join(", ")) : `#${g.id}`;
   return `<article class="card" id="o${g.id}">
@@ -658,20 +869,22 @@ function tablaChips(lista, titulo, id){
     const fx = g.fx.map(f => [f[1], f[2]]); let raza = "", extra = "";
     for (const [a,b] of fx){
       if (a === 1) raza = RAZAS[b];
-      else if (UP[a]) extra = `${UP[a]} <span class="v ${clase(a===9||a===8||a===10||a===12?0:1,b)}">${signo(b)}</span>` +
-        (a === 12 ? ` <span class="note">(en DX la naturaleza por combinación anda mal: el resultado es impredecible)</span>` : "");
-      else if (ESPECIAL[a]) extra = `Especialidad de batalla <b>${ESPECIAL[a]}</b>`;
-      else if (EXPEDICION[a]) extra = `+1 en la expedición a <b>${EXPEDICION[a]}</b>`;
-      else if (DRILL[a]) extra = `+1 en el entrenamiento <b>${DRILL[a]}</b>`;
+      else if (UP[a]) extra = `${L(UP[a])} <span class="v ${clase(a===9||a===8||a===10||a===12?0:1,b)}">${signo(b)}</span>` +
+        (a === 12 ? ` <span class="note">${L({es:"(en DX la naturaleza por combinación anda mal: el resultado es impredecible)",en:"(in DX nature from combining is buggy: the result is unpredictable)"})}</span>` : "");
+      else if (ESPECIAL[a]) extra = `${L({es:"Especialidad de batalla",en:"Battle specialty"})} <b>${ESPECIAL[a]}</b>`;
+      else if (EXPEDICION[a]) extra = `${L({es:"+1 en la expedición a",en:"+1 on the expedition to"})} <b>${EXPEDICION[a]}</b>`;
+      else if (DRILL[a]) extra = `${L({es:"+1 en el entrenamiento",en:"+1 on the drill"})} <b>${DRILL[a]}</b>`;
     }
     return {raza, extra, g};
   }).sort((a,b) => a.raza.localeCompare(b.raza));
   return `<article class="card" id="${id}" style="grid-column:1/-1">
     <h3>${titulo} <span class="ids">#42–57, #146–167</span></h3>
-    <div class="note">Cada disc chip da un bonus al hijo y además empuja el resultado hacia su raza. Ninguno se compra ni desbloquea razas.</div>
-    <div class="note">El empujón hacia la raza solo actúa si esa raza está en alguno de los padres; si no, el chip solo da su bonus. Al subir la chance de esa raza baja la de los otros resultados, y eso puede convenir: los resultados con menos % pueden dar más bonus de stats.</div>
-    <div class="tablewrap"><table><thead><tr><th>Favorece</th><th>Además</th><th class="num">Venta</th><th class="num">N.º</th></tr></thead><tbody>
-    ${filas.map(f => `<tr><td><b>${f.raza}</b></td><td>${f.extra}</td><td class="num">${f.g.sel.toLocaleString("es-AR")} G</td><td class="num">${f.g.id}</td></tr>`).join("")}
+    ${nota({es:"Cada disc chip da un bonus al hijo y además empuja el resultado hacia su raza. Ninguno se compra ni desbloquea razas.",
+      en:"Each disc chip gives the child a bonus and also pushes the result toward its breed. None are sold in shops or unlock breeds."})}
+    ${nota({es:"El empujón hacia la raza solo actúa si esa raza está en alguno de los padres; si no, el chip solo da su bonus. Al subir la chance de esa raza baja la de los otros resultados, y eso puede convenir: los resultados con menos % pueden dar más bonus de stats.",
+      en:"The push toward the breed only works if that breed is in one of the parents; otherwise the chip only gives its bonus. Raising that breed's chance lowers the other results', which can be useful: results with lower % can give more stat bonus."})}
+    <div class="tablewrap"><table><thead><tr><th>${L({es:"Favorece",en:"Favors"})}</th><th>${L({es:"Además",en:"Also"})}</th><th class="num">${L({es:"Venta",en:"Sell"})}</th><th class="num">${L({es:"N.º",en:"No."})}</th></tr></thead><tbody>
+    ${filas.map(f => `<tr><td><b>${f.raza}</b></td><td>${f.extra}</td><td class="num">${num(f.g.sel)} G</td><td class="num">${f.g.id}</td></tr>`).join("")}
     </tbody></table></div>
     ${notasReglas({isChip:true})}</article>`;
 }
@@ -679,10 +892,11 @@ function tablaChips(lista, titulo, id){
 function tablaDNA(lista){
   return `<article class="card" id="dna" style="grid-column:1/-1">
     <h3>DNA Capsule <span class="ids">#79–85</span></h3>
-    <div class="note">Al combinar, nace la raza especial al 100 %. No se compran; se venden a 50 G.</div>
-    <div class="note">El hijo es un pura raza común con el aspecto de la especial (por ejemplo, un Moo es un Dragon puro con otra piel), no las variantes especiales del santuario. Jugando normal casi no se consiguen: la rosa salía del minijuego Job de la PocketStation.</div>
-    <div class="tablewrap"><table><thead><tr><th>N.º</th><th>Nace</th></tr></thead><tbody>
-    ${lista.map(g => { const a = g.fx[0][2], s = g.fx[1][1]; return `<tr><td>${g.id}</td><td>${ESPECIAL_DNA[a+"/"+s] || RAZAS[a]}</td></tr>`; }).join("")}
+    ${nota({es:"Al combinar, nace la raza especial al 100 %. No se compran; se venden a 50 G.",en:"When combining, the special breed is born at 100 %. Not sold in shops; they sell for 50 G."})}
+    ${nota({es:"El hijo es un pura raza común con el aspecto de la especial (por ejemplo, un Moo es un Dragon puro con otra piel), no las variantes especiales del santuario. Jugando normal casi no se consiguen: la rosa salía del minijuego Job de la PocketStation.",
+      en:"The child is a regular purebred with the special look (for example, a Moo is a pure Dragon with another skin), not the shrine's special variants. In normal play they're almost unobtainable: the pink one came from the PocketStation Job minigame."})}
+    <div class="tablewrap"><table><thead><tr><th>${L({es:"N.º",en:"No."})}</th><th>${L({es:"Nace",en:"Born"})}</th></tr></thead><tbody>
+    ${lista.map(g => { const a = g.fx[0][2], s = g.fx[1][1]; return `<tr><td>${g.id}</td><td>${dna(a+"/"+s) || RAZAS[a]}</td></tr>`; }).join("")}
     </tbody></table></div></article>`;
 }
 
@@ -693,15 +907,40 @@ function armar(){
     const lista = grupos.filter(g => categoria(g) === c.k);
     let cuerpo = "";
     if (c.k === "combinacion"){
-      const chipsL = lista.filter(g => g.isChip), dna = lista.filter(g => g.n === "DNA Capsule");
+      const chipsL = lista.filter(g => g.isChip), dnaL = lista.filter(g => g.n === "DNA Capsule");
       const otros = lista.filter(g => !g.isChip && g.n !== "DNA Capsule");
-      cuerpo = tablaChips(chipsL, "Disc Chips", "chips") + tablaDNA(dna) + otros.map(ficha).join("");
+      cuerpo = tablaChips(chipsL, "Disc Chips", "chips") + tablaDNA(dnaL) + otros.map(ficha).join("");
     } else cuerpo = lista.map(ficha).join("") +
       (c.k === "mensual" ? NUEVAS.map(fichaNueva).join("") + tarjetaGustos() : "");
-    html += `<details class="sec objetos" id="${c.k}"><summary><h2>${c.t}</h2></summary>
-      <div class="cuerpo"><p class="lead">${c.d}</p><div class="grid">${cuerpo}</div></div></details>`;
+    html += `<details class="sec objetos" id="${c.k}"><summary><h2>${L(c.t)}</h2></summary>
+      <div class="cuerpo"><p class="lead">${L(c.d)}</p><div class="grid">${cuerpo}</div></div></details>`;
   }
   document.getElementById("secciones").innerHTML = html;
+}
+
+// ---------- Tu liga ----------
+function armarLiga(){
+  const g = window.LIGA; if (!g) return;
+  document.getElementById("tuLiga").classList.remove("hidden");
+  document.getElementById("ligaNombre").textContent = g.nombre || "";
+  document.getElementById("ligaTitulo").textContent = g.nombre ? "· " + g.nombre : "";
+  const v = g.rancho ? ` · Rancho ${g.rancho.version}` : "";
+  document.getElementById("pieVersion").textContent = v; document.getElementById("pieVersionEn").textContent = v;
+  let h = "";
+  if (g.descripcion) h += `<p>${L(g.descripcion)}</p>`;
+  const datos = [];
+  if (g.rancho) datos.push(`${L({es:"Versión del Rancho",en:"Rancho version"})}: <b>${esc(g.rancho.version)}</b>` +
+    (g.rancho.repo ? ` (<a href="https://github.com/${esc(g.rancho.repo)}" target="_blank" rel="noopener">${esc(g.rancho.repo)}</a>)` : ""));
+  if (g.repo) datos.push(`${L({es:"Repositorio de la liga",en:"League repository"})}: <a href="https://github.com/${esc(g.repo)}" target="_blank" rel="noopener">${esc(g.repo)}</a>`);
+  if (datos.length) h += `<ul>${datos.map(d => `<li>${d}</li>`).join("")}</ul>`;
+  const comps = g.competencias || [];
+  if (comps.length){
+    h += `<h3>${L({es:"Competencias (ranuras 8 a 14)",en:"Competitions (slots 8 to 14)"})}</h3><div class="tablewrap" style="max-width:820px"><table><thead><tr>` +
+      `<th>${L({es:"Ranura",en:"Slot"})}</th><th>${L({es:"Competencia",en:"Competition"})}</th><th>${L({es:"Rango",en:"Rank"})}</th><th>${L({es:"Participantes",en:"Participants"})}</th></tr></thead><tbody>` +
+      comps.map(c => `<tr><td>${c.ranura}</td><td><b>${esc(c.nombre)}</b> #${c.grabacion}${c.reglas ? `<div class="note">${esc(c.reglas).replace(/\n/g, "<br>")}</div>` : ""}</td>` +
+        `<td>${esc(c.rango || "–")}</td><td>${(c.participantes || []).map(esc).join(", ")}</td></tr>`).join("") + `</tbody></table></div>`;
+  }
+  document.getElementById("ligaCuerpo").innerHTML = h;
 }
 
 // ---------- Secciones colapsables ----------
@@ -729,6 +968,7 @@ function filtrar(){
   if (q && !antesDeBuscar) antesDeBuscar = secciones().filter(d => d.open).map(d => d.id);
   let visibles = 0;
   for (const d of secciones()){
+    if (d.id === "tuLiga" && !window.LIGA) continue;
     let hay;
     const cards = d.querySelectorAll(".card");
     if (d.classList.contains("objetos")){
@@ -745,8 +985,26 @@ function filtrar(){
   document.getElementById("vacio").classList.toggle("hidden", visibles > 0);
 }
 
-armar();
-restaurarAbiertas();
+// ---------- Idioma ----------
+function ponerIdioma(i){
+  IDIOMA = i;
+  document.documentElement.dataset.idioma = i;
+  document.documentElement.lang = i;
+  document.getElementById("q").placeholder = L({es:"Buscar (ej.: guardado, cansancio, Tiger)…",en:"Search (e.g. saving, fatigue, Tiger)…"});
+  document.getElementById("tema").title = L({es:"Cambiar tema",en:"Change theme"});
+  armar();
+  armarLiga();
+  aplicarConfig(document);
+  restaurarAbiertas();
+  if (document.getElementById("q").value) filtrar();
+}
+
+ponerIdioma(IDIOMA);
+document.getElementById("idioma").addEventListener("click", () => {
+  const nuevo = IDIOMA === "es" ? "en" : "es";
+  try { localStorage.setItem("kokedex-idioma", nuevo); } catch {}
+  ponerIdioma(nuevo);
+});
 document.getElementById("q").addEventListener("input", filtrar);
 document.addEventListener("toggle", guardarAbiertas, true);
 document.getElementById("abrirTodo").addEventListener("click", () => { secciones().forEach(d => d.open = true); guardarAbiertas(); });

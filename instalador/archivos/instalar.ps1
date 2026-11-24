@@ -165,11 +165,13 @@ function Copiar($desde, $hacia, [string[]]$extra) {
 
 # Scripts, configuracion del Rancho y plantillas.
 foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-config.ps1', 'subir.ps1', 'clave.ps1',
-               'Kokedex.html', 'icono.ico', 'kokedex.ico', 'rancho.json') {
+               'icono.ico', 'kokedex.ico', 'rancho.json') {
     Copy-Item (Join-Path $origen $f) $Destino -Force
 }
 Copiar (Join-Path $origen 'configuracion') (Join-Path $Destino 'configuracion') @('/MIR')
 Copiar (Join-Path $origen 'plantillas') (Join-Path $Destino 'plantillas') @('/MIR')
+# La Kokedex de la instalacion la genera sincronizar.ps1 con los datos de la liga.
+Copy-Item (Join-Path $origen 'Kokedex.html') (Join-Path $Destino 'plantillas\Kokedex.html') -Force
 
 # Mods propios: se reemplazan enteros, menos los datos de la liga que viven en sus carpetas.
 $datos = (Get-Content (Join-Path $origen 'configuracion\datos-liga.json') -Raw | ConvertFrom-Json).datos

@@ -136,3 +136,45 @@ Paso 'Configuracion' {
         -Liga $ligaCopia -Reloaded (Join-Path $Instalacion 'Reloaded-II')
     foreach ($a in $avisos) { Anotar "Configuracion: $a" }
 }
+
+# ---- 5. Kokedex de la liga ----
+# La plantilla del Rancho con los datos de la liga: nombre, configuracion efectiva de los mods (la que quedo en sus
+# Config.json) y competencias de las ranuras 8 a 14.
+Paso 'Kokedex' {
+    $plantilla = Join-Path $Instalacion 'plantillas\Kokedex.html'
+    if (-not (Test-Path $plantilla)) { return }
+    $liga = Leer-Json $ligaCopia
+    $rancho = Leer-Json (Join-Path $Instalacion 'rancho.json')
+    $reloaded = Join-Path $Instalacion 'Reloaded-II'
+
+    $config = [ordered]@{}
+    foreach ($m in (Leer-Json (Join-Path $Instalacion 'configuracion\opciones.json')).mods) {
+        $archivo = Join-Path $reloaded "User\Mods\$($m.id)\Config.json"
+        if (Test-Path $archivo) { $config[$m.id] = Leer-Json $archivo }
+    }
+
+    $competencias = @()
+    $dirComp = Join-Path $reloaded 'Mods\MRDX.Custom.RanchRules\Competencias'
+    foreach ($f in Get-ChildItem $dirComp -Filter 'competencia*.json' -ErrorAction SilentlyContinue | Sort-Object Name) {
+        try {
+            $c = Leer-Json $f.FullName
+            $competencias += [ordered]@{
+                ranura = [int]($f.BaseName -replace '\D', ''); nombre = $c.nombre; grabacion = $(if ($c.grabacion) { $c.grabacion } else { 1 })
+                rango = $c.rango; reglas = $c.reglas; participantes = @($c.participantes | ForEach-Object { $_.nombre })
+            }
+        }
+        catch { Anotar "Kokedex: competencia ilegible $($f.Name)" }
+    }
+
+    $datos = [ordered]@{
+        nombre = $liga.nombre; idioma = $liga.idioma; descripcion = $liga.descripcion
+        repo = $origen.repo; rancho = [ordered]@{ repo = $rancho.repo; version = $rancho.version }
+        config = $config; competencias = $competencias
+    }
+    $json = ([pscustomobject]$datos | ConvertTo-Json -Depth 8 -Compress) -replace '</', '<\/'
+    $html = [IO.File]::ReadAllText($plantilla, [Text.Encoding]::UTF8)
+    $marca = 'window.LIGA = null;'
+    if (-not $html.Contains($marca)) { throw 'la plantilla de la Kokedex no tiene el lugar para los datos de la liga' }
+    $html = $html.Replace($marca, "window.LIGA = $json;")
+    [IO.File]::WriteAllText((Join-Path $Instalacion 'Kokedex.html'), $html, (New-Object Text.UTF8Encoding $false))
+}
