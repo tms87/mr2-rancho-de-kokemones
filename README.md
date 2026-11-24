@@ -50,6 +50,15 @@ powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.
 
 Las ligas que fijen esa versión (`rancho.version` en su `liga.json`) la instalan en el próximo arranque de cada jugador. **Fork:** una liga puede apuntar a tu fork con `rancho.repo`. Para probar el editor con tu copia local: `Editor Kokemon.bat -RanchoLocal <carpeta del Rancho>`.
 
+### Créditos
+
+- [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II), de Sewer56 (GPLv3), y sus mods Hooks, Universal Redirector y SigScan.
+- [MRDX Base Mod, Extract Data Bin y More Monsters](https://github.com/ranchercommunity/mrdx_reloaded), de la comunidad de Monster Rancher; More Monsters de ArchbishopDave y colaboradores. El instalador los baja de su página oficial.
+- [7-Zip](https://www.7-zip.org) (7zr.exe), para abrir los `.7z`.
+- Las firmas de funciones del santuario y el congelador que usan los mods propios vienen del código de More Monsters.
+
+Monster Rancher es una marca de Koei Tecmo. Este proyecto no está afiliado a Koei Tecmo.
+
 ## English
 
 Mods for **Monster Rancher 2** from *Monster Rancher 1 & 2 DX* (Steam), made to play as a group: each group of friends sets up its own **Kokemon League**, with its rivals, tournaments, competitions and rules.
@@ -98,11 +107,11 @@ powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.
 
 Leagues that pin that version (`rancho.version` in their `liga.json`) install it on each player's next launch. **Fork:** a league can point to your fork with `rancho.repo`. To try the editor with your local copy: `Editor Kokemon.bat -RanchoLocal <Rancho folder>`.
 
-## Créditos / Credits
+### Credits
 
-- [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II), de/by Sewer56 (GPLv3), y sus mods Hooks, Universal Redirector y SigScan.
-- [MRDX Base Mod, Extract Data Bin y More Monsters](https://github.com/ranchercommunity/mrdx_reloaded), de la comunidad de Monster Rancher / by the Monster Rancher community; More Monsters de/by ArchbishopDave y colaboradores. El instalador los baja de su página oficial / The installer downloads them from their official page.
-- [7-Zip](https://www.7-zip.org) (7zr.exe), para abrir los `.7z` / to open the `.7z` files.
-- Las firmas de funciones del santuario y el congelador que usan los mods propios vienen del código de More Monsters. / The shrine and freezer function signatures used by our mods come from More Monsters' code.
+- [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II), by Sewer56 (GPLv3), and its Hooks, Universal Redirector and SigScan mods.
+- [MRDX Base Mod, Extract Data Bin and More Monsters](https://github.com/ranchercommunity/mrdx_reloaded), by the Monster Rancher community; More Monsters by ArchbishopDave and contributors. The installer downloads them from their official page.
+- [7-Zip](https://www.7-zip.org) (7zr.exe), to open the `.7z` files.
+- The shrine and freezer function signatures used by our mods come from More Monsters' code.
 
-Monster Rancher es una marca de Koei Tecmo. Este proyecto no está afiliado a Koei Tecmo. / Monster Rancher is a trademark of Koei Tecmo. This project is not affiliated with Koei Tecmo.
+Monster Rancher is a trademark of Koei Tecmo. This project is not affiliated with Koei Tecmo.
