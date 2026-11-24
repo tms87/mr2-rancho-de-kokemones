@@ -483,8 +483,12 @@ public class Mod : ModBase
     private Dictionary<int, Entry> _active = new(); // number → tournament in the current month
     private string _activeKey = "";
 
-    // Calendar texts of the numbers shared by several tournaments: months (1-12) → text (all of the same size).
-    private readonly Dictionary<int, List<(HashSet<int> Months, byte[] Text)>> _textVariants = new();
+    // Calendar texts of the new numbers: number → month (1-12) → text (all of the same size, _textSize).
+    private readonly Dictionary<int, Dictionary<int, byte[]>> _monthTexts = new();
+    // Every text the mod generated this session (base64): only those are overwritten in memory.
+    private readonly HashSet<string> _knownTexts = [];
+    private int _textSize;
+    private const int BonusTextMargin = 64; // "Bonus: <item>" can be added or change its item
 
     // The calendar screen (0x4ED2D0) stores the text section pointer here and builds each month with 0x4EDA10,
     // whose object has the month shown (1-12) at +0x44.
@@ -502,7 +506,8 @@ public class Mod : ModBase
         {
             // +0x4B = number of the tournament the info panel shows; it only redraws when it changes, so after a swap
             // it is reset (0xFF = none, as when the screen opens).
-            if (_textVariants.Count > 0 && SwapTexts(*(ushort*)(self + 0x44))) *(byte*)(self + 0x4B) = 0xFF;
+            var section = (nuint)(*(uint*)(_exeBase + TextSectionPointer));
+            if (_monthTexts.Count > 0 && SwapTexts(section, *(ushort*)(self + 0x44))) *(byte*)(self + 0x4B) = 0xFF;
         }
         catch (Exception e)
         {
@@ -512,27 +517,48 @@ public class Mod : ModBase
         _buildMonthHook!.OriginalFunction(self);
     }
 
-    /// <summary>Puts in the loaded calendar texts the tournament each shared number means in that month.</summary>
-    private unsafe bool SwapTexts(int month)
+    /// <summary>
+    ///     Puts in a loaded text section (one u32 per tournament: offset from the section, or pointer if the game
+    ///     converted it) the tournament each new number means in that month (1-12).
+    /// </summary>
+    private unsafe bool SwapTexts(nuint section, int month)
     {
         var swapped = false;
-        var section = (nuint)(*(uint*)(_exeBase + TextSectionPointer));
         if (section < 0x10000) return false;
-        foreach (var (id, variants) in _textVariants)
+        foreach (var (id, byMonth) in _monthTexts)
         {
-            var pick = variants.FirstOrDefault(v => v.Months.Contains(month));
-            if (pick.Text == null) continue; // the number is not used that month
+            if (!byMonth.TryGetValue(month, out var pick)) continue; // the number is not used that month
             var off = *(uint*)(section + (nuint)(id * 4));
-            var entry = off < 0x100000 ? section + off : (nuint)off; // offset, or pointer if the game converted it
-            var current = new Span<byte>((void*)entry, pick.Text.Length).ToArray();
-            // Only over one of our texts (the buffer can hold another file).
-            if (!variants.Any(v => current.AsSpan().SequenceEqual(v.Text))) return swapped;
-            if (current.AsSpan().SequenceEqual(pick.Text)) continue;
-            pick.Text.CopyTo(new Span<byte>((void*)entry, pick.Text.Length));
+            var entry = off < 0x100000 ? section + off : (nuint)off;
+            var current = new Span<byte>((void*)entry, pick.Length);
+            // Only over one of our texts (the buffer can hold another file, or a text from before the mod).
+            if (current.SequenceEqual(pick) || !_knownTexts.Contains(Convert.ToBase64String(current))) continue;
+            pick.CopyTo(current);
             swapped = true;
         }
 
         return swapped;
+    }
+
+    /// <summary>
+    ///     Month change while playing: the game keeps the tournament texts it loaded with the save (the town and the
+    ///     calendar read them from its copy of farm_etc_en.obj), so the current month's names are written there.
+    /// </summary>
+    private unsafe void UpdateLoadedTexts(int month)
+    {
+        try
+        {
+            var buf = (byte*)(_exeBase + FarmBufferOffset);
+            if (*(int*)buf != 3 || _monthTexts.Count == 0) return;
+            var relocated = *(int*)(buf + 4) != 0;
+            var section = (nuint)(*(uint*)(buf + 8)) + (relocated ? 0 : (nuint)buf);
+            if (section <= (nuint)buf || section >= (nuint)buf + 0x10000) return;
+            if (SwapTexts(section, month)) Log($"Nombres de los torneos del mes {month} actualizados sin recargar.");
+        }
+        catch (Exception e)
+        {
+            Log($"No se pudieron actualizar los nombres de los torneos cargados: {e.Message}", Color.Orange);
+        }
     }
 
     /// <summary>
@@ -811,6 +837,8 @@ public class Mod : ModBase
                 Log($"farm_etc_en.obj: no se pudo actualizar la pantalla del calendario ({e.Message}).", Color.Orange);
             }
 
+        if (previousYear != null) UpdateLoadedTexts(month + 1);
+
         // Japanese version: only the calendar (its texts are in Japanese).
         if (_farmJp != null)
         {
@@ -992,20 +1020,40 @@ public class Mod : ModBase
             return text[..prize].Concat(line).Append((byte)0xFD).Concat(text[prize..]).ToArray();
         }
 
-        // Numbers shared by several tournaments: every text gets the same size (padded with 0xFF after its end), so
-        // the calendar screen can swap them in memory depending on the month it shows.
-        _textVariants.Clear();
+        // Every text of a new number gets the same size (padded with 0xFF after its end), fixed for the whole session:
+        // the game keeps the texts it loaded with the save, so the mod swaps them in memory (the calendar screen by
+        // the month it shows, and the current month when the month changes while playing). A fixed size lets any
+        // tournament's text fit over any other, even after the calendar is redrawn.
+        if (_textSize == 0)
+        {
+            var all = _variants.Select(v => v.T).Concat(_autoPool.Select(p => p.E.T)).Distinct();
+            _textSize = all.Select(t => Encode(t, null).Length).DefaultIfEmpty(0).Max() + BonusTextMargin;
+        }
+
+        _monthTexts.Clear();
         var uses = Enumerable.Range(0, 12).SelectMany(m => _monthIds[m].Select(k => (Id: k.Key, Month: m + 1, k.Value.T)));
         foreach (var g in uses.GroupBy(u => u.Id))
         {
-            var byTournament = g.GroupBy(u => u.T).Select(x => (T: x.Key, Months: x.Select(u => u.Month).ToHashSet(),
-                Bytes: Encode(x.Key, BonusOf(x.Key, _shownYears[x.First().Month - 1])))).ToList();
-            var size = byTournament.Max(x => x.Bytes.Length);
-            var padded = byTournament.Select(x => (x.T, x.Months,
-                Bytes: x.Bytes.Concat(Enumerable.Repeat((byte)0xFF, size - x.Bytes.Length)).ToArray())).ToList();
-            if (padded.Count > 1) _textVariants[g.Key] = padded.Select(x => (x.Months, x.Bytes)).ToList();
+            var byMonth = new Dictionary<int, byte[]>();
+            foreach (var x in g.GroupBy(u => u.T))
+            {
+                var bytes = Encode(x.Key, BonusOf(x.Key, _shownYears[x.First().Month - 1]));
+                if (bytes.Length > _textSize)
+                {
+                    Log($"Texto de \"{x.Key.Name}\" más largo que el lugar reservado; se corta.", Color.Orange);
+                    bytes = bytes[.._textSize];
+                }
+
+                var padded = bytes.Concat(Enumerable.Repeat((byte)0xFF, _textSize - bytes.Length)).ToArray();
+                _knownTexts.Add(Convert.ToBase64String(padded));
+                foreach (var u in x) byMonth[u.Month] = padded;
+            }
+
+            _monthTexts[g.Key] = byMonth;
             var active = _active.TryGetValue(g.Key, out var a) ? a.T : null;
-            entries[g.Key] = (padded.FirstOrDefault(x => ReferenceEquals(x.T, active)).Bytes ?? padded[0].Bytes);
+            entries[g.Key] = g.FirstOrDefault(u => ReferenceEquals(u.T, active)) is { T: not null } cur
+                ? byMonth[cur.Month]
+                : byMonth.Values.First();
         }
 
         var newTexts = new List<byte>(new byte[TournamentCount * 4]);
