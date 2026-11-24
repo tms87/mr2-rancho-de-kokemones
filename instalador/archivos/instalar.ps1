@@ -1,10 +1,17 @@
-# Instalador de "MR2 Rancho de Kokemones" (mods para Monster Rancher 1&2 DX de Steam).
-# Lo ejecuta Instalar.bat. Copia Reloaded-II con los mods, lo configura y crea el acceso directo.
+# Instalador del paquete "Rancho de Kokemones" (mods para Monster Rancher 1&2 DX de Steam) para una liga.
+# Lo ejecuta el instalador de la liga (o el lanzador, al cambiar de version). Copia los scripts y los mods propios,
+# baja Reloaded-II y los mods de terceros de su origen, trae los datos y la configuracion de la liga, configura
+# Reloaded-II y crea los accesos directos.
 param(
     [string]$Destino = (Join-Path $env:LOCALAPPDATA 'MR2-Rancho-de-Kokemones'),
     [switch]$SinAccesoDirecto,
     # Lo usa el lanzador al actualizar: ya sabe donde esta el juego (no busca ni pregunta).
-    [string]$RutaJuego
+    [string]$RutaJuego,
+    # Liga: repo de GitHub ("usuario/repo") y rama, o una carpeta local (pruebas). Al actualizar se omiten y se
+    # usa la liga ya instalada.
+    [string]$LigaRepo,
+    [string]$LigaRama = 'main',
+    [string]$LigaLocal
 )
 
 $ErrorActionPreference = 'Stop'
@@ -130,10 +137,17 @@ foreach ($v in $vcpp) {
 }
 
 # ------------------------------------------------------------------
-Titulo '3. Copiando Reloaded-II y los mods'
+Titulo '3. Copiando el Rancho de Kokemones'
 # ------------------------------------------------------------------
 $reloaded = Join-Path $Destino 'Reloaded-II'
-$actualizacion = Test-Path (Join-Path $reloaded 'Reloaded-II.exe')
+$estadoLiga = Join-Path $Destino 'liga-instalada.json'
+$actualizacion = Test-Path $estadoLiga
+
+# Liga de esta instalacion: la que se pasa, o la que ya estaba (actualizacion).
+if ($LigaLocal) { $liga = [ordered]@{ local = (Resolve-Path $LigaLocal).Path } }
+elseif ($LigaRepo) { $liga = [ordered]@{ repo = $LigaRepo; rama = $LigaRama } }
+elseif ($actualizacion) { $liga = (Get-Content $estadoLiga -Raw | ConvertFrom-Json).liga }
+else { Fallar 'Falta la liga: este instalador se usa desde el instalador de una liga.' }
 
 # Con el juego abierto los mods estan en uso y no se pueden reemplazar (la copia quedaria esperando).
 while (Get-Process MF2 -ErrorAction SilentlyContinue) {
@@ -142,23 +156,47 @@ while (Get-Process MF2 -ErrorAction SilentlyContinue) {
 }
 New-Item -ItemType Directory -Force $Destino | Out-Null
 
-# Programa y mods: se reemplazan siempre. Datos del jugador (User): solo se agregan los que no existen,
-# asi una actualizacion no pisa la configuracion ni el estado guardado de cada uno.
-robocopy (Join-Path $origen 'Reloaded-II') $reloaded /E /XD (Join-Path $origen 'Reloaded-II\User') /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
-if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." }
-robocopy (Join-Path $origen 'Reloaded-II\User') (Join-Path $reloaded 'User') /E /XC /XN /XO /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
-if ($LASTEXITCODE -ge 8) { Fallar "Error copiando la configuracion (robocopy $LASTEXITCODE)." }
-Copy-Item (Join-Path $origen 'jugar.ps1') $Destino -Force
-Copy-Item (Join-Path $origen 'icono.ico') $Destino -Force
-Copy-Item (Join-Path $origen 'version.txt') $Destino -Force
-Copy-Item (Join-Path $origen 'subir.ps1') $Destino -Force
-Copy-Item (Join-Path $origen 'clave.ps1') $Destino -Force
-Copy-Item (Join-Path $origen 'Kokedex.html') $Destino -Force
-Copy-Item (Join-Path $origen 'kokedex.ico') $Destino -Force
+function Copiar($desde, $hacia, [string[]]$extra) {
+    robocopy $desde $hacia @extra /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
+    if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." }
+}
+
+# Scripts, configuracion del Rancho y plantillas.
+foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-config.ps1', 'subir.ps1', 'clave.ps1',
+               'Kokedex.html', 'icono.ico', 'kokedex.ico', 'rancho.json') {
+    Copy-Item (Join-Path $origen $f) $Destino -Force
+}
+Copiar (Join-Path $origen 'configuracion') (Join-Path $Destino 'configuracion') @('/MIR')
+Copiar (Join-Path $origen 'plantillas') (Join-Path $Destino 'plantillas') @('/MIR')
+
+# Mods propios: se reemplazan enteros, menos los datos de la liga que viven en sus carpetas.
+$datos = (Get-Content (Join-Path $origen 'configuracion\datos-liga.json') -Raw | ConvertFrom-Json).datos
+foreach ($mod in Get-ChildItem (Join-Path $origen 'mods') -Directory) {
+    $hacia = Join-Path $reloaded "Mods\$($mod.Name)"
+    $excluir = @()
+    foreach ($d in $datos) {
+        $ruta = Join-Path $Destino ($d.destino -replace '/', '\')
+        if (-not $ruta.StartsWith("$hacia\", [StringComparison]::OrdinalIgnoreCase)) { continue }
+        if ([IO.Path]::GetExtension($ruta)) { $excluir += '/XF', $ruta } else { $excluir += '/XD', $ruta }
+    }
+    Copiar $mod.FullName $hacia (@('/MIR') + $excluir)
+}
+
+# A que liga pertenece esta instalacion (lo lee el lanzador).
+[IO.File]::WriteAllText($estadoLiga, ([pscustomobject]@{ liga = $liga } | ConvertTo-Json -Depth 3), (New-Object Text.UTF8Encoding $false))
 
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
-Get-ChildItem $Destino -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
+Get-ChildItem $Destino -File -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notlike "$reloaded\User\*" } |
+    Unblock-File -ErrorAction SilentlyContinue
 Ok ($(if ($actualizacion) { "Actualizado en $Destino" } else { "Instalado en $Destino" }))
+
+# ------------------------------------------------------------------
+Titulo '3b. Reloaded-II, mods de terceros y datos de la liga'
+# ------------------------------------------------------------------
+Write-Host '   La primera vez se bajan unos 55 MB (Reloaded-II y More Monsters).'
+try { & (Join-Path $Destino 'sincronizar.ps1') -Instalacion $Destino -Estricto }
+catch { Fallar "No se pudo preparar la instalacion: $($_.Exception.Message)" }
+Ok 'Reloaded-II, mods, datos y configuracion de la liga al dia.'
 
 # ------------------------------------------------------------------
 Titulo '4. Configurando Reloaded-II'
@@ -187,6 +225,13 @@ New-Item -ItemType Directory -Force (Split-Path $app) | Out-Null
 $plantilla = Get-Content (Join-Path $origen 'plantillas\AppConfig.json') -Raw
 [IO.File]::WriteAllText($app, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
 Ok 'Reloaded-II configurado (sin consola).'
+
+# Una liga local es solo para pruebas: no se tocan los accesos directos del escritorio.
+if ($liga.local) {
+    Write-Host ''
+    Write-Host "Listo (liga local, sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" -ForegroundColor Green
+    exit 0
+}
 
 # ------------------------------------------------------------------
 if (-not $SinAccesoDirecto) {

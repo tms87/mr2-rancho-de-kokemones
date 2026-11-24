@@ -1,11 +1,17 @@
-# Sube tus monstruos exportados al repositorio de MR2 Rancho de Kokemones (como un "issue" de GitHub), para que
+# Sube tus monstruos exportados al repositorio de tu liga (como un "issue" de GitHub), para que
 # puedan sumarse como rivales o a las competencias. Cada exportado es una grabacion entera ("fecha Entrenador.json"):
 # el juego lo crea al guardar. Elegis cuales subir; los ya subidos quedan anotados para no repetirlos.
 # La clave es personal: la configura clave.ps1 (se abre solo la primera vez) con la que te pasaron por privado.
 # Para pruebas: -Exportados (otra carpeta de exportados) y -Datos (carpeta con clave-issues.dat y subidos.txt).
 param([string]$Exportados, [string]$Datos = $PSScriptRoot)
 $ErrorActionPreference = 'Stop'
-$repo = 'tms87/mr2-rancho-de-kokemones'
+# El repositorio de la liga de esta instalacion.
+$repo = ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-instalada.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).liga.repo
+if (-not $repo) {
+    Write-Host 'Esta instalacion usa una liga local: no hay repositorio donde subir exportados.' -ForegroundColor Yellow
+    Read-Host 'Enter para cerrar' | Out-Null
+    exit
+}
 $exportados = if ($Exportados) { $Exportados } else { Join-Path $PSScriptRoot 'Reloaded-II\User\Mods\MRDX.Custom.Leagues\Exportados' }
 $subidosTxt = Join-Path $Datos 'subidos.txt'
 $claveDat = Join-Path $Datos 'clave-issues.dat'

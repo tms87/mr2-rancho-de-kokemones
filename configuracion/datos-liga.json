@@ -1,0 +1,10 @@
+{
+  "_comentario": "Datos de la liga que lee cada mod: \"liga\" es la ruta en el repo de la liga y \"destino\" donde va en la instalacion del jugador. Los sincroniza el lanzador en cada arranque (borrarSobrantes: se borra lo que la liga quito). El instalador no pisa estas rutas al actualizar los mods.",
+  "version": 1,
+  "datos": [
+    { "liga": "rivales", "destino": "Reloaded-II/Mods/MRDX.Custom.Leagues/Liga", "borrarSobrantes": true },
+    { "liga": "torneos/torneos.json", "destino": "Reloaded-II/Mods/MRDX.Custom.CalendarioKokemon/torneos.json" },
+    { "liga": "torneos/imagenes", "destino": "Reloaded-II/Mods/MRDX.Custom.CalendarioKokemon/imagenes", "borrarSobrantes": true },
+    { "liga": "competencias", "destino": "Reloaded-II/Mods/MRDX.Custom.RanchRules/Competencias", "borrarSobrantes": true }
+  ]
+}

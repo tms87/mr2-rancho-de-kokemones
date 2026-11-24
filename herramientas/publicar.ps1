@@ -1,22 +1,31 @@
-# Arma (y opcionalmente publica) una version del paquete "MR2 Rancho de Kokemones".
+# Arma (y opcionalmente publica) una version del paquete del Rancho de Kokemones.
 #
 #   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0              (solo arma el zip)
 #   powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0 -Publicar    (y crea la version en GitHub)
 #
-# Toma como base el zip de la ultima version publicada (Reloaded-II, MRDX Base Mod, More Monsters, etc. no estan
-# en el repositorio) y reemplaza lo propio: los mods compilados de mods\, el instalador y el lanzador.
+# El paquete trae solo lo propio: los mods compilados de mods\ (sin datos de liga), los scripts del instalador y del
+# lanzador y la configuracion del Rancho (configuracion\). Reloaded-II y los mods de terceros los baja el instalador
+# de su origen (configuracion\dependencias.json); los datos y la configuracion de cada liga vienen de su repositorio.
+#
+# Se publica en el repositorio del remoto "origin" (asi funciona igual en un fork), o en -Repo.
 # Necesita: .NET SDK (dotnet) y GitHub CLI (gh) con sesion iniciada.
 param(
     [Parameter(Mandatory)][string]$Version,
     [switch]$Publicar,
-    [string]$Notas = ''
+    [string]$Notas = '',
+    [string]$Repo
 )
 
 $ErrorActionPreference = 'Stop'
-$Repo = 'tms87/mr2-rancho-de-kokemones'
 $raiz = Split-Path $PSScriptRoot
 $tmp = Join-Path $env:TEMP 'rk-publicar'
 [version]$Version | Out-Null # valida el formato (1.0.0)
+
+if (-not $Repo) {
+    $url = (git -C $raiz remote get-url origin)
+    if ($url -notmatch 'github\.com[:/]([^/]+/[^/]+?)(\.git)?$') { throw "No se reconoce el repositorio de GitHub del remoto origin ($url). Usa -Repo usuario/repo." }
+    $Repo = $Matches[1]
+}
 
 function Paso($t) { Write-Host ''; Write-Host "== $t ==" -ForegroundColor Cyan }
 function Robocopy-Ok($desde, $hacia, [string[]]$extra) {
@@ -26,6 +35,7 @@ function Robocopy-Ok($desde, $hacia, [string[]]$extra) {
 
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 New-Item -ItemType Directory -Force $tmp | Out-Null
+Write-Host "Rancho de Kokemones $Version ($Repo)" -ForegroundColor White
 
 # ------------------------------------------------------------------
 Paso '1. Compilando los mods'
@@ -44,34 +54,20 @@ foreach ($mod in Get-ChildItem (Join-Path $raiz 'mods') -Directory) {
 }
 
 # ------------------------------------------------------------------
-Paso '2. Bajando la ultima version publicada (base)'
+Paso '2. Armando el paquete'
 # ------------------------------------------------------------------
-gh release download --repo $Repo --pattern '*.zip' --dir (Join-Path $tmp 'base')
-if ($LASTEXITCODE -ne 0) { throw 'No se pudo bajar la ultima version' }
-Expand-Archive (Get-ChildItem (Join-Path $tmp 'base') -Filter '*.zip' | Select-Object -First 1).FullName (Join-Path $tmp 'base\x')
-$paquete = (Get-ChildItem (Join-Path $tmp 'base\x') -Recurse -Filter 'Instalar.bat' | Select-Object -First 1).Directory.FullName
+$paquete = Join-Path $tmp 'paquete\MR2-Rancho-de-Kokemones'
 $archivos = Join-Path $paquete 'archivos'
-
-# ------------------------------------------------------------------
-Paso '3. Reemplazando mods, instalador y lanzador'
-# ------------------------------------------------------------------
-foreach ($c in $compilados) {
-    Robocopy-Ok $c.FullName (Join-Path $archivos "Reloaded-II\Mods\$($c.Name)") @('/MIR')
-    Write-Host "   OK  $($c.Name)" -ForegroundColor Green
-}
-# Mods propios que cambiaron de nombre: la base todavia los trae con el nombre viejo.
-foreach ($viejo in @('MRDX.Custom.LigaKokemon')) {
-    $dir = Join-Path $archivos "Reloaded-II\Mods\$viejo"
-    if (Test-Path $dir) { Remove-Item $dir -Recurse -Force; Write-Host "   --  $viejo (renombrado)" -ForegroundColor DarkGray }
-}
-Copy-Item (Join-Path $raiz 'instalador\Instalar.bat') $paquete -Force
-Copy-Item (Join-Path $raiz 'instalador\LEEME.txt') $paquete -Force
 Robocopy-Ok (Join-Path $raiz 'instalador\archivos') $archivos @('/E')
-Set-Content -Path (Join-Path $archivos 'version.txt') -Value $Version -Encoding ASCII
-Set-Content -Path (Join-Path $raiz 'instalador\archivos\version.txt') -Value $Version -Encoding ASCII
+Robocopy-Ok (Join-Path $raiz 'configuracion') (Join-Path $archivos 'configuracion') @('/E')
+foreach ($c in $compilados) { Robocopy-Ok $c.FullName (Join-Path $archivos "mods\$($c.Name)") @('/E') }
+Copy-Item (Join-Path $raiz 'instalador\LEEME.txt') $paquete -Force
+[IO.File]::WriteAllText((Join-Path $archivos 'rancho.json'),
+    ([pscustomobject]@{ repo = $Repo; version = $Version } | ConvertTo-Json), (New-Object Text.UTF8Encoding $false))
+Write-Host "   OK  $((Get-ChildItem $paquete -Recurse -File).Count) archivos" -ForegroundColor Green
 
 # ------------------------------------------------------------------
-Paso '4. Armando el zip'
+Paso '3. Armando el zip'
 # ------------------------------------------------------------------
 $zip = Join-Path $tmp 'MR2-Rancho-de-Kokemones.zip'
 # Entrada por entrada con rutas "/" (el formato estandar): Compress-Archive y ZipFile de Windows PowerShell guardan
@@ -86,14 +82,14 @@ foreach ($f in Get-ChildItem $paquete -Recurse -File) {
 }
 $archivoZip.Dispose()
 $flujo.Dispose()
-Write-Host "   OK  $zip ($([math]::Round((Get-Item $zip).Length / 1MB)) MB)" -ForegroundColor Green
+Write-Host "   OK  $zip ($([math]::Round((Get-Item $zip).Length / 1MB, 1)) MB)" -ForegroundColor Green
 
 if ($Publicar) {
-    Paso "5. Publicando v$Version en GitHub"
+    Paso "4. Publicando v$Version en $Repo"
     gh release create "v$Version" $zip --repo $Repo --title "Rancho de Kokemones $Version" --notes $Notas
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear la version en GitHub' }
-    Write-Host '   OK  Publicada. Los jugadores la reciben la proxima vez que abran el juego.' -ForegroundColor Green
+    Write-Host '   OK  Publicada. Las ligas que fijen esta version la instalan en el proximo arranque de cada jugador.' -ForegroundColor Green
 } else {
     Write-Host ''
-    Write-Host 'No se publico (falta -Publicar). Para probarlo, descomprimi el zip y ejecuta Instalar.bat.' -ForegroundColor Yellow
+    Write-Host 'No se publico (falta -Publicar). Para probarlo: instalador-liga\instalar-liga.ps1 -LigaLocal <carpeta> -PaqueteLocal <zip>.' -ForegroundColor Yellow
 }

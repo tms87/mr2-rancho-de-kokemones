@@ -1,0 +1,15 @@
+{
+  "formato": 1,
+  "nombre": "Liga Kokemon de ejemplo",
+  "idioma": "es",
+  "rancho": {
+    "repo": "tms87/mr2-rancho-de-kokemones",
+    "version": "1.0.0"
+  },
+  "dependencias": {},
+  "configuracion": {
+    "MRDX.Custom.DiscRandomizer": { "Seed": 1812630249 },
+    "MRDX.Custom.Leagues": { "Seed": 20261120 },
+    "MRDX.Custom.CalendarioKokemon": { "Seed": 24 }
+  }
+}

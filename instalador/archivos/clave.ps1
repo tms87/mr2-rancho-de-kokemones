@@ -1,9 +1,11 @@
 # Configura tu clave para "MR2 Subir exportados": pegas la clave que te pasaron por privado (un token de GitHub que
-# solo permite crear issues en el repositorio del paquete). Se guarda cifrada con tu usuario de Windows
+# solo permite crear issues en el repositorio de tu liga). Se guarda cifrada con tu usuario de Windows
 # (clave-issues.dat, junto a este programa): copiada a otra PC no sirve. Se puede volver a correr para cambiarla.
 param([string]$Destino = $PSScriptRoot)
 $ErrorActionPreference = 'Stop'
-$repo = 'tms87/mr2-rancho-de-kokemones'
+# El repositorio de la liga de esta instalacion.
+$repo = ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-instalada.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).liga.repo
+if (-not $repo) { Write-Host 'Esta instalacion usa una liga local: no hace falta clave.' -ForegroundColor Yellow; exit }
 $archivo = Join-Path $Destino 'clave-issues.dat'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 

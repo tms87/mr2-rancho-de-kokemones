@@ -16,8 +16,6 @@
   <ItemGroup>
     <None Update="ModConfig.json" CopyToOutputDirectory="Always" />
     <None Update="Preview.png" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="torneos.json" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="imagenes\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
