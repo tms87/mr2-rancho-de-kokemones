@@ -1,81 +1,12 @@
-MR2 RANCHO DE KOKEMONES (mods para Monster Rancher 1&2 DX de Steam)
-=======================================================================
+RANCHO DE KOKEMONES - paquete / package
+=======================================
 
-INSTALAR
---------
-1. Instala "Monster Rancher 1 & 2 DX" desde Steam.
-2. Descomprimi esta carpeta donde quieras (por ejemplo, en Descargas).
-3. Doble clic en "Instalar.bat".
-   - Busca el juego solo. Si no lo encuentra, te pide que elijas MF2.exe.
-   - Si falta .NET 9, lo descarga de Microsoft e instala (Windows puede pedir permiso).
-   - Si faltan las librerias Visual C++ que usa el juego, las instala.
-4. Listo: juga con el acceso directo "MR2 Rancho de Kokemones" del escritorio.
-   Para ver las reglas y que hace cada objeto, abri la "Kokedex" (acceso directo del escritorio).
-   LA PRIMERA VEZ puede tardar varios minutos en abrir (se extraen los datos del juego,
-   unos 360 MB) y no se ve nada mientras tanto: espera, no lo abras dos veces.
+ES: Este es el paquete del Rancho de Kokemones (mods para Monster Rancher 2 DX). No se instala solo:
+    lo instala el instalador de tu Liga Kokemon (Instalar.bat de la liga), que lo baja en la version que
+    usa la liga. Si tenes este zip, pedile al administrador de tu liga su instalador.
+    Para crear una liga: https://github.com/tms87/mr2-rancho-de-kokemones (Crear liga.bat).
 
-Despues de instalar, la carpeta descomprimida se puede borrar.
-
-ACTUALIZACIONES: el acceso directo se actualiza solo. Cada vez que abris el juego revisa en
-internet si hay una version nueva o rivales/torneos nuevos y los baja antes de arrancar (sin
-internet, arranca igual). Tus partidas, la configuracion y los exportados no se tocan.
-
-QUE CAMBIA EN EL JUEGO
-----------------------
-- Discos aleatorios: cada disco del santuario da una raza al azar (siempre la misma para
-  ese disco, igual para todos los que usen este paquete). Los stats, crecimiento, vida y
-  naturaleza varian en cada creacion. Incluye las especies nuevas de More Monsters; sus
-  discos "More Monsters" tambien son aleatorios.
-- Santuario: 5 monstruos por año. Al entrar te dice cuantos quedan.
-- Items Kokemon: Nuts Oil y Magic Banana bajan menos el cansancio si se usan seguido (acostumbramiento
-  antifatiga) y pueden acortar la vida;
-  la Magic Banana suma o resta segun su resultado, otros objetos desintoxican (Quack Doll, Rock Candy,
-  Irritater, Griever, Half Eaten, Gold y Silver Peach), la vida que restan Paradoxine, Troron, Larox
-  y Manseitan pasa a ser al azar, y los de torneo (Teromeamn, Kasseitan, Nageel) ya no restan vida
-  pero intoxican, igual que Troron y Paradoxine (detalle en la Kokedex).
-  Baul de disc chips: al empezar cada mes los disc chips pasan a un baul y no ocupan lugar;
-  en el laboratorio aparecen todos (uno de cada tipo) para combinar.
-  Comida del mes: 3 comidas nuevas (Squash, Chicken y Green Tea) con gustos propios de cada raza;
-  el Green Tea desintoxica si se toma todos los meses (detalle en la Kokedex).
-- Batallas automaticas: en los torneos tu monstruo pelea solo. Aunque elijas controlarlo,
-  la batalla es automatica. El modo VS no cambia.
-- Rivales Kokemon: cada semana, los rivales de los torneos de liga (E a S) salen sorteados
-  de una lista por liga (los originales mas monstruos de jugadores), iguales para todos.
-  Al guardar, tu monstruo y los del congelador se exportan a la carpeta que abre el
-  acceso directo "Rivales Kokemon - Exportados" del escritorio.
-  Manda esos archivos para sumarlos a la lista. FIMBA y los torneos especiales no cambian.
-- Calendario Kokemon: calendario de torneos distinto cada año. Los torneos chicos de A a E salen
-  sorteados (cuantos y en que semana) entre los originales y torneos nuevos: Rookie Cup en 3
-  ediciones y 25 torneos nuevos. En diciembre, semana 2, la Champions Cup de cada rango (S a E),
-  con los mejores rivales y un premio sorpresa. El calendario muestra 7 meses hacia adelante:
-  en julio ya se ve el enero siguiente. Oficiales, los 4 grandes, FIMBA y especiales no cambian.
-- Torneos de rango inferior: un monstruo no puede entrar a torneos de un rango mas bajo que el
-  suyo (los libres, F, siempre). Se puede permitir uno o mas rangos abajo en la configuracion.
-- Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
-  Cada año nuevo se hace una copia en las ranuras 1 a 7, rotando.
-  (Para ver las copias, carga la ranura correspondiente.)
-- Ranuras 8 a 14: grabaciones de competencia para el modo VS (con los participantes de cada
-  competencia, entrenador "Kokemon"; las carga el Administrador de la Liga Kokemon y llegan con
-  las actualizaciones). Si cargas una, no se guarda nada (tampoco el autoguardado): queda igual.
-- Exportados: al empezar cada año (con la copia anual), tus monstruos se exportan en un archivo
-  "fecha Entrenador.json".
-  Para compartirlos usa "MR2 Subir exportados" (la primera vez pide la clave que te pasan por privado).
-
-IMPORTANTE
-----------
-- Steam tiene que estar abierto (el acceso directo lo abre si hace falta).
-- Si algo falla, manda los registros de esta carpeta:
-  %APPDATA%\Reloaded-Mod-Loader-II\Logs
-- La configuracion de los mods se puede cambiar abriendo
-  %LOCALAPPDATA%\MR2-Rancho-de-Kokemones\Reloaded-II\Reloaded-II.exe
-
-CREDITOS
---------
-- Reloaded-II, de Sewer56 (licencia GPLv3): https://github.com/Reloaded-Project/Reloaded-II
-- MRDX Base Mod, Extract Data Bin y More Monsters (ArchbishopDave y colaboradores), de la
-  comunidad de Monster Rancher: https://github.com/ranchercommunity/mrdx_reloaded
-  Gracias a la comunidad por su trabajo: este paquete solo los incluye para facilitar la
-  instalacion entre amigos.
-- Mods "Discos aleatorios", "Reglas del rancho", "Items Kokemon",
-  "Batallas automaticas", "Rivales Kokemon" y "Calendario Kokemon":
-  hechos para este paquete.
+EN: This is the Rancho de Kokemones package (mods for Monster Rancher 2 DX). It doesn't install by itself:
+    your Kokemon League's installer (the league's Instalar.bat) installs it, downloading the version the
+    league uses. If you have this zip, ask your league admin for their installer.
+    To create a league: https://github.com/tms87/mr2-rancho-de-kokemones (Crear liga.bat).

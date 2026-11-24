@@ -1,76 +1,106 @@
 # Rancho de Kokemones
 
-Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), listos para instalar.
+Mods para **Monster Rancher 2** de *Monster Rancher 1 & 2 DX* (Steam), pensados para jugar en grupo: cada grupo de amigos arma su propia **Liga Kokemon**, con sus rivales, torneos, competencias y reglas. / Mods for **Monster Rancher 2** from *Monster Rancher 1 & 2 DX* (Steam), made to play as a group: each group of friends sets up its own **Kokemon League**, with its rivals, tournaments, competitions and rules.
 
-**¿Venís a jugar?** Leé la [guía para jugadores](GUIA_JUGADORES.md): qué cambia en el juego y cómo instalarlo.
+- [Español](#español) · [English](#english)
 
-## Descargar e instalar
+## Español
 
-1. Instalá **Monster Rancher 1 & 2 DX** desde Steam.
-2. Descargá **`MR2-Rancho-de-Kokemones.zip`** desde la [última versión](../../releases/latest).
-3. Descomprimilo y hacé doble clic en **`Instalar.bat`**.
-   - Busca el juego en Steam solo (si no lo encuentra, te pide que elijas `MF2.exe`).
-   - Si falta .NET 9, lo descarga de Microsoft e instala.
-   - Si faltan las librerías Visual C++ que usa el juego, las instala (desde Steam o de Microsoft).
-4. Jugá con el acceso directo **"MR2 Rancho de Kokemones"** del escritorio.
-5. Para leer las reglas y qué hace cada objeto, abrí la **Kokedex** (acceso directo del escritorio, se abre en el navegador). Es [instalador/archivos/Kokedex.html](instalador/archivos/Kokedex.html) y se actualiza sola junto con los rivales y torneos.
+### Cómo funciona
 
-> **La primera vez** puede tardar varios minutos en abrir (se extraen los datos del juego) y no se ve nada mientras tanto. Esperá y no lo abras dos veces.
->
-> **Steam tiene que estar abierto.** El acceso directo lo abre si hace falta.
->
-> Si Windows muestra "Windows protegió su PC" al abrir `Instalar.bat`: *Más información* → *Ejecutar de todas formas*.
+- **Rancho de Kokemones** (este repositorio): los mods, el instalador y el lanzador, el Editor Kokemon, la Kokedex y la plantilla de las ligas. Publica versiones con los mods propios; Reloaded-II y los mods de la comunidad los baja el instalador de sus páginas oficiales (`configuracion/dependencias.json`).
+- **Liga Kokemon** (un repositorio por grupo): define qué versión del Rancho usa (de este repositorio o de un fork), la configuración de los mods y sus datos: rivales, torneos nuevos, banners y competencias. Recibe los exportados de sus jugadores como issues.
+- **Jugadores**: instalan con el instalador de su liga. Cada vez que abren el juego se ponen al día con la liga (datos, reglas, Kokedex y versión del Rancho).
 
-**Actualizaciones automáticas:** el acceso directo revisa GitHub cada vez que se abre el juego. Si hay una versión publicada más nueva, la baja e instala; si cambiaron rivales, torneos o imágenes en la rama `main`, baja solo esos archivos. Sin internet arranca igual. Las partidas, la configuración de los mods y los exportados no se tocan.
+### Crear una liga
 
-## Qué cambia en el juego
+1. Cloná este repositorio (o tu fork).
+2. Ejecutá **`Crear liga.bat`** y respondé las preguntas: idioma, tipo de liga, nombre, versión del Rancho, datos iniciales (de ejemplo o vacíos) y configuración de los mods. Las semillas (raza de cada disco, sorteos de rivales y del calendario) se generan al azar para cada liga.
+   - **GitHub** (recomendado): crea el repositorio de la liga en tu cuenta (te pide iniciar sesión con GitHub CLI), la etiqueta `exportado` y publica el instalador para tus jugadores. **El repositorio tiene que ser público**: los jugadores lo leen sin credenciales.
+   - **Local** (no recomendada): solo una carpeta, para jugar en una PC.
+3. Pasales a tus jugadores el link del instalador y la guía (`GUIA.md`, en formato Discord). Para que suban exportados, creá una clave para cada uno (el script explica cómo).
+
+Necesita git, GitHub CLI (`gh`) para el tipo GitHub y el .NET SDK 9 para el Editor Kokemon.
+
+### Qué cambia en el juego
 
 | Mod | Qué hace |
 |---|---|
-| **Discos aleatorios** | Cada disco del santuario da una raza al azar, siempre la misma para ese disco (semilla compartida: el mismo disco da lo mismo a todos). Stats, crecimiento, vida y naturaleza varían en cada creación. Incluye las especies de More Monsters, y sus discos "More Monsters" también se sortean. Las razas bloqueadas se rechazan como en el original. |
-| **Reglas del rancho** | No se puede entrar a **torneos de rango inferior** al del monstruo (los libres, F, siempre; se pueden permitir N rangos abajo). El santuario crea como máximo **5 monstruos por año** y avisa cuántos quedan. **Modo ironman:** guardes donde guardes, se guarda en la ranura 15 (autoguardado). Cada año nuevo se copia el autoguardado de enero en las ranuras 1 a 7, rotando. **Competencias:** las ranuras 8 a 14 se arman solas (después del primer guardado de cada sesión) con `Competencias/competenciaNN.json`: los participantes de la competencia en el congelador y entrenador "Kokemon", para el modo VS. Si se carga una, no se guarda nada (ni manual ni autoguardado): la grabación y el autoguardado quedan como estaban. |
-| **Items Kokemon** | Nuts Oil y Magic Banana bajan menos el cansancio si se usan semanas seguidas (acostumbramiento antifatiga) (se recupera al dejarlos) y como items tóxicos suman intoxicación, con una chance creciente de acortar la vida del monstruo. La Magic Banana depende de cuál de sus 3 resultados salga: sin bajar el cansancio desintoxica (resta 1 a la intoxicación); con −15 de cansancio suma a la intoxicación y al riesgo y suma 1 de acostumbramiento antifatiga, que con la bajada semanal lo deja igual (Nuts Oil y −30 suman 2); con −30, igual que una Nuts Oil. Otros objetos desintoxican (Quack Doll: entre −1 y −5 al azar; Rock Candy: 50 % −3; Irritater y Griever: 30 % −1; Half Eaten −1; Gold Peach: 50 % la mitad o 50 % todo; Silver Peach: 50 % un cuarto o 50 % la mitad, redondeado para arriba) y la vida que restan Paradoxine (3–10), Troron (1–3), Larox (0–4) y Manseitan (0–5) pasa a ser al azar, con más chance de las restas grandes cuanto más vida consumió el monstruo (promedio de 1/3 del rango de joven a 2/3 de viejo). Teromeamn, Kasseitan y Nageel ya no restan vida y suman de 1 a 5 de intoxicación; Troron suma 2 y Paradoxine 6; cada punto tira por separado el riesgo de vida. Los objetos se reconocen por nombre (tabla del juego), así que valen todas sus variantes. **Baúl de disc chips:** al empezar cada mes, los disc chips del inventario pasan a un baúl de la partida (dejan de ocupar lugar y ya no se venden); en el laboratorio la lista muestra los objetos de combinación del inventario más un chip de cada tipo del baúl, sin el límite de 20, y al combinar se descuenta del baúl. Comida del mes: 3 comidas nuevas (Squash, Chicken y Green Tea) con valores fijos más un ajuste por gusto y gustos propios por raza; el Green Tea desintoxica por constancia (racha mensual hasta 10, 15 % por punto hasta 75 %), el Chicken y el Fish ayudan a esa racha, y la Meat y el Chicken bajan el acostumbramiento antifatiga. |
-| **Batallas automáticas** | En los torneos y batallas del juego tu monstruo pelea solo, con su propia inteligencia: a la pregunta de antes de la batalla, cualquier respuesta lleva al modo automático. El modo VS no cambia. |
-| **Rivales Kokemon** | Cada semana, los rivales de los torneos de liga (E a S) salen sorteados de una lista por liga: los 50 originales más monstruos de jugadores (también de especies de More Monsters). El sorteo es el mismo para todos en la misma semana. Al empezar cada año (primer guardado de enero, junto con la copia anual), tu monstruo y los del congelador se exportan en un archivo "fecha Entrenador.json" con todos sus datos. Con el acceso directo **"MR2 Subir exportados"** se suben como issues del repositorio (etiqueta `exportado`; cada jugador configura una vez la clave personal que le pasan por privado) y el editor los baja para sumarlos como rivales o a competencias. FIMBA, los 4 grandes y los torneos especiales no cambian. |
-| **Calendario Kokemon** | Calendario distinto cada año: los torneos chicos de A a E salen sorteados (cuántos y cuándo) de un pozo con los originales y torneos nuevos (Rookie Cup en 3 ediciones, 25 torneos nuevos con nombre, premio y bonus propios). En diciembre, semana 2, la **Champions Cup** de cada rango con rivales elegidos y bonus sorpresa. El calendario se actualiza mes a mes y muestra 7 meses hacia adelante. Los torneos se definen en `mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/torneos.json`. |
+| **Discos del santuario** | Cada disco da una raza al azar, siempre la misma en la liga; stats, crecimiento, vida y naturaleza varían en cada creación. Incluye las especies de More Monsters. |
+| **Reglas del rancho** | Modo ironman (todo se guarda en el autoguardado), copias anuales en las ranuras 1 a 7, competencias en las ranuras 8 a 14, límite de creaciones por año y bloqueo de torneos de rango inferior. |
+| **Items Kokemon** | Acostumbramiento antifatiga de Nuts Oil y Magic Banana, intoxicación y riesgo de vida de los items tóxicos, desintoxicantes, resta de vida al azar, baúl de disc chips y 3 comidas del mes nuevas con gustos por raza. |
+| **Batallas automáticas** | En torneos y batallas el monstruo pelea solo, con su inteligencia. El modo VS no cambia. |
+| **Rivales Kokemon** | Los rivales de los torneos de liga salen sorteados cada semana de la lista de la liga (los 50 originales y monstruos de jugadores). Exportación anual de tus monstruos para compartirlos. |
+| **Calendario Kokemon** | Calendario sorteado cada año con los torneos nuevos de la liga (nombre, premio, bonus y banner propios). |
 
-Además el paquete incluye **More Monsters** (más de 240 especies nuevas).
+Los detalles, con los valores de cada liga, están en la **Kokedex** que se instala con el juego.
 
-Si algo falla, los registros están en `%APPDATA%\Reloaded-Mod-Loader-II\Logs`.
+### Desarrollo
 
-## Contenido del repositorio
+- `mods/`: los seis mods (C#, .NET 9, x86, Reloaded-II). Cada uno se compila con `dotnet build -c Release` en su carpeta; se compila contra `lib/MRDX.Base.Mod.Interfaces.dll` (MRDX Base Mod 1.2.2).
+- `configuracion/`: opciones de los mods para las ligas (`opciones.json`), dependencias de terceros (`dependencias.json`), dónde va cada dato de la liga (`datos-liga.json`) y la plantilla de la guía.
+- `instalador/`: instalador y lanzador del paquete, sincronización con la liga, subida de exportados y la plantilla de la Kokedex. `instalador-liga/`: el instalador chico que se publica en cada liga.
+- `herramientas/`: `publicar.ps1`, `crear-liga.ps1` y el código del Editor Kokemon. `plantilla-liga/`: lo que se copia al crear una liga.
 
-- `mods/` — código de los seis mods propios (C#, .NET 9, x86, para Reloaded-II). La lista de rivales de las ligas está en `mods/Leagues/MRDX.Custom.Leagues/Liga/` (un `.json` por monstruo; ver su `LEEME.txt`).
-- `instalador/` — `Instalar.bat`, el instalador (`instalar.ps1`), el lanzador con actualización automática (`jugar.ps1`), la versión del paquete (`version.txt`) y las plantillas de configuración de Reloaded-II.
-- `actualizacion.json` — qué datos baja el lanzador desde `main` sin publicar una versión (rivales, torneos, imágenes) y qué versión mínima del paquete necesitan.
-- `herramientas/publicar.ps1` — compila los mods, arma el zip y (con `-Publicar`) crea la versión en GitHub.
-
-### Cambiar rivales o torneos
-
-La forma fácil: **`Editor Kokemon.bat`** (en la raíz del repositorio) abre una app con cinco pestañas: **Rivales** (revisar los exportados recibidos, que se bajan de los issues al abrir el editor, o los tuyos; sumar los que quieras con una **versión** como "Campeón E" o "Definitivo" y la liga sugerida por stats; y descartar el archivo, que cierra su issue), **Torneos** (crear y editar torneos con formulario), **Banners** (sacar el fondo magenta o verde de una imagen hecha por IA y dejarla en 480×192), **Competencias** (armar las grabaciones de competencia de las ranuras 8 a 14: cada competencia tiene nombre, rango opcional, reglas en texto libre y grabaciones numeradas con sus participantes, leídos de cualquier grabación o exportado) y **Subir a GitHub** (commit y push a `main` solo del contenido). Necesita el .NET SDK 9, Git y GitHub CLI (`gh`, para cerrar issues).
-
-**Claves para subir exportados:** por cada amigo, creá un *fine-grained token* en GitHub (solo este repositorio, permiso **Issues: Read and write**) y pasáselo por privado; "MR2 Subir exportados" se lo pide la primera vez y lo guarda cifrado en su PC. El paquete no lleva ninguna clave.
-
-A mano: 
-Subir los cambios a `main` alcanza: los jugadores los reciben la próxima vez que abren el juego. Un rival nuevo es un `.json` en `mods/Leagues/MRDX.Custom.Leagues/Liga/jugadores/`; un torneo nuevo, una entrada en `torneos.json`. Si los datos usan algo que el mod instalado no conoce, subir `paqueteMinimo` en `actualizacion.json` y publicar una versión.
-
-### Publicar una versión
+**Publicar una versión** (en el repositorio del remoto `origin`, así funciona igual en un fork):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0 -Publicar
 ```
-Toma como base el zip de la última versión publicada (Reloaded-II y los mods de la comunidad no están en el repositorio) y reemplaza los mods propios, el instalador y el lanzador.
 
-### Compilar los mods
+Las ligas que fijen esa versión (`rancho.version` en su `liga.json`) la instalan en el próximo arranque de cada jugador. **Fork:** una liga puede apuntar a tu fork con `rancho.repo`. Para probar el editor con tu copia local: `Editor Kokemon.bat -RanchoLocal <carpeta del Rancho>`.
 
-Cada mod se compila con `dotnet build -c Release` dentro de su carpeta (`mods/<Mod>/MRDX.Custom.<Mod>`); la salida queda en `mods/<Mod>/build/`. Se compila contra `lib/MRDX.Base.Mod.Interfaces.dll` (la del MRDX Base Mod 1.2.2 instalado), no contra una copia del código fuente.
+## English
 
-El zip de la versión es una carpeta de Reloaded-II con todos los mods instalados, la configuración de cada mod en `Reloaded-II/User/Mods/` y el contenido de `instalador/`.
+### How it works
 
-## Créditos
+- **Rancho de Kokemones** (this repository): the mods, the installer and launcher, the Kokemon Editor, the Kokedex and the league template. It publishes versions with its own mods; the installer downloads Reloaded-II and the community mods from their official pages (`configuracion/dependencias.json`).
+- **Kokemon League** (one repository per group): sets which Rancho version it uses (from this repository or a fork), the mods settings and its data: rivals, new tournaments, banners and competitions. It receives its players' exports as issues.
+- **Players**: install with their league's installer. Every time they open the game they sync with the league (data, rules, Kokedex and Rancho version).
 
-- [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II), de Sewer56 (GPLv3).
-- [MRDX Base Mod, Extract Data Bin y More Monsters](https://github.com/ranchercommunity/mrdx_reloaded), de la comunidad de Monster Rancher; More Monsters de ArchbishopDave y colaboradores. Se incluyen en el paquete solo para facilitar la instalación; todo el mérito es de sus autores.
-- Las firmas de funciones del santuario y el congelador que usan los mods propios vienen del código de More Monsters.
+### Creating a league
 
-Monster Rancher es una marca de Koei Tecmo. Este proyecto no está afiliado a Koei Tecmo.
+1. Clone this repository (or your fork).
+2. Run **`Crear liga.bat`** and answer the questions: language, league type, name, Rancho version, initial data (example or empty) and mods settings. Seeds (each disc's breed, rival and calendar draws) are random for each league.
+   - **GitHub** (recommended): creates the league repository in your account (it asks you to sign in with GitHub CLI), the `exportado` label and publishes the installer for your players. **The repository must be public**: players read it without credentials.
+   - **Local** (not recommended): just a folder, to play on one PC.
+3. Give your players the installer link and the guide (`GUIA.md`, Discord format). For them to upload exports, create a key for each one (the script explains how).
+
+Needs git, GitHub CLI (`gh`) for the GitHub type and the .NET SDK 9 for the Kokemon Editor.
+
+### What changes in the game
+
+| Mod | What it does |
+|---|---|
+| **Shrine discs** | Each disc gives a random breed, always the same one in the league; stats, growth, lifespan and nature vary on each creation. Includes the More Monsters species. |
+| **Ranch Rules** | Ironman mode (everything saves to the autosave), yearly copies in slots 1 to 7, competitions in slots 8 to 14, a yearly creation limit and blocking lower-rank tournaments. |
+| **Kokemon Items** | Anti-fatigue habit for Nuts Oil and Magic Banana, toxicity and lifespan risk from toxic items, detox items, random lifespan loss, a disc chip chest and 3 new monthly foods with per-breed tastes. |
+| **Auto Battles** | In tournaments and battles the monster fights by itself, with its intelligence. VS mode doesn't change. |
+| **Kokemon Rivals** | League tournament rivals are drawn every week from the league's list (the 50 originals and player monsters). Yearly export of your monsters to share them. |
+| **Kokemon Calendar** | A calendar drawn every year with the league's new tournaments (their own name, prize, bonus and banner). |
+
+The details, with each league's values, are in the **Kokedex** installed with the game.
+
+### Development
+
+- `mods/`: the six mods (C#, .NET 9, x86, Reloaded-II). Build each with `dotnet build -c Release` in its folder; they build against `lib/MRDX.Base.Mod.Interfaces.dll` (MRDX Base Mod 1.2.2).
+- `configuracion/`: mods options for leagues (`opciones.json`), third-party dependencies (`dependencias.json`), where each league data goes (`datos-liga.json`) and the guide template.
+- `instalador/`: the package installer and launcher, league sync, export upload and the Kokedex template. `instalador-liga/`: the small installer published in each league.
+- `herramientas/`: `publicar.ps1`, `crear-liga.ps1` and the Kokemon Editor source. `plantilla-liga/`: what gets copied when creating a league.
+
+**Publishing a version** (to the `origin` remote's repository, so it works the same in a fork):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File herramientas\publicar.ps1 -Version 1.0.0 -Publicar
+```
+
+Leagues that pin that version (`rancho.version` in their `liga.json`) install it on each player's next launch. **Fork:** a league can point to your fork with `rancho.repo`. To try the editor with your local copy: `Editor Kokemon.bat -RanchoLocal <Rancho folder>`.
+
+## Créditos / Credits
+
+- [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II), de/by Sewer56 (GPLv3), y sus mods Hooks, Universal Redirector y SigScan.
+- [MRDX Base Mod, Extract Data Bin y More Monsters](https://github.com/ranchercommunity/mrdx_reloaded), de la comunidad de Monster Rancher / by the Monster Rancher community; More Monsters de/by ArchbishopDave y colaboradores. El instalador los baja de su página oficial / The installer downloads them from their official page.
+- [7-Zip](https://www.7-zip.org) (7zr.exe), para abrir los `.7z` / to open the `.7z` files.
+- Las firmas de funciones del santuario y el congelador que usan los mods propios vienen del código de More Monsters. / The shrine and freezer function signatures used by our mods come from More Monsters' code.
+
+Monster Rancher es una marca de Koei Tecmo. Este proyecto no está afiliado a Koei Tecmo. / Monster Rancher is a trademark of Koei Tecmo. This project is not affiliated with Koei Tecmo.
