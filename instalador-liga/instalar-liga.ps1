@@ -1,4 +1,4 @@
-# Instalador de una liga del Rancho de Kokemones (lo ejecuta Instalar.bat).
+# Instalador de una liga del Rancho de Kokemones (lo ejecuta Setup.bat).
 #
 # liga-origen.json (al lado de este archivo) dice cual es la liga: { "repo": "usuario/repo", "rama": "main" }.
 # Lee liga.json de la liga para saber que version del Rancho usa (y de que repositorio, por si es un fork), baja

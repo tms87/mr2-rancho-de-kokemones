@@ -4,7 +4,7 @@ Liga Kokemon del **Rancho de Kokemones** (Monster Rancher 2 DX con mods). / Koke
 
 ## 🇦🇷 Español
 
-**Jugadores:** descargá el instalador de la liga de [la última versión](../../releases/latest), descomprimilo y ejecutá `Instalar.bat`. La guía para jugadores está en [GUIA.md](GUIA.md) y la Kokedex se instala con el juego.
+**Jugadores:** descargá el instalador de la liga de [la última versión](../../releases/latest), descomprimilo y ejecutá `Setup.bat`. La guía para jugadores está en [GUIA.md](GUIA.md) y la Kokedex se instala con el juego.
 
 **Administrador:**
 - `liga.json`: nombre, idioma, versión del Rancho que usa la liga (`rancho.repo` y `rancho.version`), links alternativos de las dependencias (`dependencias`) y la configuración de los mods (`configuracion`, ver `configuracion\opciones.json` del Rancho). Los jugadores reciben los cambios la próxima vez que abren el juego.
@@ -15,7 +15,7 @@ Liga Kokemon del **Rancho de Kokemones** (Monster Rancher 2 DX con mods). / Koke
 
 ## 🇬🇧 English
 
-**Players:** download the league installer from [the latest release](../../releases/latest), unzip it and run `Instalar.bat`. The players guide is in [GUIA.md](GUIA.md) and the Kokedex is installed with the game.
+**Players:** download the league installer from [the latest release](../../releases/latest), unzip it and run `Setup.bat`. The players guide is in [GUIA.md](GUIA.md) and the Kokedex is installed with the game.
 
 **Admin:**
 - `liga.json`: name, language, Rancho version used by the league (`rancho.repo` and `rancho.version`), alternative dependency links (`dependencias`) and the mods settings (`configuracion`, see the Rancho's `configuracion\opciones.json`). Players get the changes the next time they open the game.

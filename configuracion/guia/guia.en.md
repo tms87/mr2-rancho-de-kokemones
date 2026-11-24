@@ -7,7 +7,7 @@ It's **Monster Rancher 2 DX** with several mods. This summary explains everythin
 1. Install **Monster Rancher 1 & 2 DX** from Steam.
 {{?liga.repo}}2. Download the league installer from here: <https://github.com/{{liga.repo}}/releases/latest>
 {{?!liga.repo}}2. Ask the admin for the league installer.
-3. Unzip it and double-click **`Instalar.bat`**.
+3. Unzip it and double-click **`Setup.bat`**.
  - It finds the game by itself; if it can't, it asks you to pick `MF2.exe`.
  - If something the game needs is missing (.NET 9 or Visual C++), it installs it.
  - It downloads Reloaded-II and the community mods (about 55 MB) from their official pages.

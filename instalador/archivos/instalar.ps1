@@ -169,7 +169,7 @@ function Copiar($desde, $hacia, [string[]]$extra) {
 
 # Scripts, configuracion del Rancho y plantillas.
 foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-config.ps1', 'subir.ps1', 'clave.ps1',
-               'icono.ico', 'kokedex.ico', 'rancho.json') {
+               'icono.ico', 'kokedex.ico', 'rancho.json', 'desinstalar.ps1', 'Uninstaller.bat') {
     Copy-Item (Join-Path $origen $f) $Destino -Force
 }
 Copiar (Join-Path $origen 'configuracion') (Join-Path $Destino 'configuracion') @('/MIR')
@@ -234,7 +234,42 @@ $plantilla = Get-Content (Join-Path $origen 'plantillas\AppConfig.json') -Raw
 [IO.File]::WriteAllText($app, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
 Ok (T 'Reloaded-II configurado (sin consola).' 'Reloaded-II configured (no console).')
 
-# Pruebas: no se tocan los accesos directos del escritorio.
+# ------------------------------------------------------------------
+# Accesos directos: siempre en la carpeta de instalacion (si el jugador los borra del escritorio, siguen ahi) y, al
+# instalar, en el escritorio y en el menu Inicio. Las actualizaciones no tocan el escritorio ni el menu Inicio.
+# ------------------------------------------------------------------
+$shell = New-Object -ComObject WScript.Shell
+$powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+# Carpeta donde "Rivales Kokemon" exporta tus monstruos al guardar (se crea ya, para que el acceso funcione).
+$exportados = Join-Path $reloaded 'User\Mods\MRDX.Custom.Leagues\Exportados'
+New-Item -ItemType Directory -Force $exportados | Out-Null
+$accesos = @(
+    @{ Nombre = 'MR2 Rancho de Kokemones'; Destino = $powershell; Icono = 'icono.ico'
+       Argumentos = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
+       Descripcion = (T 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)' 'MR2 Rancho de Kokemones (Monster Rancher 2 DX with mods)') },
+    @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
+       Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
+       Descripcion = (T 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
+    @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
+       Descripcion = (T 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') },
+    @{ Nombre = 'Rivales Kokemon - Exportados'; Destino = $exportados; Icono = $null; Argumentos = ''
+       Descripcion = (T 'Monstruos exportados al guardar (para compartirlos)' 'Monsters exported when saving (to share them)') }
+)
+function Crear-Accesos([string]$carpeta) {
+    New-Item -ItemType Directory -Force $carpeta | Out-Null
+    foreach ($a in $accesos) {
+        $lnk = $shell.CreateShortcut((Join-Path $carpeta "$($a.Nombre).lnk"))
+        $lnk.TargetPath = $a.Destino
+        $lnk.Arguments = $a.Argumentos
+        $lnk.WorkingDirectory = $Destino
+        if ($a.Icono) { $lnk.IconLocation = "$(Join-Path $Destino $a.Icono),0" }
+        $lnk.Description = $a.Descripcion
+        $lnk.Save()
+    }
+}
+Crear-Accesos $Destino
+
+# Pruebas: no se tocan los accesos directos del escritorio ni el registro de Windows.
 if ($SinAccesos) {
     Write-Host ''
     Write-Host (T "Listo (sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" "Done (no shortcuts). To play: $(Join-Path $Destino 'jugar.ps1')") -ForegroundColor Green
@@ -244,51 +279,24 @@ if ($SinAccesos) {
 # ------------------------------------------------------------------
 if (-not $SinAccesoDirecto) {
     Titulo (T '5. Creando accesos directos' '5. Creating shortcuts')
-    $shell = New-Object -ComObject WScript.Shell
-    # Carpeta donde "Rivales Kokemon" exporta tus monstruos al guardar (se crea ya, para que el acceso funcione).
-    $exportados = Join-Path $reloaded 'User\Mods\MRDX.Custom.Leagues\Exportados'
-    New-Item -ItemType Directory -Force $exportados | Out-Null
-    foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
-        $lnk = $shell.CreateShortcut((Join-Path $carpeta 'Rivales Kokemon - Exportados.lnk'))
-        $lnk.TargetPath = $exportados
-        $lnk.Description = (T 'Monstruos exportados al guardar (para compartirlos)' 'Monsters exported when saving (to share them)')
-        $lnk.Save()
-
-        $lnk = $shell.CreateShortcut((Join-Path $carpeta 'MR2 Rancho de Kokemones.lnk'))
-        $lnk.TargetPath = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-        $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
-        $lnk.WorkingDirectory = $Destino
-        $lnk.IconLocation = "$(Join-Path $Destino 'icono.ico'),0"
-        $lnk.Description = (T 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)' 'MR2 Rancho de Kokemones (Monster Rancher 2 DX with mods)')
-        $lnk.Save()
-    }
-    Ok (T 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.' 'Shortcuts "MR2 Rancho de Kokemones" and "Rivales Kokemon - Exportados" on the desktop and in the Start menu.')
+    Crear-Accesos ([Environment]::GetFolderPath('Desktop'))
+    Crear-Accesos (Join-Path ([Environment]::GetFolderPath('Programs')) 'MR2 Rancho de Kokemones')
+    Ok (T "Accesos directos en el escritorio, en el menu Inicio (MR2 Rancho de Kokemones) y en $Destino." "Shortcuts on the desktop, in the Start menu (MR2 Rancho de Kokemones) and in $Destino.")
 }
 
-# Accesos para subir exportados y para la Kokedex: tambien en las actualizaciones automaticas (que no tocan los
-# demas accesos), solo si todavia no existen.
-$shell = New-Object -ComObject WScript.Shell
-$powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-$accesos = @(
-    @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
-       Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
-       Descripcion = (T 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
-    @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
-       Descripcion = (T 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') }
-)
-foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
-    foreach ($a in $accesos) {
-        $ruta = Join-Path $carpeta "$($a.Nombre).lnk"
-        if ((Test-Path $ruta) -and $SinAccesoDirecto) { continue }
-        $lnk = $shell.CreateShortcut($ruta)
-        $lnk.TargetPath = $a.Destino
-        $lnk.Arguments = $a.Argumentos
-        $lnk.WorkingDirectory = $Destino
-        $lnk.IconLocation = "$(Join-Path $Destino $a.Icono),0"
-        $lnk.Description = $a.Descripcion
-        $lnk.Save()
-    }
+# Desinstalador: Uninstaller.bat en la carpeta de instalacion, y en "Aplicaciones instaladas" de Windows.
+$desinstalar = Join-Path $Destino 'Uninstaller.bat'
+try {
+    $clave = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MR2RanchoDeKokemones'
+    New-Item -Path $clave -Force | Out-Null
+    $version = (Get-Content (Join-Path $Destino 'rancho.json') -Raw | ConvertFrom-Json).version
+    $valores = @{ DisplayName = 'MR2 Rancho de Kokemones'; DisplayVersion = $version; Publisher = 'Rancho de Kokemones'
+                  DisplayIcon = (Join-Path $Destino 'icono.ico'); InstallLocation = $Destino; UninstallString = "`"$desinstalar`"" }
+    foreach ($v in $valores.GetEnumerator()) { Set-ItemProperty -Path $clave -Name $v.Key -Value $v.Value }
+    Set-ItemProperty -Path $clave -Name NoModify -Value 1 -Type DWord
+    Set-ItemProperty -Path $clave -Name NoRepair -Value 1 -Type DWord
 }
+catch { Aviso (T "No se pudo registrar el desinstalador en Windows ($($_.Exception.Message)); igual esta en $desinstalar." "Could not register the uninstaller in Windows ($($_.Exception.Message)); it is still in $desinstalar.") }
 
 Write-Host ''
 Write-Host (T 'Listo. Para jugar usa el acceso directo "MR2 Rancho de Kokemones".' 'Done. To play, use the "MR2 Rancho de Kokemones" shortcut.') -ForegroundColor Green

@@ -274,7 +274,7 @@ $archivo.Dispose(); $flujo.Dispose()
 Remove-Item $kit -Recurse -Force
 if ($Tipo -eq 'GitHub' -and -not $SinPublicar) {
     Ejecutar gh @('release', 'create', 'instalador-1', $zip, '--repo', $repoCompleto, '--title', (T 'Instalador de la liga' 'League installer'),
-        '--notes', (T 'Descargá el zip, descomprimilo y ejecutá Instalar.bat.' 'Download the zip, unzip it and run Instalar.bat.'))
+        '--notes', (T 'Descargá el zip, descomprimilo y ejecutá Setup.bat.' 'Download the zip, unzip it and run Setup.bat.'))
     Ok "https://github.com/$repoCompleto/releases/latest"
 }
 else { Ok $zip }

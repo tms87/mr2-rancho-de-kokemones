@@ -2,11 +2,11 @@ RANCHO DE KOKEMONES - paquete / package
 =======================================
 
 ES: Este es el paquete del Rancho de Kokemones (mods para Monster Rancher 2 DX). No se instala solo:
-    lo instala el instalador de tu Liga Kokemon (Instalar.bat de la liga), que lo baja en la version que
+    lo instala el instalador de tu Liga Kokemon (Setup.bat de la liga), que lo baja en la version que
     usa la liga. Si tenes este zip, pedile al administrador de tu liga su instalador.
     Para crear una liga: https://github.com/tms87/mr2-rancho-de-kokemones (Crear liga.bat).
 
 EN: This is the Rancho de Kokemones package (mods for Monster Rancher 2 DX). It doesn't install by itself:
-    your Kokemon League's installer (the league's Instalar.bat) installs it, downloading the version the
+    your Kokemon League's installer (the league's Setup.bat) installs it, downloading the version the
     league uses. If you have this zip, ask your league admin for their installer.
     To create a league: https://github.com/tms87/mr2-rancho-de-kokemones (Crear liga.bat).
