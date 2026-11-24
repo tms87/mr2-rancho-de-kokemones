@@ -1,0 +1,156 @@
+{
+  "_comentario": "Opciones de los mods del Rancho para las ligas. clase: liga = la elige el administrador de la liga (liga.json) y se reaplica en cada arranque; fija = no se expone, siempre vale \"valor\" (interruptores generales, pruebas, IDs internos); libre = diagnostico, cada jugador la puede cambiar (\"defecto\" solo si falta). semilla: la genera al azar el script de creacion de la liga. apagable: el mod se puede desactivar en una liga (solo los probados desactivados).",
+  "version": 1,
+  "mods": [
+    {
+      "id": "MRDX.Custom.RanchRules",
+      "nombre": { "es": "Reglas del rancho", "en": "Ranch Rules" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "ShrineLimitEnabled", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Limitar creaciones por año", "en": "Limit creations per year" },
+          "descripcion": { "es": "El santuario solo crea una cantidad de monstruos por año.", "en": "The shrine only creates a number of monsters per year." } },
+        { "clave": "ShrinePerYear", "clase": "liga", "tipo": "int", "defecto": 5, "min": 1, "max": 50,
+          "nombre": { "es": "Creaciones por año", "en": "Creations per year" },
+          "descripcion": { "es": "Monstruos que se pueden crear desde discos en cada año del juego.", "en": "Monsters that can be created from discs each game year." } },
+        { "clave": "YearlyBackup", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Copia anual", "en": "Yearly backup" },
+          "descripcion": { "es": "Cada enero se copia el autoguardado en las ranuras 1 a 7, rotando.", "en": "Every January the autosave is copied to slots 1 to 7, rotating." } },
+        { "clave": "BlockLowerRankTournaments", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Bloquear torneos de rango inferior", "en": "Block lower-rank tournaments" },
+          "descripcion": { "es": "Un monstruo no puede entrar a torneos de un rango más bajo que el suyo (los libres, F, siempre).", "en": "A monster cannot enter tournaments of a lower rank than its own (free F tournaments always can)." } },
+        { "clave": "LowerRanksAllowed", "clase": "liga", "tipo": "int", "defecto": 0, "min": 0, "max": 5,
+          "nombre": { "es": "Rangos inferiores permitidos", "en": "Lower ranks allowed" },
+          "descripcion": { "es": "Cuántos rangos por debajo del suyo puede jugar (0 = solo el suyo o más alto).", "en": "How many ranks below its own it can play (0 = only its own or higher)." } },
+        { "clave": "IronmanMode", "clase": "fija", "tipo": "bool", "valor": true },
+        { "clave": "SaveCompetitions", "clase": "fija", "tipo": "bool", "valor": false },
+        { "clave": "VerboseLog", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Custom.DiscRandomizer",
+      "nombre": { "es": "Discos del santuario", "en": "Shrine discs" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "Seed", "clase": "liga", "tipo": "int", "semilla": true, "min": 1, "max": 2147483647,
+          "nombre": { "es": "Semilla de razas", "en": "Breed seed" },
+          "descripcion": { "es": "Decide qué raza da cada disco. Con la misma semilla, el mismo disco da la misma raza a todos.", "en": "Decides which breed each disc gives. With the same seed, the same disc gives everyone the same breed." } },
+        { "clave": "RandomizeBreed", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Raza al azar por disco", "en": "Random breed per disc" },
+          "descripcion": { "es": "Desactivado: cada disco da su raza original y solo varían los valores.", "en": "Off: each disc gives its original breed and only the values vary." } },
+        { "clave": "IncludeMoreMonsters", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Incluir especies de More Monsters", "en": "Include More Monsters species" },
+          "descripcion": { "es": "Las especies nuevas de More Monsters también pueden salir de los discos.", "en": "The new More Monsters species can also come out of discs." } },
+        { "clave": "IncludeBonusSpecies", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Incluir especies bonus", "en": "Include bonus species" },
+          "descripcion": { "es": "Las especies bonus de More Monsters también pueden salir (requiere activarlas en More Monsters).", "en": "More Monsters bonus species can also come out (requires enabling them in More Monsters)." } },
+        { "clave": "StatVariancePercent", "clase": "liga", "tipo": "int", "defecto": 20, "min": 0, "max": 100,
+          "nombre": { "es": "Variación de stats iniciales (±%)", "en": "Starting stats variance (±%)" },
+          "descripcion": { "es": "Cuánto varían los stats iniciales en cada creación.", "en": "How much the starting stats vary on each creation." } },
+        { "clave": "GrowthVarianceSteps", "clase": "liga", "tipo": "int", "defecto": 1, "min": 0, "max": 4,
+          "nombre": { "es": "Variación de crecimiento (± niveles)", "en": "Growth variance (± levels)" },
+          "descripcion": { "es": "Cuántos niveles puede subir o bajar el crecimiento de cada stat.", "en": "How many levels each stat's growth can go up or down." } },
+        { "clave": "LifespanVariancePercent", "clase": "liga", "tipo": "int", "defecto": 10, "min": 0, "max": 50,
+          "nombre": { "es": "Variación de esperanza de vida (±%)", "en": "Lifespan variance (±%)" },
+          "descripcion": { "es": "Cuánto varía la esperanza de vida en cada creación.", "en": "How much the lifespan varies on each creation." } },
+        { "clave": "NatureVariance", "clase": "liga", "tipo": "int", "defecto": 30, "min": 0, "max": 100,
+          "nombre": { "es": "Variación de naturaleza (± puntos)", "en": "Nature variance (± points)" },
+          "descripcion": { "es": "Cuánto varía la naturaleza (de -100 a 100) en cada creación.", "en": "How much the nature (-100 to 100) varies on each creation." } },
+        { "clave": "TestOnlyBonus", "clase": "fija", "tipo": "bool", "valor": false },
+        { "clave": "TestForceBreed", "clase": "fija", "tipo": "string", "valor": "" },
+        { "clave": "VerboseLog", "clase": "libre", "tipo": "bool", "defecto": false },
+        { "clave": "FreezerDiagnostics", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Custom.ItemTolerance",
+      "nombre": { "es": "Items Kokemon", "en": "Kokemon Items" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "ToleranceStepPercent", "clase": "liga", "tipo": "int", "defecto": 10, "min": 0, "max": 100,
+          "nombre": { "es": "Pérdida por punto de acostumbramiento (%)", "en": "Loss per habit point (%)" },
+          "descripcion": { "es": "Cuánto menos baja el cansancio por cada punto de acostumbramiento antifatiga.", "en": "How much less fatigue drops for each anti-fatigue habit point." } },
+        { "clave": "MinimumEffectPercent", "clase": "liga", "tipo": "int", "defecto": 40, "min": 0, "max": 100,
+          "nombre": { "es": "Efecto mínimo (%)", "en": "Minimum effect (%)" },
+          "descripcion": { "es": "La bajada de cansancio nunca queda por debajo de este porcentaje.", "en": "The fatigue drop never goes below this percentage." } },
+        { "clave": "MaxTolerance", "clase": "liga", "tipo": "int", "defecto": 10, "min": 0, "max": 50,
+          "nombre": { "es": "Acostumbramiento máximo", "en": "Maximum habit" },
+          "descripcion": { "es": "Máximo de puntos de acostumbramiento antifatiga.", "en": "Maximum anti-fatigue habit points." } },
+        { "clave": "SharedTolerance", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Acostumbramiento compartido", "en": "Shared habit" },
+          "descripcion": { "es": "Nuts Oil y Magic Banana suman al mismo acostumbramiento.", "en": "Nuts Oil and Magic Banana add to the same habit." } },
+        { "clave": "LifespanBaseChancePercent", "clase": "liga", "tipo": "int", "defecto": 0, "min": 0, "max": 100,
+          "nombre": { "es": "Riesgo de vida base (%)", "en": "Base lifespan risk (%)" },
+          "descripcion": { "es": "Probabilidad fija de perder vida en cada tirada de un item tóxico.", "en": "Fixed chance of losing lifespan on each toxic item roll." } },
+        { "clave": "LifespanChancePerItemPercent", "clase": "liga", "tipo": "int", "defecto": 2, "min": 0, "max": 100,
+          "nombre": { "es": "Riesgo por punto de intoxicación (%)", "en": "Risk per toxicity point (%)" },
+          "descripcion": { "es": "Se suma por cada punto de intoxicación acumulado.", "en": "Added for each accumulated toxicity point." } },
+        { "clave": "LifespanMaxChancePercent", "clase": "liga", "tipo": "int", "defecto": 50, "min": 0, "max": 100,
+          "nombre": { "es": "Riesgo máximo (%)", "en": "Maximum risk (%)" },
+          "descripcion": { "es": "Tope de la probabilidad de perder vida.", "en": "Cap on the chance of losing lifespan." } },
+        { "clave": "LifespanWeeksLost", "clase": "liga", "tipo": "int", "defecto": 1, "min": 0, "max": 52,
+          "nombre": { "es": "Semanas de vida perdidas", "en": "Weeks of lifespan lost" },
+          "descripcion": { "es": "Semanas que se pierden cuando sale el riesgo.", "en": "Weeks lost when the risk hits." } },
+        { "clave": "NutsOilId", "clase": "fija", "tipo": "int", "valor": 23 },
+        { "clave": "MagicBananaId", "clase": "fija", "tipo": "int", "valor": 28 },
+        { "clave": "DevolverBaul", "clase": "fija", "tipo": "bool", "valor": false },
+        { "clave": "PruebaObjetos", "clase": "fija", "tipo": "bool", "valor": false },
+        { "clave": "PruebaComidas", "clase": "fija", "tipo": "int", "valor": 0 },
+        { "clave": "VerboseLog", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Custom.AutoBattle",
+      "nombre": { "es": "Batallas automáticas", "en": "Auto Battles" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "AutoBattle", "clase": "fija", "tipo": "bool", "valor": true },
+        { "clave": "MenuDiagnostics", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Custom.Leagues",
+      "nombre": { "es": "Rivales Kokemon", "en": "Kokemon Rivals" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "Enabled", "clase": "fija", "tipo": "bool", "valor": true },
+        { "clave": "Seed", "clase": "liga", "tipo": "int", "semilla": true, "min": 1, "max": 2147483647,
+          "nombre": { "es": "Semilla de rivales", "en": "Rivals seed" },
+          "descripcion": { "es": "Con la misma semilla, todos ven los mismos rivales en la misma semana.", "en": "With the same seed, everyone sees the same rivals in the same week." } },
+        { "clave": "IncludeMoreMonsters", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Rivales de More Monsters", "en": "More Monsters rivals" },
+          "descripcion": { "es": "Los rivales con especies de More Monsters pueden salir en los torneos.", "en": "Rivals with More Monsters species can appear in tournaments." } },
+        { "clave": "ExportOnSave", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Exportar cada año", "en": "Export every year" },
+          "descripcion": { "es": "Al empezar cada año se exportan los monstruos del jugador para subirlos a la liga.", "en": "At the start of each year the player's monsters are exported to upload them to the league." } },
+        { "clave": "VerboseLog", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Custom.CalendarioKokemon",
+      "nombre": { "es": "Calendario Kokemon", "en": "Kokemon Calendar" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "Enabled", "clase": "fija", "tipo": "bool", "valor": true },
+        { "clave": "ShuffleSmall", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Sortear torneos chicos cada año", "en": "Shuffle small tournaments every year" },
+          "descripcion": { "es": "Cada año cambian cuántos torneos chicos de A a E hay y en qué fecha.", "en": "Every year the number and dates of small A to E tournaments change." } },
+        { "clave": "Seed", "clase": "liga", "tipo": "int", "semilla": true, "min": 1, "max": 2147483647,
+          "nombre": { "es": "Semilla del calendario", "en": "Calendar seed" },
+          "descripcion": { "es": "Con la misma semilla, todos tienen el mismo calendario cada año.", "en": "With the same seed, everyone has the same calendar each year." } },
+        { "clave": "LogFileReads", "clase": "libre", "tipo": "bool", "defecto": false },
+        { "clave": "VerboseLog", "clase": "libre", "tipo": "bool", "defecto": false }
+      ]
+    },
+    {
+      "id": "MRDX.Game.MoreMonsters",
+      "nombre": { "es": "More Monsters", "en": "More Monsters" },
+      "apagable": false,
+      "opciones": [
+        { "clave": "BonusMonsterSpecies", "clase": "liga", "tipo": "bool", "defecto": true,
+          "nombre": { "es": "Especies bonus", "en": "Bonus species" },
+          "descripcion": { "es": "Activa las especies bonus de More Monsters.", "en": "Enables More Monsters bonus species." } }
+      ]
+    }
+  ]
+}
