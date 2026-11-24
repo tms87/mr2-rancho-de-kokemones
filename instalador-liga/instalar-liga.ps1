@@ -21,6 +21,10 @@ $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $h = @{ 'User-Agent' = 'rancho-de-kokemones-instalador'; 'Accept' = 'application/vnd.github+json' }
 
+# Idioma de los mensajes: el de liga-origen.json hasta leer la liga, despues el de la liga.
+$Idioma = 'es'
+try { $Idioma = ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga-origen.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).idioma } catch { }
+function T([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
 function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red; exit 1 }
 
 try {
@@ -39,11 +43,12 @@ try {
             $ligaTexto = (Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$rama/liga.json" -UseBasicParsing `
                 -Headers @{ 'User-Agent' = $h['User-Agent'] } -TimeoutSec 20).Content
         }
-        catch { Fallar "No se pudo leer la liga $($origen.repo) ($($_.Exception.Message)). Revisa la conexion; si sigue, avisale al administrador de la liga (el repositorio tiene que ser publico)." }
+        catch { Fallar (T "No se pudo leer la liga $($origen.repo) ($($_.Exception.Message)). Revisa la conexion; si sigue, avisale al administrador de la liga (el repositorio tiene que ser publico)." "Could not read the league $($origen.repo) ($($_.Exception.Message)). Check your connection; if it persists, tell the league admin (the repository has to be public).") }
         $ligaArgs = @('-LigaRepo', $origen.repo, '-LigaRama', $rama)
     }
     $liga = $ligaTexto | ConvertFrom-Json
-    Write-Host "Liga: $($liga.nombre)" -ForegroundColor White
+    if ($liga.idioma) { $Idioma = $liga.idioma }
+    Write-Host (T "Liga: $($liga.nombre)" "League: $($liga.nombre)") -ForegroundColor White
     Write-Host "Rancho de Kokemones $($liga.rancho.version) ($($liga.rancho.repo))"
 
     # ---- El paquete del Rancho que usa la liga ----
@@ -56,16 +61,16 @@ try {
         try {
             $rel = Invoke-RestMethod "https://api.github.com/repos/$($liga.rancho.repo)/releases/tags/v$($liga.rancho.version)" -Headers $h -TimeoutSec 20
         }
-        catch { Fallar "No se encontro la version $($liga.rancho.version) del Rancho en $($liga.rancho.repo). Avisale al administrador de la liga." }
+        catch { Fallar (T "No se encontro la version $($liga.rancho.version) del Rancho en $($liga.rancho.repo). Avisale al administrador de la liga." "Rancho version $($liga.rancho.version) was not found in $($liga.rancho.repo). Tell the league admin.") }
         $zipInfo = $rel.assets | Where-Object { $_.name -like '*.zip' } | Select-Object -First 1
-        if (-not $zipInfo) { Fallar "La version $($liga.rancho.version) no tiene paquete para descargar." }
-        Write-Host "Bajando el paquete ($([math]::Round($zipInfo.size / 1MB, 1)) MB)..."
+        if (-not $zipInfo) { Fallar (T "La version $($liga.rancho.version) no tiene paquete para descargar." "Version $($liga.rancho.version) has no package to download.") }
+        Write-Host (T "Bajando el paquete ($([math]::Round($zipInfo.size / 1MB, 1)) MB)..." "Downloading the package ($([math]::Round($zipInfo.size / 1MB, 1)) MB)...")
         Invoke-WebRequest $zipInfo.browser_download_url -OutFile $zip -UseBasicParsing -TimeoutSec 900
     }
     Expand-Archive $zip -DestinationPath (Join-Path $tmp 'x') -Force
     Get-ChildItem (Join-Path $tmp 'x') -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
     $inst = Get-ChildItem (Join-Path $tmp 'x') -Recurse -Filter 'instalar.ps1' | Select-Object -First 1
-    if (-not $inst) { Fallar 'El paquete del Rancho no tiene instalador.' }
+    if (-not $inst) { Fallar (T 'El paquete del Rancho no tiene instalador.' 'The Rancho package has no installer.') }
 }
 catch { Fallar $_.Exception.Message }
 
@@ -73,6 +78,7 @@ catch { Fallar $_.Exception.Message }
 $extra = @()
 if ($Destino) { $extra += @("-Destino", $Destino) }
 if ($SinAccesos) { $extra += '-SinAccesos' }
+$extra += @('-Idioma', $Idioma)
 & powershell -NoProfile -ExecutionPolicy Bypass -File $inst.FullName @ligaArgs @extra
 $codigo = $LASTEXITCODE
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue

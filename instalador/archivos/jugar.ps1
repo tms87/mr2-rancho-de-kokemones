@@ -19,6 +19,9 @@ Add-Type -AssemblyName System.Windows.Forms
 
 $Titulo = 'MR2 Rancho de Kokemones'
 $Registro = Join-Path $PSScriptRoot 'actualizacion.log'
+$Idioma = 'es'
+try { $Idioma = ([IO.File]::ReadAllText((Join-Path $PSScriptRoot 'liga.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).idioma } catch { }
+function T([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
 
 function Error-Ventana($texto) {
     if ($SinJuego) { throw $texto }
@@ -93,10 +96,10 @@ function Actualizar($juego) {
                     $rel = Invoke-RestMethod "https://api.github.com/repos/$repo/releases/tags/v$version" -Headers $h -TimeoutSec 10
                     $zipInfo = $rel.assets | Where-Object { $_.name -like '*.zip' } | Select-Object -First 1
                     if (-not $zipInfo) { throw "la version v$version de $repo no tiene paquete" }
-                    Estado "Actualizando el Rancho a la version $version...`nBajando el paquete ($([math]::Round($zipInfo.size / 1MB)) MB)."
+                    Estado (T "Actualizando el Rancho a la version $version...`nBajando el paquete ($([math]::Round($zipInfo.size / 1MB)) MB)." "Updating the Rancho to version $version...`nDownloading the package ($([math]::Round($zipInfo.size / 1MB)) MB).")
                     Invoke-WebRequest $zipInfo.browser_download_url -OutFile $zip -UseBasicParsing -TimeoutSec 900
                 }
-                Estado "Actualizando el Rancho a la version $version...`nInstalando."
+                Estado (T "Actualizando el Rancho a la version $version...`nInstalando." "Updating the Rancho to version $version...`nInstalling.")
                 Expand-Archive $zip -DestinationPath (Join-Path $tmp 'x') -Force
                 $inst = Get-ChildItem (Join-Path $tmp 'x') -Recurse -Filter 'instalar.ps1' | Select-Object -First 1
                 if (-not $inst) { throw 'el paquete no tiene instalar.ps1' }
@@ -113,7 +116,7 @@ function Actualizar($juego) {
     }
 
     # ---- Dependencias, datos y configuracion ----
-    Estado "Revisando la liga..."
+    Estado (T 'Revisando la liga...' 'Checking the league...')
     $parametros = @{ Instalacion = $PSScriptRoot }
     if ($liga) { $parametros.LigaJson = $ligaNueva }
     & (Join-Path $PSScriptRoot 'sincronizar.ps1') @parametros
@@ -122,10 +125,10 @@ function Actualizar($juego) {
 try {
     $reloaded = Join-Path $PSScriptRoot 'Reloaded-II\Reloaded-II.exe'
     $app = Join-Path $PSScriptRoot 'Reloaded-II\Apps\mf2.exe\AppConfig.json'
-    if (-not (Test-Path $reloaded) -or -not (Test-Path $app)) { Error-Ventana 'Falta la instalacion. Volve a ejecutar el instalador de tu liga.' }
+    if (-not (Test-Path $reloaded) -or -not (Test-Path $app)) { Error-Ventana (T 'Falta la instalacion. Volve a ejecutar el instalador de tu liga.' 'The installation is missing. Run your league installer again.') }
 
     $juego = (Get-Content $app -Raw | ConvertFrom-Json).AppLocation
-    if (-not (Test-Path $juego)) { Error-Ventana "No se encuentra el juego en:`n$juego`n`nSi lo moviste, volve a ejecutar el instalador de tu liga." }
+    if (-not (Test-Path $juego)) { Error-Ventana (T "No se encuentra el juego en:`n$juego`n`nSi lo moviste, volve a ejecutar el instalador de tu liga." "The game was not found at:`n$juego`n`nIf you moved it, run your league installer again.") }
 
     if (-not $SinActualizar) {
         try { Actualizar $juego } catch { Anotar "Error al actualizar: $($_.Exception.Message)" }
@@ -138,7 +141,7 @@ try {
         Start-Process 'steam://open/main'
         $limite = (Get-Date).AddSeconds(90)
         while (-not (Get-Process steam -ErrorAction SilentlyContinue)) {
-            if ((Get-Date) -gt $limite) { Error-Ventana 'Steam no se abrio. Abrilo a mano y volve a intentar.' }
+            if ((Get-Date) -gt $limite) { Error-Ventana (T 'Steam no se abrio. Abrilo a mano y volve a intentar.' 'Steam did not open. Open it manually and try again.') }
             Start-Sleep -Seconds 1
         }
         Start-Sleep -Seconds 15 # que Steam termine de iniciar sesion
@@ -159,5 +162,5 @@ try {
 }
 catch {
     Cerrar-Estado
-    Error-Ventana "No se pudo iniciar el juego:`n$($_.Exception.Message)"
+    Error-Ventana (T "No se pudo iniciar el juego:`n$($_.Exception.Message)" "Could not start the game:`n$($_.Exception.Message)")
 }

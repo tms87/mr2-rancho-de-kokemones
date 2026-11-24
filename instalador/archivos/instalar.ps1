@@ -13,21 +13,25 @@ param(
     [string]$LigaRama = 'main',
     [string]$LigaLocal,
     # Pruebas: no crea ni toca accesos directos.
-    [switch]$SinAccesos
+    [switch]$SinAccesos,
+    # Idioma de los mensajes (es/en); si falta, el de la liga instalada.
+    [string]$Idioma
 )
 
 $ErrorActionPreference = 'Stop'
 $origen = $PSScriptRoot
 
+if (-not $Idioma) { try { $Idioma = ([IO.File]::ReadAllText((Join-Path $Destino 'liga.json'), [Text.Encoding]::UTF8) | ConvertFrom-Json).idioma } catch { } }
+function T([string]$es, [string]$en) { if ($Idioma -eq 'en') { $en } else { $es } }
 function Titulo($t) { Write-Host ''; Write-Host "== $t ==" -ForegroundColor Cyan }
 function Ok($t) { Write-Host "   OK  $t" -ForegroundColor Green }
 function Aviso($t) { Write-Host "   !   $t" -ForegroundColor Yellow }
 function Fallar($t) { Write-Host ''; Write-Host "ERROR: $t" -ForegroundColor Red; exit 1 }
 
-Write-Host 'MR2 Rancho de Kokemones: instalador' -ForegroundColor White
+Write-Host (T 'MR2 Rancho de Kokemones: instalador' 'MR2 Rancho de Kokemones: installer') -ForegroundColor White
 
 # ------------------------------------------------------------------
-Titulo '1. Buscando el juego en Steam'
+Titulo (T '1. Buscando el juego en Steam' '1. Looking for the game in Steam')
 # ------------------------------------------------------------------
 $steam = $null
 foreach ($clave in 'HKCU:\Software\Valve\Steam', 'HKLM:\SOFTWARE\WOW6432Node\Valve\Steam', 'HKLM:\SOFTWARE\Valve\Steam') {
@@ -39,7 +43,7 @@ foreach ($clave in 'HKCU:\Software\Valve\Steam', 'HKLM:\SOFTWARE\WOW6432Node\Val
     } catch { }
     if ($steam) { break }
 }
-if (-not $steam) { Fallar 'No se encontro Steam. Instala Steam y el juego Monster Rancher 1&2 DX primero.' }
+if (-not $steam) { Fallar (T 'No se encontro Steam. Instala Steam y el juego Monster Rancher 1&2 DX primero.' 'Steam was not found. Install Steam and Monster Rancher 1&2 DX first.') }
 $steam = $steam -replace '/', '\'
 
 # Todas las bibliotecas de Steam (el juego puede estar en otro disco).
@@ -60,18 +64,18 @@ foreach ($b in ($bibliotecas | Select-Object -Unique)) {
 }
 
 if (-not $juego) {
-    Aviso 'No se encontro el juego automaticamente. Elegi el archivo MF2.exe (carpeta del juego\MF2\MF2.exe).'
+    Aviso (T 'No se encontro el juego automaticamente. Elegi el archivo MF2.exe (carpeta del juego\MF2\MF2.exe).' 'The game was not found automatically. Pick the MF2.exe file (game folder\MF2\MF2.exe).')
     Add-Type -AssemblyName System.Windows.Forms
     $dialogo = New-Object System.Windows.Forms.OpenFileDialog
     $dialogo.Filter = 'MF2.exe|MF2.exe'
-    $dialogo.Title = 'Elegi MF2.exe (Monster Rancher 2 DX)'
-    if ($dialogo.ShowDialog() -ne 'OK') { Fallar 'Instalacion cancelada.' }
+    $dialogo.Title = (T 'Elegi MF2.exe (Monster Rancher 2 DX)' 'Pick MF2.exe (Monster Rancher 2 DX)')
+    if ($dialogo.ShowDialog() -ne 'OK') { Fallar (T 'Instalacion cancelada.' 'Installation cancelled.') }
     $juego = $dialogo.FileName
 }
-Ok "Juego: $juego"
+Ok (T "Juego: $juego" "Game: $juego")
 
 # ------------------------------------------------------------------
-Titulo '2. Comprobando .NET 9 (lo necesita Reloaded-II)'
+Titulo (T '2. Comprobando .NET 9 (lo necesita Reloaded-II)' '2. Checking .NET 9 (needed by Reloaded-II)')
 # ------------------------------------------------------------------
 function Tiene-Runtime($raiz) {
     $dir = Join-Path $raiz 'dotnet\shared\Microsoft.WindowsDesktop.App'
@@ -88,19 +92,19 @@ if (-not (Tiene-Runtime $env:ProgramFiles)) { $faltan += @{ Nombre = '.NET 9 Des
 if (-not (Tiene-Runtime ${env:ProgramFiles(x86)})) { $faltan += @{ Nombre = '.NET 9 Desktop (32 bits)'; Url = 'https://aka.ms/dotnet/9.0/windowsdesktop-runtime-win-x86.exe' } }
 
 foreach ($r in $faltan) {
-    Aviso "Falta $($r.Nombre). Se descarga de Microsoft e instala (Windows puede pedir permiso)."
+    Aviso (T "Falta $($r.Nombre). Se descarga de Microsoft e instala (Windows puede pedir permiso)." "$($r.Nombre) is missing. Downloading it from Microsoft and installing it (Windows may ask for permission).")
     $archivo = Join-Path $env:TEMP ([IO.Path]::GetFileName($r.Url))
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $ProgressPreference = 'SilentlyContinue'
     Invoke-WebRequest -Uri $r.Url -OutFile $archivo -UseBasicParsing
     $proc = Start-Process $archivo -ArgumentList '/install', '/passive', '/norestart' -Verb RunAs -Wait -PassThru
-    if ($proc.ExitCode -notin 0, 3010, 1638) { Fallar "No se pudo instalar $($r.Nombre) (codigo $($proc.ExitCode))." }
-    Ok "$($r.Nombre) instalado."
+    if ($proc.ExitCode -notin 0, 3010, 1638) { Fallar (T "No se pudo instalar $($r.Nombre) (codigo $($proc.ExitCode))." "Could not install $($r.Nombre) (code $($proc.ExitCode)).") }
+    Ok (T "$($r.Nombre) instalado." "$($r.Nombre) installed.")
 }
-if ($faltan.Count -eq 0) { Ok '.NET 9 ya esta instalado.' }
+if ($faltan.Count -eq 0) { Ok (T '.NET 9 ya esta instalado.' '.NET 9 is already installed.') }
 
 # ------------------------------------------------------------------
-Titulo '2b. Comprobando Visual C++ (lo necesita el juego)'
+Titulo (T '2b. Comprobando Visual C++ (lo necesita el juego)' '2b. Checking Visual C++ (needed by the game)')
 # ------------------------------------------------------------------
 # Steam instala estas librerias la primera vez que se abre el juego DESDE Steam; si el juego nunca se abrio
 # desde Steam faltan (p. ej. "MSVCR100.dll was not found", que pide el sqlite3.dll del juego).
@@ -113,9 +117,9 @@ $vcpp = @(
        Args = @('/install', '/quiet', '/norestart'); Url = 'https://aka.ms/vs/17/release/vc_redist.x86.exe' }
 )
 foreach ($v in $vcpp) {
-    if (-not ($v.Dlls | Where-Object { -not (Test-Path (Join-Path $sys32 $_)) })) { Ok "$($v.Nombre) ya esta instalado."; continue }
+    if (-not ($v.Dlls | Where-Object { -not (Test-Path (Join-Path $sys32 $_)) })) { Ok (T "$($v.Nombre) ya esta instalado." "$($v.Nombre) is already installed."); continue }
 
-    Aviso "Falta $($v.Nombre). Se instala ahora (Windows puede pedir permiso)."
+    Aviso (T "Falta $($v.Nombre). Se instala ahora (Windows puede pedir permiso)." "$($v.Nombre) is missing. Installing it now (Windows may ask for permission).")
     $instalador = $null
     foreach ($b in ($bibliotecas | Select-Object -Unique)) {
         $c = Join-Path $b "steamapps\common\Steamworks Shared\_CommonRedist\$($v.Local)"
@@ -130,16 +134,16 @@ foreach ($v in $vcpp) {
         }
         $proc = Start-Process $instalador -ArgumentList $v.Args -Verb RunAs -Wait -PassThru
         if ($proc.ExitCode -notin 0, 3010, 1638, 5100) { throw "codigo $($proc.ExitCode)" }
-        Ok "$($v.Nombre) instalado."
+        Ok (T "$($v.Nombre) instalado." "$($v.Nombre) installed.")
     }
     catch {
-        Aviso "No se pudo instalar $($v.Nombre) ($($_.Exception.Message))."
-        Aviso 'Solucion: abri el juego UNA vez desde Steam (Steam instala lo que falta) y despues usa el acceso directo.'
+        Aviso (T "No se pudo instalar $($v.Nombre) ($($_.Exception.Message))." "Could not install $($v.Nombre) ($($_.Exception.Message)).")
+        Aviso (T 'Solucion: abri el juego UNA vez desde Steam (Steam instala lo que falta) y despues usa el acceso directo.' 'Fix: open the game ONCE from Steam (Steam installs what is missing) and then use the shortcut.')
     }
 }
 
 # ------------------------------------------------------------------
-Titulo '3. Copiando el Rancho de Kokemones'
+Titulo (T '3. Copiando el Rancho de Kokemones' '3. Copying Rancho de Kokemones')
 # ------------------------------------------------------------------
 $reloaded = Join-Path $Destino 'Reloaded-II'
 $estadoLiga = Join-Path $Destino 'liga-instalada.json'
@@ -149,18 +153,18 @@ $actualizacion = Test-Path $estadoLiga
 if ($LigaLocal) { $liga = [ordered]@{ local = (Resolve-Path $LigaLocal).Path } }
 elseif ($LigaRepo) { $liga = [ordered]@{ repo = $LigaRepo; rama = $LigaRama } }
 elseif ($actualizacion) { $liga = (Get-Content $estadoLiga -Raw | ConvertFrom-Json).liga }
-else { Fallar 'Falta la liga: este instalador se usa desde el instalador de una liga.' }
+else { Fallar (T 'Falta la liga: este instalador se usa desde el instalador de una liga.' 'Missing league: this installer is run from a league installer.') }
 
 # Con el juego abierto los mods estan en uso y no se pueden reemplazar (la copia quedaria esperando).
 while (Get-Process MF2 -ErrorAction SilentlyContinue) {
-    Aviso 'El juego esta abierto: cerralo para poder actualizar los mods. Se sigue solo al cerrarlo.'
+    Aviso (T 'El juego esta abierto: cerralo para poder actualizar los mods. Se sigue solo al cerrarlo.' 'The game is open: close it so the mods can be updated. It continues by itself once closed.')
     Start-Sleep -Seconds 5
 }
 New-Item -ItemType Directory -Force $Destino | Out-Null
 
 function Copiar($desde, $hacia, [string[]]$extra) {
     robocopy $desde $hacia @extra /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
-    if ($LASTEXITCODE -ge 8) { Fallar "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." }
+    if ($LASTEXITCODE -ge 8) { Fallar (T "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." "Error copying files (robocopy $LASTEXITCODE). If the game or Reloaded-II are open, close them and try again.") }
 }
 
 # Scripts, configuracion del Rancho y plantillas.
@@ -192,18 +196,18 @@ foreach ($mod in Get-ChildItem (Join-Path $origen 'mods') -Directory) {
 # Los archivos bajados de internet quedan "bloqueados" por Windows: se desbloquean.
 Get-ChildItem $Destino -File -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notlike "$reloaded\User\*" } |
     Unblock-File -ErrorAction SilentlyContinue
-Ok ($(if ($actualizacion) { "Actualizado en $Destino" } else { "Instalado en $Destino" }))
+Ok ($(if ($actualizacion) { T "Actualizado en $Destino" "Updated in $Destino" } else { T "Instalado en $Destino" "Installed in $Destino" }))
 
 # ------------------------------------------------------------------
-Titulo '3b. Reloaded-II, mods de terceros y datos de la liga'
+Titulo (T '3b. Reloaded-II, mods de terceros y datos de la liga' '3b. Reloaded-II, third-party mods and league data')
 # ------------------------------------------------------------------
-Write-Host '   La primera vez se bajan unos 55 MB (Reloaded-II y More Monsters).'
+Write-Host (T '   La primera vez se bajan unos 55 MB (Reloaded-II y More Monsters).' '   The first time about 55 MB are downloaded (Reloaded-II and More Monsters).')
 try { & (Join-Path $Destino 'sincronizar.ps1') -Instalacion $Destino -Estricto }
-catch { Fallar "No se pudo preparar la instalacion: $($_.Exception.Message)" }
-Ok 'Reloaded-II, mods, datos y configuracion de la liga al dia.'
+catch { Fallar (T "No se pudo preparar la instalacion: $($_.Exception.Message)" "Could not prepare the installation: $($_.Exception.Message)") }
+Ok (T 'Reloaded-II, mods, datos y configuracion de la liga al dia.' 'Reloaded-II, mods, league data and settings up to date.')
 
 # ------------------------------------------------------------------
-Titulo '4. Configurando Reloaded-II'
+Titulo (T '4. Configurando Reloaded-II' '4. Configuring Reloaded-II')
 # ------------------------------------------------------------------
 function Reemplazar($texto) {
     $texto.Replace('{{RELOADED}}', ($reloaded -replace '\\', '\\')).
@@ -228,18 +232,18 @@ $app = Join-Path $reloaded 'Apps\mf2.exe\AppConfig.json'
 New-Item -ItemType Directory -Force (Split-Path $app) | Out-Null
 $plantilla = Get-Content (Join-Path $origen 'plantillas\AppConfig.json') -Raw
 [IO.File]::WriteAllText($app, (Reemplazar $plantilla), (New-Object Text.UTF8Encoding $false))
-Ok 'Reloaded-II configurado (sin consola).'
+Ok (T 'Reloaded-II configurado (sin consola).' 'Reloaded-II configured (no console).')
 
 # Pruebas: no se tocan los accesos directos del escritorio.
 if ($SinAccesos) {
     Write-Host ''
-    Write-Host "Listo (sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" -ForegroundColor Green
+    Write-Host (T "Listo (sin accesos directos). Para jugar: $(Join-Path $Destino 'jugar.ps1')" "Done (no shortcuts). To play: $(Join-Path $Destino 'jugar.ps1')") -ForegroundColor Green
     exit 0
 }
 
 # ------------------------------------------------------------------
 if (-not $SinAccesoDirecto) {
-    Titulo '5. Creando accesos directos'
+    Titulo (T '5. Creando accesos directos' '5. Creating shortcuts')
     $shell = New-Object -ComObject WScript.Shell
     # Carpeta donde "Rivales Kokemon" exporta tus monstruos al guardar (se crea ya, para que el acceso funcione).
     $exportados = Join-Path $reloaded 'User\Mods\MRDX.Custom.Leagues\Exportados'
@@ -247,7 +251,7 @@ if (-not $SinAccesoDirecto) {
     foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
         $lnk = $shell.CreateShortcut((Join-Path $carpeta 'Rivales Kokemon - Exportados.lnk'))
         $lnk.TargetPath = $exportados
-        $lnk.Description = 'Monstruos exportados al guardar (para compartirlos)'
+        $lnk.Description = (T 'Monstruos exportados al guardar (para compartirlos)' 'Monsters exported when saving (to share them)')
         $lnk.Save()
 
         $lnk = $shell.CreateShortcut((Join-Path $carpeta 'MR2 Rancho de Kokemones.lnk'))
@@ -255,10 +259,10 @@ if (-not $SinAccesoDirecto) {
         $lnk.Arguments = "-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'jugar.ps1')`""
         $lnk.WorkingDirectory = $Destino
         $lnk.IconLocation = "$(Join-Path $Destino 'icono.ico'),0"
-        $lnk.Description = 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)'
+        $lnk.Description = (T 'MR2 Rancho de Kokemones (Monster Rancher 2 DX con mods)' 'MR2 Rancho de Kokemones (Monster Rancher 2 DX with mods)')
         $lnk.Save()
     }
-    Ok 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.'
+    Ok (T 'Accesos directos "MR2 Rancho de Kokemones" y "Rivales Kokemon - Exportados" en el escritorio y en el menu Inicio.' 'Shortcuts "MR2 Rancho de Kokemones" and "Rivales Kokemon - Exportados" on the desktop and in the Start menu.')
 }
 
 # Accesos para subir exportados y para la Kokedex: tambien en las actualizaciones automaticas (que no tocan los
@@ -268,9 +272,9 @@ $powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powersh
 $accesos = @(
     @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
        Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
-       Descripcion = 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' },
+       Descripcion = (T 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
     @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
-       Descripcion = 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' }
+       Descripcion = (T 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') }
 )
 foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Environment]::GetFolderPath('Programs')) '')) {
     foreach ($a in $accesos) {
@@ -287,5 +291,5 @@ foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), (Join-Path ([Envir
 }
 
 Write-Host ''
-Write-Host 'Listo. Para jugar usa el acceso directo "MR2 Rancho de Kokemones".' -ForegroundColor Green
-Write-Host 'La primera vez tarda un poco mas: se preparan los datos del juego.' -ForegroundColor Green
+Write-Host (T 'Listo. Para jugar usa el acceso directo "MR2 Rancho de Kokemones".' 'Done. To play, use the "MR2 Rancho de Kokemones" shortcut.') -ForegroundColor Green
+Write-Host (T 'La primera vez tarda un poco mas: se preparan los datos del juego.' 'The first time takes a bit longer: the game data is prepared.') -ForegroundColor Green
