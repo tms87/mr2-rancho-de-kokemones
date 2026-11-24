@@ -2,7 +2,7 @@
     "ModId": "MRDX.Custom.ItemTolerance",
     "ModName": "Items Kokemon",
     "ModAuthor": "",
-    "ModVersion": "1.3.0",
+    "ModVersion": "1.0.0",
     "ModDescription": "La Nuts Oil y la Magic Banana pierden efecto si se usan seguidas y pueden acortar la vida del monstruo; otros objetos desintoxican o restan vida al azar; baúl de disc chips para el laboratorio.",
     "ModDll": "MRDX.Custom.ItemTolerance.dll",
     "ModIcon": "Preview.png",
