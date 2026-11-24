@@ -124,7 +124,7 @@ Los disc chips dejan de ocupar lugar en el inventario:
  - **D:** entre 6 y 10
  - **E:** entre 5 y 8
 - Los torneos oficiales y los especiales siguen como siempre.
-- En el calendario **ves 7 meses hacia adelante**, y se va actualizando mes a mes.
+- En el calendario **ves 7 meses hacia adelante**, y se va actualizando mes a mes. Los otros meses muestran lo que se jugó el año anterior, así que un torneo chico puede aparecer dos veces.
 - El sorteo es **el mismo para todos** en el mismo año del juego.
 - **Rookie Cup** (3 ediciones por año, rango E): los rivales están **entre los más débiles** de la liga E.
 - Los torneos nuevos tienen premio y objeto bonus propios, y sus rivales salen al azar de su liga.
