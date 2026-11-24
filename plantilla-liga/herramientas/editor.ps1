@@ -14,29 +14,9 @@ function T([string]$es, [string]$en) { if ($liga.idioma -eq 'en') { $en } else {
 function Salir($t) { Write-Host $t -ForegroundColor Red; Read-Host (T 'Enter para cerrar' 'Press Enter to close') | Out-Null; exit 1 }
 
 # ---- Codigo del editor ----
-if ($RanchoLocal) {
-    $fuente = (Resolve-Path $RanchoLocal).Path
-    $trabajo = Join-Path $env:TEMP 'EditorKokemon-local'
-}
-else {
-    $version = $liga.rancho.version
-    $trabajo = Join-Path $env:TEMP "EditorKokemon-$version"
-    $fuente = Join-Path $trabajo 'fuente'
-    if (-not (Test-Path (Join-Path $fuente 'herramientas\EditorKokemon'))) {
-        Write-Host (T "Bajando el editor del Rancho $version ($($liga.rancho.repo))..." "Downloading the Rancho $version editor ($($liga.rancho.repo))...")
-        New-Item -ItemType Directory -Force $trabajo | Out-Null
-        $zip = Join-Path $trabajo 'fuente.zip'
-        try { Invoke-WebRequest "https://github.com/$($liga.rancho.repo)/archive/refs/tags/v$version.zip" -OutFile $zip -UseBasicParsing -TimeoutSec 300 }
-        catch { Salir (T "No se pudo bajar el codigo del Rancho $version de $($liga.rancho.repo): $($_.Exception.Message)" "Could not download the Rancho $version source from $($liga.rancho.repo): $($_.Exception.Message)") }
-        $x = Join-Path $trabajo 'x'
-        if (Test-Path $x) { Remove-Item $x -Recurse -Force }
-        Expand-Archive $zip -DestinationPath $x -Force
-        $dir = Get-ChildItem $x -Directory | Select-Object -First 1
-        if (Test-Path $fuente) { Remove-Item $fuente -Recurse -Force }
-        Move-Item $dir.FullName $fuente
-        Remove-Item $x, $zip -Recurse -Force -ErrorAction SilentlyContinue
-    }
-}
+try { $fuente = & (Join-Path $PSScriptRoot 'rancho.ps1') -RanchoLocal $RanchoLocal }
+catch { Salir (T "No se pudo bajar el codigo del Rancho $($liga.rancho.version) de $($liga.rancho.repo): $($_.Exception.Message)" "Could not download the Rancho $($liga.rancho.version) source from $($liga.rancho.repo): $($_.Exception.Message)") }
+$trabajo = if ($RanchoLocal) { Join-Path $env:TEMP 'EditorKokemon-local' } else { Join-Path $env:TEMP "EditorKokemon-$($liga.rancho.version)" }
 
 # ---- Compilar (si falta o si el codigo es mas nuevo) ----
 $codigo = Join-Path $fuente 'herramientas\EditorKokemon'

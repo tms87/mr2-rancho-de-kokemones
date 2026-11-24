@@ -13,23 +13,7 @@ $liga = [IO.File]::ReadAllText((Join-Path $raiz 'liga.json'), [Text.Encoding]::U
 $idioma = if ($liga.idioma -eq 'en') { 'en' } else { 'es' }
 
 # ---- Codigo del Rancho (el mismo que usa el editor) ----
-if ($RanchoLocal) { $fuente = (Resolve-Path $RanchoLocal).Path }
-else {
-    $version = $liga.rancho.version
-    $trabajo = Join-Path $env:TEMP "EditorKokemon-$version"
-    $fuente = Join-Path $trabajo 'fuente'
-    if (-not (Test-Path (Join-Path $fuente 'configuracion\guia'))) {
-        New-Item -ItemType Directory -Force $trabajo | Out-Null
-        $zip = Join-Path $trabajo 'fuente.zip'
-        Invoke-WebRequest "https://github.com/$($liga.rancho.repo)/archive/refs/tags/v$version.zip" -OutFile $zip -UseBasicParsing -TimeoutSec 300
-        $x = Join-Path $trabajo 'x'
-        if (Test-Path $x) { Remove-Item $x -Recurse -Force }
-        Expand-Archive $zip -DestinationPath $x -Force
-        if (Test-Path $fuente) { Remove-Item $fuente -Recurse -Force }
-        Move-Item (Get-ChildItem $x -Directory | Select-Object -First 1).FullName $fuente
-        Remove-Item $x, $zip -Recurse -Force -ErrorAction SilentlyContinue
-    }
-}
+$fuente = & (Join-Path $PSScriptRoot 'rancho.ps1') -RanchoLocal $RanchoLocal
 
 # ---- Configuracion efectiva: la de la liga, o el valor por defecto (o fijo) del Rancho ----
 $valores = @{

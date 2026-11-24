@@ -255,29 +255,13 @@ else {
 # 8. Instalador de la liga
 # ------------------------------------------------------------------
 Titulo (T 'Instalador para los jugadores' 'Installer for the players')
-$kit = Join-Path $env:TEMP "liga-instalador-$slug"
-if (Test-Path $kit) { Remove-Item $kit -Recurse -Force }
-$carpetaKit = Join-Path $kit $(if ($Repo) { "Instalar-$Repo" } else { "Instalar-$slug" })
-New-Item -ItemType Directory -Force $carpetaKit | Out-Null
-Copy-Item (Join-Path $rancho 'instalador-liga\*') $carpetaKit -Force
-$origen = if ($Tipo -eq 'GitHub') { [ordered]@{ repo = $repoCompleto; rama = 'main'; idioma = $Idioma } } else { [ordered]@{ local = $Destino; idioma = $Idioma } }
-Escribir (Join-Path $carpetaKit 'liga-origen.json') (Json-Lindo ([pscustomobject]$origen))
-$zip = Join-Path (Split-Path $Destino) "$(Split-Path $carpetaKit -Leaf).zip"
-if (Test-Path $zip) { Remove-Item $zip -Force }
-Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
-$flujo = [IO.File]::Open($zip, 'Create')
-$archivo = New-Object IO.Compression.ZipArchive($flujo, [IO.Compression.ZipArchiveMode]::Create)
-foreach ($f in Get-ChildItem $carpetaKit -File) {
-    [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archivo, $f.FullName, "$(Split-Path $carpetaKit -Leaf)/$($f.Name)") | Out-Null
-}
-$archivo.Dispose(); $flujo.Dispose()
-Remove-Item $kit -Recurse -Force
-if ($Tipo -eq 'GitHub' -and -not $SinPublicar) {
-    Ejecutar gh @('release', 'create', 'instalador-1', $zip, '--repo', $repoCompleto, '--title', (T 'Instalador de la liga' 'League installer'),
-        '--notes', (T 'Descargá el zip, descomprimilo y ejecutá Setup.bat.' 'Download the zip, unzip it and run Setup.bat.'))
-    Ok "https://github.com/$repoCompleto/releases/latest"
-}
-else { Ok $zip }
+# La misma herramienta que la liga usa despues para republicarlo (herramientas\instalador.ps1).
+$parametrosKit = @{ RanchoLocal = $rancho }
+if ($repoCompleto) { $parametrosKit.Repo = $repoCompleto }
+if ($SinPublicar) { $parametrosKit.SinPublicar = $true }
+try { $zip = & (Join-Path $Destino 'herramientas\instalador.ps1') @parametrosKit | Select-Object -Last 1 }
+catch { Fallar $_.Exception.Message }
+if ($Tipo -eq 'GitHub' -and -not $SinPublicar) { Ok "https://github.com/$repoCompleto/releases/latest" } else { Ok $zip }
 
 # ------------------------------------------------------------------
 # 9. Lo que sigue
