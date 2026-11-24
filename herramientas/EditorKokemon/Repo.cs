@@ -73,32 +73,51 @@ public sealed class Rival
         File.WriteAllText(archivo, Datos.ToJsonString(new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping }) + "\n", new UTF8Encoding(false));
 }
 
-/// <summary>La copia local del repositorio y las carpetas de contenido.</summary>
+/// <summary>La copia local del repositorio de la liga y sus carpetas de contenido.</summary>
 public sealed class Repo
 {
     public string Raiz { get; }
-    public string Jugadores => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\jugadores");
-    public string Originales => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\originales");
-    public string Torneos => Path.Combine(Raiz, @"mods\CalendarioKokemon\MRDX.Custom.CalendarioKokemon\torneos.json");
-    public string Imagenes => Path.Combine(Raiz, @"mods\CalendarioKokemon\MRDX.Custom.CalendarioKokemon\imagenes");
-    public string Competencias => Path.Combine(Raiz, @"mods\RanchRules\MRDX.Custom.RanchRules\Competencias");
+    public string Jugadores => Path.Combine(Raiz, @"rivales\jugadores");
+    public string Originales => Path.Combine(Raiz, @"rivales\originales");
+    public string Torneos => Path.Combine(Raiz, @"torneos\torneos.json");
+    public string Imagenes => Path.Combine(Raiz, @"torneos\imagenes");
+    public string Competencias => Path.Combine(Raiz, "competencias");
 
-    /// <summary>Carpetas y archivos que sube el botón "Subir" (solo contenido).</summary>
-    public string[] Contenido =>
-    [
-        @"mods/Leagues/MRDX.Custom.Leagues/Liga",
-        @"mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/torneos.json",
-        @"mods/CalendarioKokemon/MRDX.Custom.CalendarioKokemon/imagenes",
-        @"mods/RanchRules/MRDX.Custom.RanchRules/Competencias"
-    ];
+    /// <summary>Carpetas y archivos que sube el botón "Subir" (el contenido de la liga).</summary>
+    public string[] Contenido => ["rivales", "torneos", "competencias", "liga.json"];
 
-    public Repo(string raiz) => Raiz = raiz;
+    /// <summary>Idioma de la liga (liga.json): el del editor.</summary>
+    public string Idioma { get; }
 
-    /// <summary>Busca la raíz del repositorio (la carpeta con actualizacion.json) desde la carpeta del programa.</summary>
+    /// <summary>Repositorio de GitHub de la liga ("usuario/repo"), del remoto origin; null si no tiene.</summary>
+    public string? RepoGitHub { get; }
+
+    public Repo(string raiz)
+    {
+        Raiz = raiz;
+        try { Idioma = (string?)JsonNode.Parse(File.ReadAllText(Path.Combine(raiz, "liga.json")))?["idioma"] ?? "es"; }
+        catch { Idioma = "es"; }
+        try
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo("git", "remote get-url origin")
+                { WorkingDirectory = raiz, RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true };
+            using var p = System.Diagnostics.Process.Start(psi)!;
+            var url = p.StandardOutput.ReadToEnd().Trim();
+            p.WaitForExit();
+            var m = System.Text.RegularExpressions.Regex.Match(url, @"github\.com[:/]([^/]+/[^/]+?)(\.git)?$");
+            if (m.Success) RepoGitHub = m.Groups[1].Value;
+        }
+        catch
+        {
+            // sin git o sin remoto: se puede editar igual, pero no subir ni cerrar issues
+        }
+    }
+
+    /// <summary>Busca la raíz del repositorio de la liga (la carpeta con liga.json) desde una carpeta.</summary>
     public static string? Buscar(string desde)
     {
         for (var d = new DirectoryInfo(desde); d != null; d = d.Parent)
-            if (File.Exists(Path.Combine(d.FullName, "actualizacion.json"))) return d.FullName;
+            if (File.Exists(Path.Combine(d.FullName, "liga.json"))) return d.FullName;
         return null;
     }
 

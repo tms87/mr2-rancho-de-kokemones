@@ -10,6 +10,11 @@
     <OutputPath>build</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- T("español", "english"): textos en el idioma de la liga. -->
+    <Using Include="EditorKokemon.Textos" Static="true" />
+  </ItemGroup>
   <ItemGroup>
     <!-- Lee WebP (muchas IA guardan WebP con extension .png), PNG, JPG, etc. -->
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />

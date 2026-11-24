@@ -10,7 +10,9 @@ namespace EditorKokemon;
 /// </summary>
 public sealed partial class Ventana
 {
-    private const string RepoGitHub = "tms87/mr2-rancho-de-kokemones";
+    // El repositorio de la liga (remoto origin): ahí llegan los issues de exportados.
+    private string RepoGitHub => _repo.RepoGitHub ?? throw new InvalidOperationException(
+        T("La liga no tiene un repositorio de GitHub (remoto origin).", "The league has no GitHub repository (origin remote)."));
 
     private string CarpetaRecibidos => Path.Combine(_repo.Raiz, "recibidos");
 

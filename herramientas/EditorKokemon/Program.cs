@@ -10,16 +10,19 @@ internal static class Program
         var raiz = (args.Length > 0 ? Repo.Buscar(args[0]) : null) ?? Repo.Buscar(AppContext.BaseDirectory);
         if (raiz == null)
         {
-            using var d = new FolderBrowserDialog { Description = "Elegí la carpeta del repositorio mr2-rancho-de-kokemones (la que tiene actualizacion.json)" };
+            using var d = new FolderBrowserDialog { Description = "Elegí la carpeta del repositorio de tu liga (la que tiene liga.json) / Pick your league repository folder (the one with liga.json)" };
             if (d.ShowDialog() != DialogResult.OK) return;
             raiz = Repo.Buscar(d.SelectedPath);
             if (raiz == null)
             {
-                MessageBox.Show("Esa carpeta no es el repositorio (no tiene actualizacion.json).", "Editor Kokemon");
+                MessageBox.Show("Esa carpeta no es el repositorio de una liga (no tiene liga.json).\nThat folder is not a league repository (no liga.json).", "Editor Kokemon");
                 return;
             }
         }
 
-        Application.Run(new Ventana(new Repo(raiz)));
+        var repo = new Repo(raiz);
+        Textos.Idioma = repo.Idioma;
+
+        Application.Run(new Ventana(repo));
     }
 }
