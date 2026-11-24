@@ -14,6 +14,8 @@ param(
     [Parameter(Mandatory)][string]$Instalacion,
     # liga.json ya bajado por el lanzador (para no bajarlo dos veces).
     [string]$LigaJson,
+    # Commit de la liga que leyó el lanzador (para usar los mismos datos que ese liga.json).
+    [string]$Commit,
     [switch]$Estricto
 )
 $ErrorActionPreference = 'Stop'
@@ -37,10 +39,16 @@ function Paso($nombre, [scriptblock]$accion) {
 $origen = (Leer-Json (Join-Path $Instalacion 'liga-instalada.json')).liga
 $ligaCopia = Join-Path $Instalacion 'liga.json'
 
-# Ruta de un archivo de la liga en GitHub (sin bajar nada) o en la carpeta local.
+# Todo se baja de un commit fijo: raw.githubusercontent.com cachea las ramas unos minutos, un commit no cambia.
+if (-not $origen.local -and -not $Commit) {
+    try { $Commit = (Invoke-RestMethod "https://api.github.com/repos/$($origen.repo)/commits/$($origen.rama)" -Headers $ua -TimeoutSec 15).sha }
+    catch { Anotar "No se pudo leer el ultimo commit de la liga: $($_.Exception.Message)" }
+}
+
+# Ruta de un archivo de la liga en GitHub (sin bajar nada).
 function Url-Raw($ruta) {
     $partes = $ruta.Split('/') | ForEach-Object { [Uri]::EscapeDataString($_) }
-    return "https://raw.githubusercontent.com/$($origen.repo)/$($origen.rama)/$($partes -join '/')"
+    return "https://raw.githubusercontent.com/$($origen.repo)/$Commit/$($partes -join '/')"
 }
 
 # ---- 1. liga.json ----
@@ -100,7 +108,7 @@ Paso 'Datos' {
         Anotar 'Datos de la liga copiados de la carpeta local.'
         return
     }
-    $arbol = Invoke-RestMethod "https://api.github.com/repos/$($origen.repo)/git/trees/$($origen.rama)?recursive=1" -Headers $ua -TimeoutSec 15
+    $arbol = Invoke-RestMethod "https://api.github.com/repos/$($origen.repo)/git/trees/$($Commit)?recursive=1" -Headers $ua -TimeoutSec 15
     foreach ($d in $mapa) {
         $base = Join-Path $Instalacion ($d.destino -replace '/', '\')
         $blobs = @($arbol.tree | Where-Object { $_.type -eq 'blob' -and ($_.path -eq $d.liga -or $_.path.StartsWith("$($d.liga)/")) })

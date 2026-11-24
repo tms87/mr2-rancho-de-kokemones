@@ -73,7 +73,9 @@ function Actualizar($juego) {
     try {
         if ($origen.local) { Copy-Item (Join-Path $origen.local 'liga.json') $ligaNueva -Force }
         else {
-            Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$($origen.rama)/liga.json" -OutFile $ligaNueva `
+            # El commit actual de la liga (raw.githubusercontent.com cachea las ramas unos minutos).
+            $commit = (Invoke-RestMethod "https://api.github.com/repos/$($origen.repo)/commits/$($origen.rama)" -Headers $h -TimeoutSec 10).sha
+            Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$commit/liga.json" -OutFile $ligaNueva `
                 -UseBasicParsing -Headers @{ 'User-Agent' = $h['User-Agent'] } -TimeoutSec 10
         }
         $liga = Leer-Json $ligaNueva
@@ -119,6 +121,7 @@ function Actualizar($juego) {
     Estado (T 'Revisando la liga...' 'Checking the league...')
     $parametros = @{ Instalacion = $PSScriptRoot }
     if ($liga) { $parametros.LigaJson = $ligaNueva }
+    if ($commit) { $parametros.Commit = $commit }
     & (Join-Path $PSScriptRoot 'sincronizar.ps1') @parametros
 }
 

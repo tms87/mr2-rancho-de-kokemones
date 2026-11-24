@@ -40,7 +40,8 @@ try {
     else {
         $rama =if ($origen.rama) { $origen.rama } else { 'main' }
         try {
-            $ligaTexto = (Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$rama/liga.json" -UseBasicParsing `
+            $commit = (Invoke-RestMethod "https://api.github.com/repos/$($origen.repo)/commits/$rama" -Headers $h -TimeoutSec 20).sha
+            $ligaTexto = (Invoke-WebRequest "https://raw.githubusercontent.com/$($origen.repo)/$commit/liga.json" -UseBasicParsing `
                 -Headers @{ 'User-Agent' = $h['User-Agent'] } -TimeoutSec 20).Content
         }
         catch { Fallar (T "No se pudo leer la liga $($origen.repo) ($($_.Exception.Message)). Revisa la conexion; si sigue, avisale al administrador de la liga (el repositorio tiene que ser publico)." "Could not read the league $($origen.repo) ($($_.Exception.Message)). Check your connection; if it persists, tell the league admin (the repository has to be public).") }
