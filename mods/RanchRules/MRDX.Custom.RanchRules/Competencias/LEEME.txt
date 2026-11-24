@@ -1,17 +1,25 @@
 Grabaciones de competencia (modo VS)
 
+Cada competencia tiene un nombre y una o más grabaciones numeradas (#1, #2...) con sus participantes.
+
 Cada archivo competenciaNN.json (NN = 08 a 14) arma la ranura NN del juego al abrirlo:
-una copia del autoguardado con el congelador reemplazado por los monstruos del archivo (hasta 20).
-En el modo VS, elegí esa grabación y se registran los monstruos congelados.
+una copia del autoguardado con el congelador reemplazado por los participantes del archivo (hasta 20).
+En el modo VS, elegí esa grabación y se registran los participantes (congelados).
 
 Se regeneran solas cuando cambia el archivo. Si no hay archivo para una ranura, esa ranura no se toca.
 Con el modo ironman, las copias anuales usan las ranuras 1 a 7.
 
 Formato:
 {
-  "nombre": "Campeones E",
-  "monstruos": [
+  "nombre": "Champions Cup E",
+  "grabacion": 1,
+  "entrenador": "Kokemon",
+  "rango": "E",
+  "reglas": "Texto libre: el mod no lo usa.",
+  "participantes": [
     { "nombre": "Angie", "crudo": "<datos del monstruo en base64, 524 bytes>" }
   ]
 }
+"rango" (S, A, B, C, D o E) y "reglas" son opcionales y el mod no los usa: son datos de la competencia
+para los jugadores. Todas las grabaciones de una misma competencia comparten nombre, rango y reglas.
 Los arma el Editor Kokemon (pestaña Competencias).

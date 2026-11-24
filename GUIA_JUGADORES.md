@@ -41,7 +41,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 - Elijas la ranura que elijas, **siempre se guarda en la ranura Auto**, así que no se puede guardar antes de algo y recargar.
 - Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.
 - **Las copias anuales son las que se usan para competir en el modo versus.**
-- **Las ranuras 8 a 14 son para competencias:** se arman solas con los campeones de cada competencia (en el congelador, con el entrenador "Kokemon") después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, no se guarda nada (tampoco el autoguardado): la próxima vez que la cargues está igual, y tu partida (Auto) no se toca.
+- **Las ranuras 8 a 14 son para competencias:** tienen los participantes de cada competencia (en el congelador, con el entrenador "Kokemon"). Las carga el Administrador de la Liga Kokemon, llegan con las actualizaciones y aparecen después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, no se guarda nada (tampoco el autoguardado): la próxima vez que la cargues está igual, y tu partida (Auto) no se toca.
 
 ---
 

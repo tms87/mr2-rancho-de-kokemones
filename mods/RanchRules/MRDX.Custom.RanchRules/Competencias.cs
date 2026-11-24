@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace MRDX.Custom.RanchRules;
 
 /// <summary>
-///     Grabaciones de competencia: las ranuras 8 a 14 (archivos 07..13) se arman con los monstruos de
+///     Grabaciones de competencia: las ranuras 8 a 14 (archivos 07..13) se arman con los participantes de
 ///     Competencias\competenciaNN.json (NN = número de ranura del juego, 08..14), puestos en el congelador.
 ///     Sirven para el modo VS: al elegir esa grabación, el juego registra los monstruos congelados.
 ///
@@ -132,7 +132,7 @@ public sealed partial class SaveManager
 
             changed = true;
             state.Slots[key] = new CompetitionDone { Json = jsonHash, Save = Convert.ToHexString(SHA256.HashData(data)) };
-            _log($"Ranura {gameSlot}: competencia \"{comp.Nombre}\" armada con {Math.Min(comp.Monstruos.Count, FreezerSlots)} monstruos.",
+            _log($"Ranura {gameSlot}: competencia \"{comp.Nombre}\" #{comp.Grabacion} armada con {Math.Min(comp.Participantes.Count, FreezerSlots)} participantes.",
                 Color.LightGreen);
         }
 
@@ -151,13 +151,13 @@ public sealed partial class SaveManager
             return null;
         }
 
-        if (comp.Monstruos.Count > FreezerSlots)
-            _log($"{name}: tiene {comp.Monstruos.Count} monstruos; el congelador tiene lugar para {FreezerSlots}.", Color.Orange);
+        if (comp.Participantes.Count > FreezerSlots)
+            _log($"{name}: tiene {comp.Participantes.Count} participantes; el congelador tiene lugar para {FreezerSlots}.", Color.Orange);
 
         var data = (byte[])baseFile.Clone();
         for (var k = 0; k < FreezerSlots; k++)
         {
-            var record = k < comp.Monstruos.Count ? Record(comp.Monstruos[k], name) : EmptyRecord;
+            var record = k < comp.Participantes.Count ? Record(comp.Participantes[k], name) : EmptyRecord;
             Buffer.BlockCopy(record, 0, data, FreezerStart + k * RecordSize, RecordSize);
         }
 
@@ -260,8 +260,9 @@ public sealed partial class SaveManager
     private sealed class Competition
     {
         public string Nombre { get; set; } = "";
+        public int Grabacion { get; set; } = 1;
         public string? Entrenador { get; set; }
-        public List<CompetitionMonster> Monstruos { get; set; } = new();
+        public List<CompetitionMonster> Participantes { get; set; } = new();
     }
 
     private sealed class CompetitionMonster

@@ -81,7 +81,6 @@ public sealed class Repo
     public string Originales => Path.Combine(Raiz, @"mods\Leagues\MRDX.Custom.Leagues\Liga\originales");
     public string Torneos => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\torneos.json");
     public string Imagenes => Path.Combine(Raiz, @"mods\LigaKokemon\MRDX.Custom.LigaKokemon\imagenes");
-    public string Campeones => Path.Combine(Raiz, "campeones");
     public string Competencias => Path.Combine(Raiz, @"mods\RanchRules\MRDX.Custom.RanchRules\Competencias");
 
     /// <summary>Carpetas y archivos que sube el botón "Subir" (solo contenido).</summary>
@@ -90,7 +89,6 @@ public sealed class Repo
         @"mods/Leagues/MRDX.Custom.Leagues/Liga",
         @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/torneos.json",
         @"mods/LigaKokemon/MRDX.Custom.LigaKokemon/imagenes",
-        @"campeones",
         @"mods/RanchRules/MRDX.Custom.RanchRules/Competencias"
     ];
 

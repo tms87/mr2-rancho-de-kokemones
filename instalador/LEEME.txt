@@ -54,8 +54,9 @@ QUE CAMBIA EN EL JUEGO
 - Modo ironman: guardes en la ranura que guardes, se guarda en la 15 (autoguardado).
   Cada año nuevo se hace una copia en las ranuras 1 a 7, rotando.
   (Para ver las copias, carga la ranura correspondiente.)
-- Ranuras 8 a 14: grabaciones de competencia para el modo VS (se arman solas con los campeones,
-  entrenador "Kokemon"). Si cargas una, no se guarda nada (tampoco el autoguardado): queda igual.
+- Ranuras 8 a 14: grabaciones de competencia para el modo VS (con los participantes de cada
+  competencia, entrenador "Kokemon"; las carga el Administrador de la Liga Kokemon y llegan con
+  las actualizaciones). Si cargas una, no se guarda nada (tampoco el autoguardado): queda igual.
 - Exportados: al empezar cada año (con la copia anual), tus monstruos se exportan en un archivo
   "fecha Entrenador.json".
   Para compartirlos usa "MR2 Subir exportados" (la primera vez pide la clave que te pasan por privado).
