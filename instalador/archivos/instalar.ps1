@@ -56,13 +56,20 @@ if (Test-Path $vdf) {
         $bibliotecas += ($m.Groups[1].Value -replace '\\\\', '\')
     }
 }
+# Solo las que existen (una biblioteca en un disco desconectado o quitado queda anotada en Steam).
+$bibliotecas = @($bibliotecas | Where-Object { try { [IO.Directory]::Exists($_) } catch { $false } })
 
 $juego = $null
 if ($RutaJuego -and (Test-Path $RutaJuego)) { $juego = (Resolve-Path $RutaJuego).Path }
+# Steam puede tener anotadas bibliotecas en discos que ya no estan (desconectados o quitados): se saltean. Join-Path
+# falla con un disco inexistente, asi que las rutas se arman y se prueban con .NET.
 foreach ($b in ($bibliotecas | Select-Object -Unique)) {
     if ($juego) { break }
-    $candidato = Join-Path $b 'steamapps\common\mfdx\MF2\MF2.exe'
-    if (Test-Path $candidato) { $juego = (Resolve-Path $candidato).Path; break }
+    try {
+        $candidato = [IO.Path]::Combine($b, 'steamapps\common\mfdx\MF2\MF2.exe')
+        if ([IO.File]::Exists($candidato)) { $juego = [IO.Path]::GetFullPath($candidato); break }
+    }
+    catch { }
 }
 
 if (-not $juego) {
@@ -124,8 +131,8 @@ foreach ($v in $vcpp) {
     Aviso (T "Falta $($v.Nombre). Se instala ahora (Windows puede pedir permiso)." "$($v.Nombre) is missing. Installing it now (Windows may ask for permission).")
     $instalador = $null
     foreach ($b in ($bibliotecas | Select-Object -Unique)) {
-        $c = Join-Path $b "steamapps\common\Steamworks Shared\_CommonRedist\$($v.Local)"
-        if (Test-Path $c) { $instalador = $c; break }
+        $c = [IO.Path]::Combine($b, "steamapps\common\Steamworks Shared\_CommonRedist\$($v.Local)")
+        if ([IO.File]::Exists($c)) { $instalador = $c; break }
     }
     try {
         if (-not $instalador) {
