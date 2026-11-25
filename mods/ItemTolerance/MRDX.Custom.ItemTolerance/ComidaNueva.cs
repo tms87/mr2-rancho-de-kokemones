@@ -223,10 +223,71 @@ public unsafe partial class Mod
         try
         {
             _exeDir = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule!.FileName)!;
+            _redirector.Loading += AlCargarArchivo;
+        }
+        catch (Exception e)
+        {
+            Log($"No se pudieron preparar los archivos de las comidas nuevas: {e.Message}", Color.Orange);
+            return;
+        }
+
+        // Los archivos de origen son los datos del juego que extrae "MRDX Extract Data Bin". La primera vez en una PC
+        // todavía no están cuando carga este mod (la extracción empieza después): se espera a que aparezcan.
+        if (OrigenesComida().All(File.Exists))
+        {
+            ArmarArchivosComida();
+            return;
+        }
+
+        Log("Comidas nuevas: esperando a que se extraigan los datos del juego (primera vez en esta PC).");
+        Task.Run(EsperarDatosComida);
+    }
+
+    private string CarpetaDatos(params string[] partes) =>
+        Path.Combine([_exeDir, "Resources", "data", "mf2", "data", .. partes]);
+
+    /// <summary>Archivos del juego de los que salen los textos y los modelos de las comidas nuevas.</summary>
+    private IEnumerable<string> OrigenesComida() =>
+        new[] { CarpetaDatos("obj", "item_msg_en.obj"), CarpetaDatos("obj", "msg_farm_en.obj") }
+            .Concat(ComidasNuevas.Select(c => CarpetaDatos("item", "itm", $"item_{c.Modelo:x2}.itm")));
+
+    /// <summary>Espera (hasta 30 minutos) a que estén los archivos de origen, completos (sin cambiar de tamaño).</summary>
+    private void EsperarDatosComida()
+    {
+        try
+        {
+            var origenes = OrigenesComida().ToList();
+            long[]? antes = null;
+            for (var reloj = System.Diagnostics.Stopwatch.StartNew(); reloj.Elapsed < TimeSpan.FromMinutes(30); Thread.Sleep(500))
+            {
+                if (!origenes.All(File.Exists)) { antes = null; continue; }
+                var tamanos = origenes.Select(f => new FileInfo(f).Length).ToArray();
+                if (antes != null && tamanos.SequenceEqual(antes))
+                {
+                    Log($"Comidas nuevas: datos del juego listos ({reloj.Elapsed.TotalSeconds:0} s).");
+                    ArmarArchivosComida();
+                    return;
+                }
+
+                antes = tamanos;
+            }
+
+            Log("Comidas nuevas: no aparecieron los datos del juego; se arman la próxima vez que abras el juego.", Color.Orange);
+        }
+        catch (Exception e)
+        {
+            Log($"Comidas nuevas: error esperando los datos del juego: {e.Message}", Color.Orange);
+        }
+    }
+
+    private void ArmarArchivosComida()
+    {
+        try
+        {
             var dir = Path.Combine(_modLoader.GetModConfigDirectory(_modConfig.ModId), "comida");
             Directory.CreateDirectory(dir);
 
-            var obj = Path.Combine(_exeDir, "Resources", "data", "mf2", "data", "obj");
+            var obj = CarpetaDatos("obj");
             foreach (var (archivo, desde) in new[] { ("item_msg_en.obj", 0), ("msg_farm_en.obj", 336) })
                 try
                 {
@@ -239,7 +300,7 @@ public unsafe partial class Mod
                     Log($"Comidas nuevas: no se pudo preparar {archivo}: {e.Message}", Color.Orange);
                 }
 
-            var itm = Path.Combine(_exeDir, "Resources", "data", "mf2", "data", "item", "itm");
+            var itm = CarpetaDatos("item", "itm");
             // Modelo de cada comida: el del objeto de origen con la textura de su receta (Texturas), armado sobre el
             // archivo del jugador. Un archivo en la carpeta Modelos del mod con el número de la comida (item_42.itm
             // para la #66) le gana, para probar otros. Solo lo usa esa comida; el objeto original no cambia.
@@ -267,7 +328,6 @@ public unsafe partial class Mod
                     Log($"Comida {c.Nombre}: no se pudo armar el modelo: {e.Message}", Color.Orange);
                 }
 
-            _redirector.Loading += AlCargarArchivo;
             Log($"Comidas nuevas listas: {string.Join(", ", ComidasNuevas.Select(c => $"{c.Nombre} (#{c.Id})"))}.");
         }
         catch (Exception e)
@@ -283,21 +343,32 @@ public unsafe partial class Mod
             RedirigirRuta(Path.GetFullPath(Path.Combine(raiz, relativo)), destino);
     }
 
+    // Se puede llamar desde el hilo que espera los datos del juego mientras el juego abre archivos: con lock.
     private void RedirigirRuta(string origen, string destino)
     {
-        _redirector!.RemoveRedirect(origen);
-        _redirecciones[origen] = destino;
-        _redirector.AddRedirect(origen, destino);
+        lock (_redirecciones)
+        {
+            _redirector!.RemoveRedirect(origen);
+            _redirecciones[origen] = destino;
+            _redirector.AddRedirect(origen, destino);
+        }
     }
 
     // Por si el juego abre el archivo con otra forma de la ruta: se registra para la próxima vez.
     private void AlCargarArchivo(string ruta)
     {
         var nombre = Path.GetFileName(ruta);
-        foreach (var (origen, destino) in _redirecciones.ToList())
+        List<KeyValuePair<string, string>> lista;
+        lock (_redirecciones)
+        {
+            if (_redirecciones.ContainsKey(ruta)) return;
+            lista = _redirecciones.ToList();
+        }
+
+        foreach (var (origen, destino) in lista)
         {
             if (!string.Equals(Path.GetFileName(origen), nombre, StringComparison.OrdinalIgnoreCase)) continue;
-            if (string.Equals(ruta, destino, StringComparison.OrdinalIgnoreCase) || _redirecciones.ContainsKey(ruta)) return;
+            if (string.Equals(ruta, destino, StringComparison.OrdinalIgnoreCase)) return;
             RedirigirRuta(ruta, destino);
             return;
         }
@@ -565,8 +636,8 @@ public unsafe partial class Mod
     {
         if (_game?.Monster is not { } m) return;
         if (id == Meat) BajarToleranciaNuts(m, ToleranciaMeat, "Meat");
-        // Fish: con racha del té de 1 o menos la deja en 1 (la mantiene o la empieza); tira con la racha que tenga.
-        if (id == Fish) RachaTe(m, "Fish", (r, _) => r <= RachaPescado ? RachaPescado : null);
+        // Fish: nunca suma; si la racha del té está en 1, la mantiene (ese mes no baja). Tira con la racha que tenga.
+        if (id == Fish) RachaTe(m, "Fish", (r, _) => r == RachaPescado ? r : null);
     }
 
     /// <summary>

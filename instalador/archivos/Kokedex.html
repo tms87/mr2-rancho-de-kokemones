@@ -502,7 +502,7 @@ code.link{display:inline-block;margin-top:4px;word-break:break-all;user-select:a
         <ul>
           <li>Cada mes que come <a href="#o66">Green Tea</a>, la racha sube <b>1</b> (máximo 10). Cada mes que no lo come, baja <b>1</b>.</li>
           <li>Al comerlo tira para bajar <b>1 de intoxicación</b>: <b>15 % por punto</b> de racha, hasta <b>75 %</b> (con 5). De 5 a 10 la chance no sube, pero la racha aguanta más meses sin té.</li>
-          <li><a href="#o40">Chicken</a>: si la racha está en 2 o menos, ese mes no baja. <a href="#o1">Fish</a>: si está en 0 o 1, la deja en 1.</li>
+          <li><a href="#o40">Chicken</a>: si la racha está en 2 o menos, ese mes no baja. <a href="#o1">Fish</a>: nunca la sube; si está en 1, ese mes no baja.</li>
           <li>Chicken y Fish <b>siempre tiran</b> con la racha que tenga (si es 1 o más), aunque no la mantengan.</li>
           <li>La racha es de cada monstruo y se guarda con la partida.</li>
         </ul>
@@ -550,7 +550,7 @@ code.link{display:inline-block;margin-top:4px;word-break:break-all;user-select:a
         <ul>
           <li>Each month the monster eats <a href="#o66">Green Tea</a>, the streak goes up <b>1</b> (maximum 10). Each month it doesn't, it goes down <b>1</b>.</li>
           <li>Eating it rolls to remove <b>1 toxicity</b>: <b>15 % per streak point</b>, up to <b>75 %</b> (at 5). From 5 to 10 the chance doesn't grow, but the streak survives more months without tea.</li>
-          <li><a href="#o40">Chicken</a>: if the streak is 2 or less, it doesn't drop that month. <a href="#o1">Fish</a>: if it is 0 or 1, it sets it to 1.</li>
+          <li><a href="#o40">Chicken</a>: if the streak is 2 or less, it doesn't drop that month. <a href="#o1">Fish</a>: never raises it; if it is 1, it doesn't drop that month.</li>
           <li>Chicken and Fish <b>always roll</b> with the current streak (if it is 1 or more), even when they don't keep it.</li>
           <li>Each monster has its own streak, saved with the game.</li>
         </ul>
@@ -669,8 +669,8 @@ const DESBLOQUEO = {es:"Encontrarlo ya activa el evento de desbloqueo: después 
   en:"Finding it already triggers the unlock event: afterwards you can sell it, throw it away or use it to combine."};
 const NOTAS = {
   0:[PIDE],3:[PIDE],4:[PIDE],5:[PIDE],
-  1:[PIDE,{es:`Como comida del mes ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 0 o 1 la deja en 1, y tira para desintoxicar con la racha que tenga.`,
-    en:`As monthly food it helps the <a href="#reglaTe">Green Tea streak</a>: if it is 0 or 1 it sets it to 1, and rolls to detox with the current streak.`}],
+  1:[PIDE,{es:`Como comida del mes ayuda a la <a href="#reglaTe">racha del Green Tea</a>: nunca la sube, pero si está en 1 la mantiene (ese mes no baja). Tira para desintoxicar con la racha que tenga.`,
+    en:`As monthly food it helps the <a href="#reglaTe">Green Tea streak</a>: it never raises it, but if it is 1 it keeps it (it doesn't drop that month). Rolls to detox with the current streak.`}],
   2:[PIDE,{es:`Como comida del mes baja <b>2 puntos</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`,
     en:`As monthly food it lowers the anti-fatigue habit by <b>2 points</b>. <a href="#modReglas">Rules</a>.`}],
   23:[{es:"Si te la pide el monstruo para entrenar, baja el cansancio completo, pero Henger, Arrowhead y Durahan no reciben la bajada extra de estrés.",
