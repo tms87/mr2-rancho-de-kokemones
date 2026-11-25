@@ -110,10 +110,18 @@ details.sec p.lead{margin:0 0 12px;color:var(--muted);max-width:820px}
 @media (max-width:520px){.grid{grid-template-columns:1fr} header.top h1{font-size:23px} header.top img{width:52px;height:52px}}
 html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-oculto]{display:none !important}
 .liga-nombre{font-size:.55em;color:var(--muted);font-weight:600}
+/* Lo del administrador: solo con "Soy administrador" activado. */
+html:not([data-admin]) .admin{display:none !important}
+.icon-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.tag-admin{display:inline-block;font-size:11px;font-weight:700;line-height:1.5;padding:0 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);margin-right:6px;vertical-align:1px}
+details.sec.admin{border-color:var(--accent)}
+.guia ol.pasos li{margin:5px 0}
+.guia h3{font-size:15px;margin:16px 0 6px}
+.guia code{background:var(--panel2);padding:0 4px;border-radius:4px;font-size:.92em}
 </style>
 <!-- Datos de la liga: los escribe el lanzador al generar la Kokedex de cada instalacion (sin ellos, valores por defecto). -->
 <script id="liga">window.LIGA = null;</script>
-<script>(function(){ var i = null; try { i = localStorage.getItem("kokedex-idioma"); } catch (e) {} document.documentElement.dataset.idioma = i || (window.LIGA && window.LIGA.idioma) || "es"; })();</script>
+<script>(function(){ var i = null, a = null; try { i = localStorage.getItem("kokedex-idioma"); a = localStorage.getItem("kokedex-admin"); } catch (e) {} document.documentElement.dataset.idioma = i || (window.LIGA && window.LIGA.idioma) || "es"; if (a) document.documentElement.setAttribute("data-admin", ""); })();</script>
 </head>
 <body>
 <header class="top wrap">
@@ -133,6 +141,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
       <button class="icon-btn" id="cerrarTodo"><span lang="es">Contraer todo</span><span lang="en">Collapse all</span></button>
       <button class="icon-btn" id="tema"><span lang="es">◐ Tema</span><span lang="en">◐ Theme</span></button>
       <button class="icon-btn" id="idioma" title="Español / English">ES · EN</button>
+      <button class="icon-btn" id="admin" aria-pressed="false"><span lang="es">🛠️ Soy administrador</span><span lang="en">🛠️ I'm the admin</span></button>
     </div>
   </div>
 </div>
@@ -141,6 +150,100 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
   <details class="sec guia hidden" id="tuLiga">
     <summary><h2>🏟️ <span lang="es">Tu liga</span><span lang="en">Your league</span>: <span id="ligaNombre"></span></h2></summary>
     <div class="cuerpo" id="ligaCuerpo"></div>
+  </details>
+
+  <h2 class="grupo admin"><span lang="es">Administración</span><span lang="en">Administration</span></h2>
+
+  <details class="sec guia admin" id="administrar">
+    <summary><h2>🛠️ <span lang="es">Administrar la liga</span><span lang="en">Running the league</span></h2></summary>
+    <div class="cuerpo">
+      <div lang="es">
+        <p>Lo que necesita saber quien administra la liga. En el resto de la Kokedex, lo marcado con <span class="tag-admin">Admin</span> también es para vos.</p>
+        <h3>La liga es un repositorio</h3>
+        <ul>
+          <li>La liga es una carpeta con <code>liga.json</code> (nombre, idioma, versión del Rancho y configuración de los mods) y sus datos: <code>rivales\</code>, <code>torneos\</code> y <code>competencias\</code>.</li>
+          <li data-si="liga.repo">Vive en GitHub: <a data-href="repo" target="_blank" rel="noopener"><span data-c="liga.repo"></span></a>. <b>Tiene que ser público</b>: los jugadores lo leen sin credenciales.</li>
+          <li>Lo que subas le llega a cada jugador <b>la próxima vez que abre el juego</b>, junto con esta Kokedex.</li>
+          <li>Para editarla necesitás git, GitHub CLI (<code>gh</code>, con la sesión iniciada: <code>gh auth login</code>) y el .NET SDK 9.</li>
+        </ul>
+        <h3>Crear una liga</h3>
+        <ol class="pasos">
+          <li>Cloná el repositorio del Rancho de Kokemones (o tu fork).</li>
+          <li>Ejecutá <b>Crear liga.bat</b> y respondé las preguntas: idioma, tipo, nombre, versión del Rancho, datos iniciales y configuración de los mods.</li>
+          <li>Tipo <b>GitHub</b> (recomendado): crea el repositorio, la etiqueta <code>exportado</code> y publica el instalador. Tipo <b>local</b>: solo una carpeta para una PC, sin actualizaciones ni subida de exportados.</li>
+          <li>Pasales a los jugadores el link del instalador<span data-si="liga.repo"> (<a data-href="instalador" target="_blank" rel="noopener">la última versión de la liga</a>)</span> y la guía <code>GUIA.md</code>, que está en formato para Discord.</li>
+        </ol>
+        <h3 data-si="liga.repo">Claves para subir exportados</h3>
+        <p data-si="liga.repo">Cada jugador necesita una clave (un token de GitHub) para usar "MR2 Subir exportados". Creá una por jugador: así, si hace falta, revocás solo la de uno.</p>
+        <ol class="pasos" data-si="liga.repo">
+          <li>Con tu cuenta, entrá a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+          <li><b>Token name:</b> el nombre del jugador. <b>Expiration:</b> la que quieras (cuando vence, el jugador ya no puede subir hasta que le pases otra).</li>
+          <li><b>Repository access:</b> <i>Only select repositories</i> → <code data-c="liga.repo"></code>.</li>
+          <li><b>Permissions</b> → <b>Repository permissions</b> → <b>Issues:</b> <i>Read and write</i>. Ningún otro permiso.</li>
+          <li><b>Generate token</b> y copiala: GitHub la muestra una sola vez.</li>
+          <li>Pasásela al jugador por privado. "MR2 Subir exportados" se la pide la primera vez; para cambiarla, el jugador corre <code>clave.ps1</code> desde su carpeta de instalación.</li>
+        </ol>
+        <p data-si="liga.repo">Las claves se ven y se revocan en <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>. Nunca la publiques en un canal compartido.</p>
+        <h3>Editor Kokemon</h3>
+        <p>Se abre con <b>Editor Kokemon.bat</b>, en la carpeta de la liga.</p>
+        <ul>
+          <li><b>Rivales:</b> la lista de cada liga (E a S). <i>Recibidos (GitHub)</i> trae los exportados que subieron los jugadores<span data-si="liga.repo"> (<a data-href="exportados" target="_blank" rel="noopener">issues con la etiqueta <code>exportado</code></a>)</span>, que se bajan al abrir el editor; marcás los que querés y los agregás como rivales. Descartar uno cierra su issue.</li>
+          <li><b>Torneos</b> y <b>Banners:</b> los torneos nuevos del calendario, con su nombre, premio, bonus y banner.</li>
+          <li><b>Competencias:</b> las grabaciones de las ranuras 8 a 14, con los participantes sacados de una grabación o de los exportados (hasta 20 por grabación).</li>
+          <li><b>Subir a GitHub:</b> publica los cambios para todos.</li>
+        </ul>
+        <h3>Versión del Rancho y configuración</h3>
+        <ul>
+          <li>En <code>liga.json</code>, <code>rancho.version</code> fija la versión del Rancho que instalan todos (y <code>rancho.repo</code>, de qué repositorio, por si usás un fork). Cambiala cuando salga una versión nueva.</li>
+          <li><code>configuracion</code> tiene las opciones de los mods de la liga. Un cambio a mitad de temporada afecta a todos desde su próximo arranque.</li>
+          <li><code>herramientas\instalador.ps1</code> vuelve a armar y publicar el instalador para los jugadores. Corrélo cuando las notas de una versión digan que cambió el instalador, así los que instalan de cero reciben lo nuevo.</li>
+          <li><code>herramientas\guia.ps1</code> vuelve a generar <code>GUIA.md</code> con la configuración actual.</li>
+        </ul>
+      </div>
+      <div lang="en">
+        <p>What the person running the league needs to know. In the rest of the Kokedex, anything tagged <span class="tag-admin">Admin</span> is also for you.</p>
+        <h3>The league is a repository</h3>
+        <ul>
+          <li>The league is a folder with <code>liga.json</code> (name, language, Rancho version and mods settings) and its data: <code>rivales\</code>, <code>torneos\</code> and <code>competencias\</code>.</li>
+          <li data-si="liga.repo">It lives on GitHub: <a data-href="repo" target="_blank" rel="noopener"><span data-c="liga.repo"></span></a>. <b>It must be public</b>: players read it without credentials.</li>
+          <li>Whatever you upload reaches each player <b>the next time they open the game</b>, along with this Kokedex.</li>
+          <li>To edit it you need git, GitHub CLI (<code>gh</code>, signed in: <code>gh auth login</code>) and the .NET SDK 9.</li>
+        </ul>
+        <h3>Creating a league</h3>
+        <ol class="pasos">
+          <li>Clone the Rancho de Kokemones repository (or your fork).</li>
+          <li>Run <b>Crear liga.bat</b> and answer the questions: language, type, name, Rancho version, initial data and mods settings.</li>
+          <li><b>GitHub</b> type (recommended): creates the repository, the <code>exportado</code> label and publishes the installer. <b>Local</b> type: just a folder for one PC, with no updates or export uploads.</li>
+          <li>Give your players the installer link<span data-si="liga.repo"> (<a data-href="instalador" target="_blank" rel="noopener">the league's latest release</a>)</span> and the <code>GUIA.md</code> guide, formatted for Discord.</li>
+        </ol>
+        <h3 data-si="liga.repo">Keys to upload exports</h3>
+        <p data-si="liga.repo">Each player needs a key (a GitHub token) to use "MR2 Subir exportados". Create one per player: that way, if needed, you revoke just one.</p>
+        <ol class="pasos" data-si="liga.repo">
+          <li>With your account, go to <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+          <li><b>Token name:</b> the player's name. <b>Expiration:</b> whatever you like (once it expires, the player can't upload until you give them a new one).</li>
+          <li><b>Repository access:</b> <i>Only select repositories</i> → <code data-c="liga.repo"></code>.</li>
+          <li><b>Permissions</b> → <b>Repository permissions</b> → <b>Issues:</b> <i>Read and write</i>. No other permission.</li>
+          <li><b>Generate token</b> and copy it: GitHub shows it only once.</li>
+          <li>Send it to the player privately. "MR2 Subir exportados" asks for it the first time; to change it, the player runs <code>clave.ps1</code> from their installation folder.</li>
+        </ol>
+        <p data-si="liga.repo">You can see and revoke keys at <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>. Never post one in a shared channel.</p>
+        <h3>Kokemon Editor</h3>
+        <p>Open it with <b>Editor Kokemon.bat</b>, in the league folder.</p>
+        <ul>
+          <li><b>Rivals:</b> each league's list (E to S). <i>Received (GitHub)</i> brings the exports players uploaded<span data-si="liga.repo"> (<a data-href="exportados" target="_blank" rel="noopener">issues labeled <code>exportado</code></a>)</span>, downloaded when the editor opens; check the ones you want and add them as rivals. Discarding one closes its issue.</li>
+          <li><b>Tournaments</b> and <b>Banners:</b> the calendar's new tournaments, with their name, prize, bonus and banner.</li>
+          <li><b>Competitions:</b> the recordings for slots 8 to 14, with participants taken from a save or from the exports (up to 20 per recording).</li>
+          <li><b>Upload to GitHub:</b> publishes the changes for everyone.</li>
+        </ul>
+        <h3>Rancho version and settings</h3>
+        <ul>
+          <li>In <code>liga.json</code>, <code>rancho.version</code> sets the Rancho version everyone installs (and <code>rancho.repo</code>, from which repository, in case you use a fork). Change it when a new version comes out.</li>
+          <li><code>configuracion</code> holds the league's mods options. A change mid-season affects everyone from their next launch.</li>
+          <li><code>herramientas\instalador.ps1</code> rebuilds and republishes the players installer. Run it when a version's notes say the installer changed, so new players get it.</li>
+          <li><code>herramientas\guia.ps1</code> regenerates <code>GUIA.md</code> with the current settings.</li>
+        </ul>
+      </div>
+    </div>
   </details>
 
   <h2 class="grupo"><span lang="es">Cómo se juega</span><span lang="en">How to play</span></h2>
@@ -166,6 +269,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <p>Después de instalar, la carpeta descomprimida se puede borrar. En el escritorio y en el menú Inicio quedan los accesos directos <b>MR2 Rancho de Kokemones</b> (para jugar), <b>MR2 Subir exportados</b>, <b>MR2 Exportar grabacion</b>, <b>Kokedex</b> (esta guía) y <b>Rivales Kokemon - Exportados</b>. Los mismos están en la carpeta de instalación (la que elegiste al instalar; por defecto <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), por si los borrás del escritorio.</p>
         <p><b>Desinstalar:</b> <b>Uninstaller.bat</b> en esa carpeta, o desde <i>Aplicaciones instaladas</i> de Windows. Borra la instalación y los accesos directos, y ofrece guardar en Documentos una copia de tus exportados y del respaldo de tus grabaciones (el de antes de instalar y las ranuras que reemplazaron los mods). El juego y tus grabaciones no se tocan.</p>
         <p><b>Actualizaciones:</b> cada vez que abrís el juego con el acceso directo, se pone al día con tu liga: rivales, torneos, banners, competencias, reglas, esta guía y la versión del Rancho que usa la liga. Sin internet arranca igual. Tus partidas no se tocan.</p>
+        <p class="admin"><span class="tag-admin">Admin</span>Lo que subís a la liga le llega a cada jugador así, en su próximo arranque. El instalador para los que empiezan se republica con <code>herramientas\instalador.ps1</code> (ver <a href="#administrar">Administrar la liga</a>).</p>
       </div>
       <div lang="en">
         <ol>
@@ -185,6 +289,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <p>After installing you can delete the unzipped folder. Your desktop and Start menu get the shortcuts <b>MR2 Rancho de Kokemones</b> (to play), <b>MR2 Subir exportados</b> (upload exports), <b>MR2 Exportar grabacion</b> (export a save), <b>Kokedex</b> (this guide) and <b>Rivales Kokemon - Exportados</b>. The same ones are in the installation folder (the one you chose when installing; by default <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), in case you delete them from the desktop.</p>
         <p><b>Uninstall:</b> <b>Uninstaller.bat</b> in that folder, or from Windows <i>Installed apps</i>. It deletes the installation and the shortcuts, and offers to keep in Documents a copy of your exports and of your saves backup (the one from before installing and the slots the mods replaced). The game and your saves are not touched.</p>
         <p><b>Updates:</b> every time you open the game with the shortcut, it syncs with your league: rivals, tournaments, banners, competitions, rules, this guide and the Rancho version the league uses. It still starts without internet. Your saves are never touched.</p>
+        <p class="admin"><span class="tag-admin">Admin</span>Whatever you upload to the league reaches each player this way, on their next launch. The installer for new players is republished with <code>herramientas\instalador.ps1</code> (see <a href="#administrar">Running the league</a>).</p>
       </div>
     </div>
   </details>
@@ -239,12 +344,14 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li data-si="RanchRules.YearlyBackup">Cada enero se hace una copia automática en las ranuras 1 a 7, rotando. Son una red de seguridad, no para hacer trampa.</li>
         <li data-si="RanchRules.YearlyBackup"><b>Las copias anuales son las que se usan para competir en el modo versus.</b></li>
         <li><b>Las ranuras 8 a 14 son para competencias:</b> tienen los participantes de cada competencia (en el congelador, con el entrenador "Kokemon"). Las carga el Administrador de la Liga Kokemon, llegan con las actualizaciones y aparecen después del primer guardado de cada sesión. En el modo VS elegís esa ranura y quedan registrados. Si cargás una para jugar, no se guarda nada (tampoco el autoguardado): la próxima vez que la cargues está igual, y tu partida (Auto) no se toca.</li>
+        <li class="admin"><span class="tag-admin">Admin</span>Las armás en la pestaña <b>Competencias</b> del Editor Kokemon: elegís la ranura, el nombre y el número de grabación, y sumás participantes de una grabación o de los exportados. Varias grabaciones de la misma competencia comparten rango y reglas. Se publican con <b>Subir a GitHub</b>.</li>
       </ul>
       <ul lang="en">
         <li>Whatever slot you pick, <b>the game always saves to the Auto slot</b>, so you can't save before something and reload.</li>
         <li data-si="RanchRules.YearlyBackup">Every January an automatic copy goes to slots 1 to 7, rotating. They are a safety net, not a way to cheat.</li>
         <li data-si="RanchRules.YearlyBackup"><b>The yearly copies are the ones used to compete in versus mode.</b></li>
         <li><b>Slots 8 to 14 are for competitions:</b> they hold each competition's participants (in the freezer, with the trainer "Kokemon"). The Kokemon League admin loads them; they arrive with the updates and appear after the first save of each session. In VS mode you pick that slot and they get registered. If you load one to play, nothing is saved (not even the autosave): next time you load it, it's the same, and your game (Auto) is not touched.</li>
+        <li class="admin"><span class="tag-admin">Admin</span>You build them in the Kokemon Editor's <b>Competitions</b> tab: pick the slot, the name and the recording number, and add participants from a save or from the exports. Several recordings of the same competition share rank and rules. They are published with <b>Upload to GitHub</b>.</li>
       </ul>
     </div>
   </details>
@@ -276,6 +383,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li data-si="Leagues.ExportOnSave"><b>Al empezar cada año, tu monstruo y los del congelador se exportan</b> (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo <code>1021-01-1 Gareth.json</code>.</li>
         <li><b>Para exportar cuando quieras, "MR2 Exportar grabacion"</b>: elegís una o más ranuras (también de grabaciones de antes del Rancho) y exporta sus monstruos igual que al empezar el año. Si ya hay un exportado con los mismos monstruos, no lo repite.</li>
         <li data-si="Leagues.ExportOnSave,liga.repo"><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y le llegan al administrador de la liga, que puede sumarlos como rivales o a una competencia. La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas).</li>
+        <li class="admin" data-si="liga.repo"><span class="tag-admin">Admin</span>Cada jugador necesita su clave (ver <a href="#administrar">Administrar la liga</a>). Lo que suben te llega como issues con la etiqueta <code>exportado</code>; en la pestaña <b>Rivales</b> del Editor Kokemon, con <i>Recibidos (GitHub)</i>, elegís cuáles sumar a la lista de cada liga.</li>
         <li>FIMBA, los 4 grandes y los torneos especiales no cambian.</li>
       </ul>
       <ul lang="en">
@@ -284,6 +392,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li data-si="Leagues.ExportOnSave"><b>At the start of each year your monster and the ones in the freezer are exported</b> (along with the yearly copy) to a file named with the game date and your trainer, for example <code>1021-01-1 Gareth.json</code>.</li>
         <li><b>To export whenever you want, "MR2 Exportar grabacion"</b>: pick one or more slots (also saves from before the Rancho) and it exports their monsters just like at the start of the year. If there is already an export with the same monsters, it doesn't repeat it.</li>
         <li data-si="Leagues.ExportOnSave,liga.repo"><b>To share them, use "MR2 Subir exportados"</b> (desktop shortcut): pick which exports to upload and they reach the league admin, who can add them as rivals or to a competition. The first time it asks for the key the admin sends you privately (it's personal: don't share it).</li>
+        <li class="admin" data-si="liga.repo"><span class="tag-admin">Admin</span>Each player needs their own key (see <a href="#administrar">Running the league</a>). Their uploads reach you as issues labeled <code>exportado</code>; in the Kokemon Editor's <b>Rivals</b> tab, with <i>Received (GitHub)</i>, you pick which ones join each league's list.</li>
         <li>FIMBA, the big 4 and the special tournaments don't change.</li>
       </ul>
     </div>
@@ -299,6 +408,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li data-si="CalendarioKokemon.ShuffleSmall">El sorteo es <b>el mismo para todos</b> en el mismo año del juego.</li>
         <li>Los torneos nuevos tienen premio y objeto bonus propios, y sus rivales salen de su liga.</li>
         <li>Los torneos oficiales y los especiales siguen como siempre.</li>
+        <li class="admin"><span class="tag-admin">Admin</span>Los torneos nuevos se cargan en las pestañas <b>Torneos</b> (nombre, liga, premio, bonus) y <b>Banners</b> del Editor Kokemon, y se publican con <b>Subir a GitHub</b>.</li>
       </ul>
       <ul lang="en">
         <li data-si="CalendarioKokemon.ShuffleSmall"><b>The calendar changes every year.</b> Small A to E tournaments are drawn, both how many and when, from a pool with the originals and <b>the league's new tournaments</b>.</li>
@@ -307,6 +417,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li data-si="CalendarioKokemon.ShuffleSmall">The draw is <b>the same for everyone</b> in the same game year.</li>
         <li>New tournaments have their own prize and bonus item, and their rivals come from their league.</li>
         <li>Official and special tournaments stay as always.</li>
+        <li class="admin"><span class="tag-admin">Admin</span>New tournaments are set up in the Kokemon Editor's <b>Tournaments</b> (name, league, prize, bonus) and <b>Banners</b> tabs, and published with <b>Upload to GitHub</b>.</li>
       </ul>
     </div>
   </details>
@@ -480,6 +591,8 @@ const DATA =
 // ---------- Idioma ----------
 // Cada texto es "texto" (igual en los dos idiomas) o {es, en}.
 let IDIOMA = document.documentElement.dataset.idioma || "es";
+// "Soy administrador": muestra lo que es para el administrador de la liga (elementos con la clase "admin").
+let ADMIN = document.documentElement.hasAttribute("data-admin");
 const L = o => o == null ? "" : typeof o === "string" ? o : (o[IDIOMA] ?? o.es);
 const num = n => n.toLocaleString(IDIOMA === "en" ? "en-US" : "es-AR");
 
@@ -502,7 +615,11 @@ function aplicarConfig(raiz){
     const ok = e.dataset.si.split(",").every(k => k.startsWith("!") ? !cfg(k.slice(1)) : !!cfg(k));
     e.toggleAttribute("data-oculto", !ok);
   });
-  if (window.LIGA?.repo) raiz.querySelectorAll('[data-href="instalador"]').forEach(a => a.href = `https://github.com/${LIGA.repo}/releases/latest`);
+  if (window.LIGA?.repo){
+    const base = `https://github.com/${LIGA.repo}`;
+    const rutas = {instalador:"/releases/latest", repo:"", exportados:"/issues?q=is%3Aissue+label%3Aexportado"};
+    raiz.querySelectorAll("[data-href]").forEach(a => { if (a.dataset.href in rutas) a.href = base + rutas[a.dataset.href]; });
+  }
 }
 
 const RAZAS = ["Pixie","Dragon","Centaur","ColorPandora","Beaclon","Henger","Wracky","Golem","Zuum","Durahan",
@@ -828,7 +945,8 @@ function agrupar(items){
 function textoBusqueda(el){
   let t = "";
   const w = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {acceptNode: n =>
-    n.nodeType === 1 && ((n.lang && n.lang !== IDIOMA) || n.hasAttribute("data-oculto")) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+    n.nodeType === 1 && ((n.lang && n.lang !== IDIOMA) || n.hasAttribute("data-oculto") || (!ADMIN && n.classList.contains("admin")))
+      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
   for (let n = w.nextNode(); n; n = w.nextNode()) if (n.nodeType === 3) t += n.nodeValue;
   return t.toLowerCase();
 }
@@ -979,6 +1097,7 @@ function filtrar(){
   let visibles = 0;
   for (const d of secciones()){
     if (d.id === "tuLiga" && !window.LIGA) continue;
+    if (d.classList.contains("admin") && !ADMIN) continue;
     let hay;
     const cards = d.querySelectorAll(".card");
     if (d.classList.contains("objetos")){
@@ -1014,6 +1133,17 @@ document.getElementById("idioma").addEventListener("click", () => {
   const nuevo = IDIOMA === "es" ? "en" : "es";
   try { localStorage.setItem("kokedex-idioma", nuevo); } catch {}
   ponerIdioma(nuevo);
+});
+function ponerAdmin(si){
+  ADMIN = si;
+  document.documentElement.toggleAttribute("data-admin", si);
+  document.getElementById("admin").setAttribute("aria-pressed", si);
+  if (document.getElementById("q").value) filtrar();
+}
+ponerAdmin(ADMIN);
+document.getElementById("admin").addEventListener("click", () => {
+  try { if (ADMIN) localStorage.removeItem("kokedex-admin"); else localStorage.setItem("kokedex-admin", "1"); } catch {}
+  ponerAdmin(!ADMIN);
 });
 document.getElementById("q").addEventListener("input", filtrar);
 document.addEventListener("toggle", guardarAbiertas, true);

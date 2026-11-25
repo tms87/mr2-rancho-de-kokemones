@@ -97,7 +97,10 @@ Write-Host "   OK  $zip ($([math]::Round((Get-Item $zip).Length / 1MB, 1)) MB)" 
 
 if ($Publicar) {
     Paso "4. Publicando v$Version en $Repo"
-    gh release create "v$Version" $zip --repo $Repo --title "Rancho de Kokemones $Version" --notes $Notas
+    # Las notas van en un archivo: pasadas como argumento, Windows PowerShell rompe las comillas que tengan.
+    $archivoNotas = Join-Path $tmp 'notas.md'
+    [IO.File]::WriteAllText($archivoNotas, $Notas, (New-Object Text.UTF8Encoding $false))
+    gh release create "v$Version" $zip --repo $Repo --title "Rancho de Kokemones $Version" --notes-file $archivoNotas
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear la version en GitHub' }
     Write-Host '   OK  Publicada. Las ligas que fijen esta version la instalan en el proximo arranque de cada jugador.' -ForegroundColor Green
 } else {
