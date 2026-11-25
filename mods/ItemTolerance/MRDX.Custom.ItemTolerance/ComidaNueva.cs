@@ -16,9 +16,7 @@ public sealed record Comida(
     string[] Texto,
     int Precio,
     int Modelo, // número del objeto cuyo modelo 3D se usa (o el archivo propio en la carpeta Modelos del mod)
-    int Estres,
-    int Miedo,
-    int Mimo,
+    (int Estres, int Miedo, int Mimo)[] PorGusto, // por gusto: normal, le gusta, no le gusta
     int Forma,
     int Cansancio = 0,
     Especial Especial = Especial.Ninguno);
@@ -80,25 +78,32 @@ public unsafe partial class Mod
     // en +0x106 / +0x108 de su ficha: la comida o el objeto de su modelo); si no, el de su raza (GustosRaza; la
     // tabla del juego en [0x76E290], 2 bits por comida y raza, no tiene lugar para las nuevas).
 
-    // Ajuste según el gusto, sobre los valores fijos: (estrés, miedo, mimo).
-    private static readonly (int Estres, int Miedo, int Mimo)[] AjusteGusto = [(0, 0, 0), (-2, 0, 2), (3, 1, -3)];
     private static readonly string[] NombreGusto = ["normal", "le gusta", "no le gusta"];
 
     // El juego aplica la fila de una comida base con el gusto que se le pasa (así el monstruo reacciona según el
-    // gusto). Por gusto, la fila más cercana a nada: normal Milk (-2, 0, +1), le gusta Potato (0, 0, +1), no le gusta
+    // gusto). Por gusto, una fila chica: normal Milk (-2, 0, +1), le gusta Potato (0, +2, +1), no le gusta
     // Meat (0, +1, +1). El mod la lee de la tabla y la descuenta.
     private static readonly uint[] ComidaBasePorGusto = [3, 0, 2];
     private const int DeTablaAComidas = 0x122C; // filas (estrés, miedo, mimo): comida x 3 (le gusta, normal, no le gusta)
 
-    // Provisorias, para probar.
+    // Filas de las comidas del juego que cambia el Rancho (comida, gusto, estrés, miedo, mimo); gusto como el juego:
+    // 0 normal, 1 le gusta, 2 no le gusta. Se escriben en la tabla en memoria cada vez que se abre el menú.
+    private const uint Potato = 0, CupJelly = 4, Tablets = 5;
+    private static readonly (uint Comida, int Gusto, sbyte Estres, sbyte Miedo, sbyte Mimo)[] FilasRancho =
+    [
+        (Potato, 1, 0, 2, 1),
+        (CupJelly, 1, -8, 0, 4), (CupJelly, 0, -5, 0, 2),
+        (Tablets, 1, -14, 0, 2), (Tablets, 0, -11, 1, -1), (Tablets, 2, -9, 1, -2)
+    ];
+
     private static readonly Comida[] ComidasNuevas =
     [
         new(62, "Squash", "Squash", ["Hearty squash. Builds", "form, eases fatigue."], 500, 0x0E,
-            Estres: 0, Miedo: -2, Mimo: -2, Forma: 5, Cansancio: -10),
+            PorGusto: [(0, -2, -2), (-2, -2, 0), (3, 3, -3)], Forma: 5, Cansancio: -10),
         new(40, "Chicken", "Chicken", ["Roast chicken. Eases", "antifatigue habit."], 250, 0x02,
-            Estres: -2, Miedo: -2, Mimo: 2, Forma: 2, Especial: Especial.Pollo),
+            PorGusto: [(-2, 1, 2), (-4, 0, 4), (1, -1, -1)], Forma: 2, Especial: Especial.Pollo),
         new(66, "Green Tea", "Green Tea", ["Calming tea. Monthly", "use cleanses toxins."], 800, 0x87,
-            Estres: -10, Miedo: -2, Mimo: 0, Forma: -2, Especial: Especial.Te)
+            PorGusto: [(-10, -2, 0), (-12, -2, 2), (-7, -1, -3)], Forma: -2, Especial: Especial.Te)
     ];
 
     // Gusto natural de cada raza principal (en el orden del juego) por las comidas nuevas, en el orden de
@@ -396,11 +401,20 @@ public unsafe partial class Mod
     /// <summary>
     ///     En la tabla de objetos en memoria: cada comida nueva pasa a ser comida, con su precio y sin efectos propios
     ///     (sus registros de efectos quedan con valor 0, o apuntan a uno ya vaciado si el suyo es compartido).
+    ///     Antes, las filas de las comidas del juego que cambia el Rancho (<see cref="FilasRancho" />).
     /// </summary>
     private static bool PrepararTabla()
     {
         var tabla = TablaObjetos;
         if (tabla == null) return false;
+        foreach (var (comida, gusto, estres, miedo, mimo) in FilasRancho)
+        {
+            var fila = (sbyte*)(tabla + DeTablaAComidas + (comida * 3 + (gusto == 1 ? 0 : gusto == 0 ? 1 : 2)) * 3);
+            fila[0] = estres;
+            fila[1] = miedo;
+            fila[2] = mimo;
+        }
+
         var efectos = tabla + DeTablaAEfectos;
         uint Registro(uint id) => *(uint*)(efectos + tabla[id * 8 + 6] * 4);
 
@@ -523,10 +537,9 @@ public unsafe partial class Mod
         Log($"{comida.Nombre}: antes de comer: estrés {m.Stress}, miedo {m.LoyalFear}, mimo {m.LoyalSpoil}, forma {m.FormRaw}, " +
             $"cansancio {m.Fatigue}. Gusto: {NombreGusto[gusto]} ({porque}).");
 
-        // Valores fijos más el ajuste por gusto. El juego suma después la fila de la comida base: se descuenta acá.
-        var aj = AjusteGusto[gusto];
+        // Valores fijos según el gusto. El juego suma después la fila de la comida base: se descuenta acá.
         var fila = FilaComida(ComidaBasePorGusto[gusto], gusto);
-        int estres = comida.Estres + aj.Estres, miedo = comida.Miedo + aj.Miedo, mimo = comida.Mimo + aj.Mimo;
+        var (estres, miedo, mimo) = comida.PorGusto[gusto];
         m.Stress = (sbyte)Math.Clamp(m.Stress + estres - fila.Estres, 0, 100);
         m.LoyalFear = (byte)Math.Clamp(m.LoyalFear + miedo - fila.Miedo, 0, 100);
         m.LoyalSpoil = (byte)Math.Clamp(m.LoyalSpoil + mimo - fila.Mimo, 0, 100);

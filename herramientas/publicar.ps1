@@ -52,6 +52,16 @@ foreach ($mod in Get-ChildItem (Join-Path $raiz 'mods') -Directory) {
     $compilados += $salida
     Write-Host "   OK  $($salida.Name)" -ForegroundColor Green
 }
+# Exportador manual (comparte codigo con el mod Leagues: se compila desde una copia con la misma estructura).
+$srcExp = Join-Path $tmp 'src\instalador\exportador'
+Robocopy-Ok (Join-Path $raiz 'instalador\exportador') $srcExp @('/E', '/XD', 'bin', 'obj', 'build')
+Robocopy-Ok (Join-Path $raiz 'instalador\archivos') (Join-Path $tmp 'src\instalador\archivos') @('icono.ico')
+Robocopy-Ok (Join-Path $raiz 'mods\Leagues') (Join-Path $tmp 'src\mods\Leagues') @('/E', '/XD', 'bin', 'obj', 'build')
+dotnet build (Join-Path $srcExp 'ExportarGrabacion.csproj') -c Release --no-incremental -v q -nologo | Out-Host
+if ($LASTEXITCODE -ne 0) { throw 'No compila el exportador' }
+$exportador = Join-Path $srcExp 'build\exportador'
+Get-ChildItem $exportador -Filter '*.pdb' | Remove-Item
+Write-Host '   OK  exportador' -ForegroundColor Green
 
 # ------------------------------------------------------------------
 Paso '2. Armando el paquete'
@@ -61,6 +71,7 @@ $archivos = Join-Path $paquete 'archivos'
 Robocopy-Ok (Join-Path $raiz 'instalador\archivos') $archivos @('/E')
 Robocopy-Ok (Join-Path $raiz 'configuracion') (Join-Path $archivos 'configuracion') @('/E')
 foreach ($c in $compilados) { Robocopy-Ok $c.FullName (Join-Path $archivos "mods\$($c.Name)") @('/E') }
+Robocopy-Ok $exportador (Join-Path $archivos 'exportador') @('/E')
 Copy-Item (Join-Path $raiz 'instalador\LEEME.txt') $paquete -Force
 [IO.File]::WriteAllText((Join-Path $archivos 'rancho.json'),
     ([pscustomobject]@{ repo = $Repo; version = $Version } | ConvertTo-Json), (New-Object Text.UTF8Encoding $false))

@@ -164,6 +164,20 @@ while (Get-Process MF2 -ErrorAction SilentlyContinue) {
 }
 New-Item -ItemType Directory -Force $Destino | Out-Null
 
+# Respaldo de las grabaciones del juego (Documentos\KoeiTecmo\mfdx_en: ranuras e indice psdata001.bin) antes de que
+# los mods las usen: una sola vez, la primera instalacion en esta carpeta (o la primera actualizacion que lo trae).
+$respaldos = @('Respaldo de grabaciones', 'Save backup') | ForEach-Object { Join-Path $Destino $_ }
+$grabaciones = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'KoeiTecmo\mfdx_en'
+if (-not ($respaldos | Where-Object { Test-Path $_ }) -and (Test-Path (Join-Path $grabaciones 'bu00'))) {
+    $respaldo = Join-Path $respaldos[$(if ($Idioma -eq 'en') { 1 } else { 0 })] (Get-Date -Format 'yyyy-MM-dd HH-mm')
+    try {
+        New-Item -ItemType Directory -Force $respaldo | Out-Null
+        Copy-Item $grabaciones $respaldo -Recurse -Force
+        Ok (T "Respaldo de tus grabaciones en $respaldo" "Backup of your saves in $respaldo")
+    }
+    catch { Aviso (T "No se pudo respaldar tus grabaciones ($($_.Exception.Message))." "Could not back up your saves ($($_.Exception.Message)).") }
+}
+
 function Copiar($desde, $hacia, [string[]]$extra) {
     robocopy $desde $hacia @extra /R:3 /W:2 /NFL /NDL /NJH /NJS /NP | Out-Null
     if ($LASTEXITCODE -ge 8) { Fallar (T "Error copiando archivos (robocopy $LASTEXITCODE). Si el juego o Reloaded-II estan abiertos, cerralos y volve a intentar." "Error copying files (robocopy $LASTEXITCODE). If the game or Reloaded-II are open, close them and try again.") }
@@ -176,6 +190,7 @@ foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-conf
 }
 Copiar (Join-Path $origen 'configuracion') (Join-Path $Destino 'configuracion') @('/MIR')
 Copiar (Join-Path $origen 'plantillas') (Join-Path $Destino 'plantillas') @('/MIR')
+if (Test-Path (Join-Path $origen 'exportador')) { Copiar (Join-Path $origen 'exportador') (Join-Path $Destino 'exportador') @('/MIR') }
 # La Kokedex de la instalacion la genera sincronizar.ps1 con los datos de la liga.
 Copy-Item (Join-Path $origen 'Kokedex.html') (Join-Path $Destino 'plantillas\Kokedex.html') -Force
 
@@ -252,6 +267,8 @@ $accesos = @(
     @{ Nombre = 'MR2 Subir exportados'; Destino = $powershell; Icono = 'icono.ico'
        Argumentos = "-NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $Destino 'subir.ps1')`""
        Descripcion = (T1 'Subir tus monstruos exportados para sumarlos como rivales o a las competencias' 'Upload your exported monsters so they can join as rivals or competitions') },
+    @{ Nombre = 'MR2 Exportar grabacion'; Destino = (Join-Path $Destino 'exportador\ExportarGrabacion.exe'); Icono = 'icono.ico'; Argumentos = ''
+       Descripcion = (T1 'Exportar los monstruos de una grabacion (cualquier ranura, tambien de antes del Rancho)' 'Export the monsters of a save (any slot, also from before the Rancho)') },
     @{ Nombre = 'Kokedex'; Destino = (Join-Path $Destino 'Kokedex.html'); Icono = 'kokedex.ico'; Argumentos = ''
        Descripcion = (T1 'Kokedex: guia del Rancho de Kokemones (como jugar, reglas y objetos)' 'Kokedex: Rancho de Kokemones guide (how to play, rules and items)') },
     @{ Nombre = 'Rivales Kokemon - Exportados'; Destino = $exportados; Icono = $null; Argumentos = ''

@@ -1,8 +1,9 @@
 # Desinstala MR2 Rancho de Kokemones (lo ejecuta Uninstaller.bat desde una copia en TEMP, para poder borrar la carpeta).
 #
 # Borra la carpeta de instalacion, los accesos directos (escritorio, menu Inicio y carpeta) y el registro en
-# "Aplicaciones instaladas" de Windows. No toca el juego ni sus partidas (estan en la carpeta del juego, en Steam).
-# Los exportados viven en la instalacion: antes de borrar se ofrece guardar una copia en Documentos.
+# "Aplicaciones instaladas" de Windows. No toca el juego ni sus grabaciones (Documentos\KoeiTecmo\mfdx_en).
+# Los exportados, el respaldo de las grabaciones que hizo el instalador y las ranuras que reemplazaron los mods viven
+# en la instalacion: antes de borrar se ofrece guardar una copia en Documentos.
 param([Parameter(Mandatory)][string]$Instalacion, [switch]$Si)
 $ErrorActionPreference = 'Stop'
 $Instalacion = [IO.Path]::GetFullPath($Instalacion.TrimEnd('\', '.') )
@@ -25,7 +26,7 @@ if (-not (Test-Path (Join-Path $Instalacion 'jugar.ps1')) -or -not (Test-Path (J
 Write-Host (T "Se va a borrar:" "This will delete:")
 Write-Host "  - $Instalacion"
 Write-Host (T '  - Los accesos directos del escritorio, del menu Inicio y de esa carpeta.' '  - The shortcuts on the desktop, in the Start menu and in that folder.')
-Write-Host (T '  El juego y tus partidas no se tocan (estan en la carpeta del juego, en Steam).' '  The game and your saves are not touched (they are in the game folder, in Steam).')
+Write-Host (T '  El juego y tus grabaciones no se tocan (estan en Documentos\KoeiTecmo).' '  The game and your saves are not touched (they are in Documents\KoeiTecmo).')
 Write-Host ''
 if (-not $Si -and (Read-Host (T 'Desinstalar? (s/n)' 'Uninstall? (y/n)')) -notmatch '^(s|si|y|yes)$') { Salir (T 'No se desinstalo nada.' 'Nothing was uninstalled.') }
 
@@ -45,10 +46,28 @@ if ((Test-Path $exportados) -and (Get-ChildItem $exportados -File -ErrorAction S
     }
 }
 
+# Respaldo de las grabaciones (del instalador) y ranuras reemplazadas por los mods (papelera de "Reglas del rancho").
+$respaldos = @('Respaldo de grabaciones', 'Save backup') | ForEach-Object { Join-Path $Instalacion $_ } | Where-Object { Test-Path $_ }
+$papelera = Join-Path $Instalacion 'Reloaded-II\User\Mods\MRDX.Custom.RanchRules\papelera'
+$hayPapelera = (Test-Path $papelera) -and (Get-ChildItem $papelera -File -ErrorAction SilentlyContinue)
+if ($respaldos -or $hayPapelera) {
+    if ($Si -or (Read-Host (T 'Guardar en Documentos el respaldo de tus grabaciones (el de antes de instalar y las ranuras que reemplazaron los mods)? (s/n)' 'Keep in Documents the backup of your saves (the one from before installing and the slots the mods replaced)? (y/n)')) -match '^(s|si|y|yes)$') {
+        $copia = Join-Path ([Environment]::GetFolderPath('MyDocuments')) (T 'MR2 Rancho de Kokemones - Respaldo de grabaciones' 'MR2 Rancho de Kokemones - Save backup')
+        New-Item -ItemType Directory -Force $copia | Out-Null
+        foreach ($r in $respaldos) { Copy-Item (Join-Path $r '*') $copia -Recurse -Force }
+        if ($hayPapelera) {
+            $reemplazadas = Join-Path $copia (T 'Ranuras reemplazadas' 'Replaced slots')
+            New-Item -ItemType Directory -Force $reemplazadas | Out-Null
+            Copy-Item (Join-Path $papelera '*') $reemplazadas -Force
+        }
+        Write-Host (T "Respaldo copiado a $copia" "Backup copied to $copia") -ForegroundColor Green
+    }
+}
+
 # Accesos directos que apuntan a esta instalacion (escritorio y menu Inicio; tambien los de versiones anteriores).
 $shell = New-Object -ComObject WScript.Shell
 $programas = [Environment]::GetFolderPath('Programs')
-$nombres = 'MR2 Rancho de Kokemones', 'MR2 Subir exportados', 'Kokedex', 'Rivales Kokemon - Exportados'
+$nombres = 'MR2 Rancho de Kokemones', 'MR2 Subir exportados', 'MR2 Exportar grabacion', 'Kokedex', 'Rivales Kokemon - Exportados'
 foreach ($carpeta in [Environment]::GetFolderPath('Desktop'), $programas, (Join-Path $programas 'MR2 Rancho de Kokemones')) {
     foreach ($n in $nombres) {
         $lnk = Join-Path $carpeta "$n.lnk"

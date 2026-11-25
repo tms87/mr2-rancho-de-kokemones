@@ -11,6 +11,7 @@ It's **Monster Rancher 2 DX** with several mods. This summary explains everythin
  - It asks where to install it; Enter uses the suggested folder.
  - It finds the game by itself; if it can't, it asks you to pick `MF2.exe`.
  - If something the game needs is missing (.NET 9 or Visual C++), it installs it.
+ - It keeps a copy of your saves in the installation's **Save backup** folder.
  - It downloads Reloaded-II and the community mods (about 55 MB) from their official pages.
  - If Windows shows *"Windows protected your PC"*: **More info** → **Run anyway**.
 
@@ -64,6 +65,7 @@ It's **Monster Rancher 2 DX** with several mods. This summary explains everythin
 ## 👥 Kokemon Rivals
 - In league tournaments (E to S), **rivals are drawn every week** from a list per league: the 50 originals plus **monsters from the league's players**. The draw is **the same for everyone** in the same week.
 {{?Leagues.ExportOnSave}}- **At the start of each year your monster and the ones in the freezer are exported** to a file named with the game date and your trainer, for example `1021-01-1 Gareth.json`.
+- **To export whenever you want, use "MR2 Exportar grabacion"**: pick the slots (also saves from before the Rancho) and it exports their monsters.
 {{?Leagues.ExportOnSave}}{{?liga.repo}}- **To share them, use "MR2 Subir exportados"** (desktop shortcut). The first time it asks for the key the admin sends you privately (it's personal: don't share it).
 
 ---

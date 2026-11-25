@@ -39,7 +39,7 @@ try {
     $clave = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro))
 }
 catch { Salir (T 'No se pudo leer tu clave (puede que se haya configurado con otro usuario de Windows). Volve a configurarla con clave.ps1.' 'Could not read your key (it may have been set up with another Windows user). Set it up again with clave.ps1.') 'Red' }
-if (-not (Test-Path $exportados)) { Salir (T "Todavia no hay exportados (se crean al guardar en el juego): $exportados" "No exports yet (they are created when saving in the game): $exportados") }
+if (-not (Test-Path $exportados)) { Salir (T "Todavia no hay exportados (se crean al guardar en el juego al empezar cada anio, o con el acceso \"MR2 Exportar grabacion\"): $exportados" "No exports yet (they are created when saving in the game at the start of each year, or with the \"MR2 Exportar grabacion\" shortcut): $exportados") }
 
 $subidos = @()
 if (Test-Path $subidosTxt) { $subidos = @(Get-Content $subidosTxt | Where-Object { $_ }) }
@@ -61,7 +61,7 @@ foreach ($f in Get-ChildItem $exportados -Filter '*.json' | Sort-Object Name -De
     }
     catch { }
 }
-if ($lista.Count -eq 0) { Salir (T 'No hay exportados para subir. Se crean al guardar en el juego al empezar cada anio.' 'There are no exports to upload. They are created when saving in the game at the start of each year.') }
+if ($lista.Count -eq 0) { Salir (T 'No hay exportados para subir. Se crean al guardar en el juego al empezar cada anio, o con el acceso "MR2 Exportar grabacion".' 'There are no exports to upload. They are created when saving in the game at the start of each year, or with the "MR2 Exportar grabacion" shortcut.') }
 
 # Elegir: ventana con la lista (si no esta disponible, por numero en la consola).
 $elegidos = @()

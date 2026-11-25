@@ -22,7 +22,6 @@ public class Mod : ModBase
     private const int RecordSize = 60;
     private const int OriginalSize = 78778;
     private const int MonsterOffset = 0x37667C; // current monster (from the start of the .exe), as in More Monsters
-    private const int LearnedTechsOffset = 0x192; // 24 positions x 2 bytes, relative to MonsterOffset
     private const string MoreMonstersId = "MRDX.Game.MoreMonsters";
 
     // League tournament slots (R_01..R_50 in the original game table). The other slots (4 majors, FIMBA,
@@ -513,7 +512,7 @@ public class Mod : ModBase
             var m = LeagueMonster.FromRecord(Record(_original!, slot));
             m.League = league;
             m.Origin = "original";
-            File.WriteAllText(Path.Combine(dir, $"{league}_{slot:00}_{FileSafe(m.Name)}.json"),
+            File.WriteAllText(Path.Combine(dir, $"{league}_{slot:00}_{Exportacion.NombreArchivo(m.Name)}.json"),
                 JsonSerializer.Serialize(m, LeagueMonster.Json));
         }
 
@@ -540,22 +539,16 @@ public class Mod : ModBase
     }
 
     // ------------------------------------------------------------------
-    // Export the player's monster
+    // Exportación de los monstruos del jugador (el formato y el archivo, en Exportacion.cs)
     // ------------------------------------------------------------------
 
-    // Monster layout (offsets relative to the start of the struct, as at exe+0x37667C):
-    private const int OffGenusMain = 0x00, OffGenusSub = 0x04;
-    private const int OffLife = 0x08, OffPower = 0x0A, OffDefense = 0x0C, OffSkill = 0x0E, OffSpeed = 0x10, OffIntelligence = 0x12;
-    private const int OffNatureRaw = 0x1C, OffSpoil = 0x24, OffFear = 0x25, OffNatureBase = 0x41;
-    private const int NameOffset = 0x168; // 12 characters x 2 bytes
-    private const int OffRank = 0x18A;    // 0 = E ... 4 = A, 5 = S
-    private const int OffArenaSpeed = 0x1CE, OffGutsRate = 0x1CF, OffBattleSpecials = 0x1D0;
-    // Freezer: 20 slots of 524 bytes; the monster starts 8 bytes in (its name at +0x170). Empty: name = 0xFF.
-    private const int FreezerOffset = 0x3768BC, FreezerSlots = 20, FreezerSlotSize = 524, FreezerMonsterStart = 8;
+    // Rancho en exe+0x37667C y congelador: 20 registros de 0x20C bytes (el monstruo empieza 8 bytes adentro).
+    private const int FreezerOffset = 0x3768BC;
 
     // Año de referencia para exportar: el de la partida cargada. Se exporta solo en el primer guardado de un año nuevo
     // (enero), igual que la copia anual de "Reglas del rancho": un exportado por año, la foto de enero.
     private int _exportYear;
+    private CarpetaExportados? _exportados;
 
     private void OnLoad(ISaveFileEntry file) => _exportYear = YearOf(SaveDate(file.Filename));
 
@@ -576,13 +569,23 @@ public class Mod : ModBase
 
         _exportYear = year;
         var exported = new List<LeagueMonster>();
-        var trainer = SaveTrainer(file.Filename);
-        Export(_exeBase + MonsterOffset, "rancho", exported);
-        for (var i = 0; i < FreezerSlots; i++)
-            Export(_exeBase + FreezerOffset + (nuint)(i * FreezerSlotSize + FreezerMonsterStart), $"congelador {i + 1}", exported);
+        string? trainer = null;
         try
         {
-            var path = ExportFile(new ExportedSave { Trainer = trainer, Date = date, Monsters = exported });
+            if (file.Filename != null && File.Exists(file.Filename)) trainer = Exportacion.Entrenador(File.ReadAllBytes(file.Filename));
+        }
+        catch (IOException)
+        {
+            // sin entrenador
+        }
+
+        Export(_exeBase + MonsterOffset - Exportacion.Cabecera, "rancho", exported);
+        for (var i = 0; i < Exportacion.Congelador; i++)
+            Export(_exeBase + FreezerOffset + (nuint)(i * Exportacion.Registro), $"congelador {i + 1}", exported);
+        try
+        {
+            _exportados ??= new CarpetaExportados(_exportDir);
+            var path = _exportados.Escribir(new ExportedSave { Trainer = trainer, Date = date, Monsters = exported });
             if (path != null)
                 Log($"Exportados {exported.Count} monstruos a {path}: {string.Join(", ", exported.Select(m => m.Name))}");
             else if (_config.VerboseLog)
@@ -593,124 +596,23 @@ public class Mod : ModBase
             Log($"No se pudo exportar: {e.Message}", Color.Orange);
         }
 
-        if (UnknownChars.Count > 0)
-            Log($"Nombres con caracteres desconocidos (quedaron como ?): códigos {string.Join(" ", UnknownChars)}. Se puede corregir el nombre en el archivo exportado.", Color.Orange);
+        if (Exportacion.CaracteresDesconocidos.Count > 0)
+            Log($"Nombres con caracteres desconocidos (quedaron como ?): códigos {string.Join(" ", Exportacion.CaracteresDesconocidos)}. Se puede corregir el nombre en el archivo exportado.", Color.Orange);
     }
 
-    private unsafe void Export(nuint s, string where, List<LeagueMonster> exported)
+    /// <summary>Un monstruo desde su registro en memoria (0x20C bytes desde <paramref name="registro" />).</summary>
+    private unsafe void Export(nuint registro, string where, List<LeagueMonster> exported)
     {
         try
         {
-            var p = (byte*)s;
-            if (p[NameOffset] == 0xFF) return; // empty slot
-            var main = *(int*)(p + OffGenusMain);
-            var sub = *(int*)(p + OffGenusSub);
-            var life = *(ushort*)(p + OffLife);
-            if (main is < 0 or > 45 || sub is < 0 or > 45 || life == 0) return;
-
-            // El monstruo completo: el registro de 0x20C bytes empieza 8 bytes antes (igual que en el congelador).
-            var raw = new ReadOnlySpan<byte>(p - FreezerMonsterStart, FreezerSlotSize).ToArray();
-
-            var techs = new List<int>();
-            for (var i = 0; i < 24; i++)
-                if (p[LearnedTechsOffset + i * 2] != 0) techs.Add(i);
-
-            var rank = p[OffRank];
-            var m = new LeagueMonster
-            {
-                Name = ReadName(p + NameOffset) ?? "Rival",
-                Origin = $"exportado ({where})",
-                // Rank reached in the game; if unknown, the league is decided by stat total when loading it.
-                League = rank < LeagueMonster.Leagues.Length ? LeagueMonster.Leagues[^(rank + 1)] : (rank >= 5 ? "S" : ""),
-                GenusMain = (MonsterGenus)main, GenusSub = (MonsterGenus)sub,
-                Life = life,
-                Power = *(ushort*)(p + OffPower), Intelligence = *(ushort*)(p + OffIntelligence),
-                Skill = *(ushort*)(p + OffSkill), Speed = *(ushort*)(p + OffSpeed), Defense = *(ushort*)(p + OffDefense),
-                Nature = (sbyte)Math.Clamp(*(sbyte*)(p + OffNatureBase) + MonsterHelper.NatureRawToMod(*(short*)(p + OffNatureRaw)), -100, 100),
-                Fear = p[OffFear], Spoil = p[OffSpoil],
-                Techniques = techs,
-                ArenaSpeed = p[OffArenaSpeed], GutsRate = p[OffGutsRate],
-                BattleSpecials = *(ushort*)(p + OffBattleSpecials),
-                Place = where,
-                Raw = Convert.ToBase64String(raw)
-            };
-
+            if (Exportacion.Monstruo(new ReadOnlySpan<byte>((void*)registro, Exportacion.Registro), where) is not { } m) return;
             exported.Add(m);
             if (_config.VerboseLog)
-                Log($"  {m.Label}, rango {rank} → liga {m.League}, naturaleza {m.Nature}, técnicas [{string.Join(",", techs)}]");
+                Log($"  {m.Label}, liga {m.League}, naturaleza {m.Nature}, técnicas [{string.Join(",", m.Techniques)}]");
         }
         catch (Exception e)
         {
             Log($"No se pudo exportar el monstruo ({where}): {e.Message}", Color.Orange);
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // Exportación: un archivo por grabación, Exportados\"año-mes-semana Entrenador.json", con todos sus monstruos
-    // (rancho y congelador): datos de batalla legibles y el monstruo completo ("crudo"). Si el conjunto de monstruos
-    // es igual al de un archivo anterior, no se repite.
-    // ------------------------------------------------------------------
-
-    private HashSet<string>? _exportedSets; // huella de los monstruos de cada archivo ya exportado
-
-    private static string SetKey(IEnumerable<LeagueMonster> monsters) =>
-        string.Join("|", monsters.Select(m => m.Raw).Order(StringComparer.Ordinal));
-
-    /// <summary>Escribe el archivo de la grabación. Devuelve su ruta, o null si ya había uno igual.</summary>
-    private string? ExportFile(ExportedSave save)
-    {
-        if (save.Monsters.Count == 0) return null;
-        Directory.CreateDirectory(_exportDir);
-        if (_exportedSets == null)
-        {
-            _exportedSets = [];
-            foreach (var f in Directory.GetFiles(_exportDir, "*.json"))
-            {
-                try
-                {
-                    var old = JsonSerializer.Deserialize<ExportedSave>(File.ReadAllText(f), LeagueMonster.Json);
-                    if (old?.Monsters is { Count: > 0 }) _exportedSets.Add(SetKey(old.Monsters));
-                }
-                catch
-                {
-                    // exportados del formato anterior (un monstruo por archivo) u otros: se ignoran
-                }
-            }
-        }
-
-        var key = SetKey(save.Monsters);
-        if (!_exportedSets.Add(key)) return null;
-
-        var baseName = $"{save.Date} {FileSafe(save.Trainer ?? "Entrenador")}";
-        var path = Path.Combine(_exportDir, baseName + ".json");
-        for (var n = 2; File.Exists(path); n++) path = Path.Combine(_exportDir, $"{baseName} ({n}).json");
-        File.WriteAllText(path, JsonSerializer.Serialize(save, LeagueMonster.Json));
-        return path;
-    }
-
-    /// <summary>Nombre del entrenador de la grabación (0x2B06: como los nombres de monstruo, B0 + código, fin 0xFF).</summary>
-    private static string? SaveTrainer(string? saveFile)
-    {
-        try
-        {
-            if (saveFile == null || !File.Exists(saveFile)) return null;
-            var d = File.ReadAllBytes(saveFile);
-            if (d.Length < 0x2B06 + 26) return null;
-            var sb = new System.Text.StringBuilder();
-            for (var i = 0x2B06; i < 0x2B06 + 24 && d[i] != 0xFF;)
-            {
-                if (d[i] is >= 0xA2 and <= 0xAB) { sb.Append((char)('0' + d[i] - 0xA2)); i++; continue; }
-                var c = d[i + 1];
-                sb.Append(c <= 0x19 ? (char)('A' + c) : c <= 0x33 ? (char)('a' + c - 0x1A) : c is >= 0x57 and <= 0x60 ? (char)('0' + c - 0x57) : '?');
-                i += 2;
-            }
-
-            var name = sb.ToString().Trim();
-            return name.Length > 0 ? name : null;
-        }
-        catch (IOException)
-        {
-            return null;
         }
     }
 
@@ -719,28 +621,7 @@ public class Mod : ModBase
     {
         try
         {
-            if (saveFile != null && File.Exists(saveFile))
-            {
-                var d = File.ReadAllBytes(saveFile);
-                int? year = null, month = null, week = null;
-                var number = 0;
-                var digits = 0;
-                for (var i = 0; i < Math.Min(d.Length - 1, 0x80); i++)
-                {
-                    if (d[i] == 0x82 && d[i + 1] is >= 0x4F and <= 0x58) { number = number * 10 + d[i + 1] - 0x4F; digits++; i++; continue; }
-                    if (digits > 0)
-                    {
-                        if (d[i] == 0x94 && d[i + 1] == 0x4E) year = number;
-                        else if (d[i] == 0x8C && d[i + 1] == 0x8E) month = number;
-                        else if (d[i] == 0x8F && d[i + 1] == 0x54) week = number;
-                    }
-
-                    number = 0;
-                    digits = 0;
-                }
-
-                if (year != null && month != null && week != null) return $"{year}-{month:00}-{week}";
-            }
+            if (saveFile != null && File.Exists(saveFile) && Exportacion.Fecha(File.ReadAllBytes(saveFile)) is { } f) return f;
         }
         catch (IOException)
         {
@@ -750,71 +631,6 @@ public class Mod : ModBase
         // El contador de semanas va 12 semanas atrás de la fecha real (semana 0 = año 1000, mes 4, semana 1).
         var w = (long)*(uint*)(_exeBase + WeekCounterOffset) + 12;
         return $"{1000 + w / 48}-{w % 48 / 4 + 1:00}-{w % 4 + 1}";
-    }
-
-    /// <summary>
-    ///     A monster's name. In DX (English) each character is stored with prefix 0xB0, whereas the tournament
-    ///     file and the base mod use 0xB5 (same code), so the base mod decodes it wrong (表表表...).
-    /// </summary>
-    private static unsafe string? ReadName(byte* p)
-    {
-        // Letters take 2 bytes (prefix + code); digits typed in the name screen take 1 byte: 0xA2 = '0' ... 0xAB = '9'
-        // (a monster called "99" is AB AB). Everything is converted to the 2-byte form of the decoder (B5 57 = '0').
-        var raw = Enumerable.Repeat((byte)0xFF, 26).ToArray();
-        var at = 0;
-        for (var i = 0; i < 24 && at < 24; )
-        {
-            var hi = p[i];
-            if (hi == 0xFF) break;
-            if (hi is >= 0xA2 and <= 0xAB)
-            {
-                raw[at++] = 0xB5;
-                raw[at++] = (byte)(0x57 + hi - 0xA2);
-                i++;
-                continue;
-            }
-
-            raw[at++] = hi == 0xB0 ? (byte)0xB5 : hi;
-            raw[at++] = p[i + 1];
-            i += 2;
-        }
-
-        string name;
-        try
-        {
-            name = raw.AsShorts().AsString().Trim();
-        }
-        catch
-        {
-            // Some character the decoder does not know (symbols, accents): decoded one by one, unknown ones as "?".
-            var sb = new System.Text.StringBuilder();
-            for (var i = 0; i < 12 && raw[i * 2] != 0xFF; i++)
-            {
-                try
-                {
-                    sb.Append(new byte[] { raw[i * 2], raw[i * 2 + 1], 0xFF, 0xFF }.AsShorts().AsString());
-                }
-                catch
-                {
-                    sb.Append('?');
-                    UnknownChars.Add($"{raw[i * 2]:X2}{raw[i * 2 + 1]:X2}");
-                }
-            }
-
-            name = sb.ToString().Trim();
-        }
-
-        return name.Length > 0 && !name.Contains('表') ? name : null;
-    }
-
-    /// <summary>Character codes of names the decoder did not know (reported in the log after exporting).</summary>
-    private static readonly HashSet<string> UnknownChars = [];
-
-    private static string FileSafe(string name)
-    {
-        var invalid = Path.GetInvalidFileNameChars();
-        var s = new string((name ?? "").Where(c => !invalid.Contains(c)).ToArray()).Trim();
-        return s.Length > 0 ? s : "monstruo";
     }
 
     private void Log(string msg, Color? color = null) =>

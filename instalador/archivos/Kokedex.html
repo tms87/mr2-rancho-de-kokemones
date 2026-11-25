@@ -157,13 +157,14 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
               <li>Te pregunta en qué carpeta instalarlo; con Enter usa la que propone.</li>
               <li>Busca el juego solo; si no lo encuentra, te pide que elijas <code>MF2.exe</code>.</li>
               <li>Si te falta algo que el juego necesita (.NET 9 o Visual C++), lo instala.</li>
+              <li>Guarda una copia de tus grabaciones del juego en la carpeta <b>Respaldo de grabaciones</b> de la instalación, antes de que los mods las usen.</li>
               <li>Baja Reloaded-II y los mods de la comunidad (unos 55 MB) de sus páginas oficiales.</li>
               <li>Si Windows muestra <i>"Windows protegió su PC"</i>: <b>Más información</b> → <b>Ejecutar de todas formas</b>.</li>
             </ul>
           </li>
         </ol>
-        <p>Después de instalar, la carpeta descomprimida se puede borrar. En el escritorio y en el menú Inicio quedan los accesos directos <b>MR2 Rancho de Kokemones</b> (para jugar), <b>MR2 Subir exportados</b>, <b>Kokedex</b> (esta guía) y <b>Rivales Kokemon - Exportados</b>. Los mismos están en la carpeta de instalación (la que elegiste al instalar; por defecto <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), por si los borrás del escritorio.</p>
-        <p><b>Desinstalar:</b> <b>Uninstaller.bat</b> en esa carpeta, o desde <i>Aplicaciones instaladas</i> de Windows. Borra la instalación y los accesos directos, y ofrece guardar una copia de tus exportados en Documentos. El juego y tus partidas no se tocan.</p>
+        <p>Después de instalar, la carpeta descomprimida se puede borrar. En el escritorio y en el menú Inicio quedan los accesos directos <b>MR2 Rancho de Kokemones</b> (para jugar), <b>MR2 Subir exportados</b>, <b>MR2 Exportar grabacion</b>, <b>Kokedex</b> (esta guía) y <b>Rivales Kokemon - Exportados</b>. Los mismos están en la carpeta de instalación (la que elegiste al instalar; por defecto <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), por si los borrás del escritorio.</p>
+        <p><b>Desinstalar:</b> <b>Uninstaller.bat</b> en esa carpeta, o desde <i>Aplicaciones instaladas</i> de Windows. Borra la instalación y los accesos directos, y ofrece guardar en Documentos una copia de tus exportados y del respaldo de tus grabaciones (el de antes de instalar y las ranuras que reemplazaron los mods). El juego y tus grabaciones no se tocan.</p>
         <p><b>Actualizaciones:</b> cada vez que abrís el juego con el acceso directo, se pone al día con tu liga: rivales, torneos, banners, competencias, reglas, esta guía y la versión del Rancho que usa la liga. Sin internet arranca igual. Tus partidas no se tocan.</p>
       </div>
       <div lang="en">
@@ -175,13 +176,14 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
               <li>It asks where to install it; Enter uses the suggested folder.</li>
               <li>It finds the game by itself; if it can't, it asks you to pick <code>MF2.exe</code>.</li>
               <li>If something the game needs is missing (.NET 9 or Visual C++), it installs it.</li>
+              <li>It keeps a copy of your game saves in the installation's <b>Save backup</b> folder, before the mods use them.</li>
               <li>It downloads Reloaded-II and the community mods (about 55 MB) from their official pages.</li>
               <li>If Windows shows <i>"Windows protected your PC"</i>: <b>More info</b> → <b>Run anyway</b>.</li>
             </ul>
           </li>
         </ol>
-        <p>After installing you can delete the unzipped folder. Your desktop and Start menu get the shortcuts <b>MR2 Rancho de Kokemones</b> (to play), <b>MR2 Subir exportados</b> (upload exports), <b>Kokedex</b> (this guide) and <b>Rivales Kokemon - Exportados</b>. The same ones are in the installation folder (the one you chose when installing; by default <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), in case you delete them from the desktop.</p>
-        <p><b>Uninstall:</b> <b>Uninstaller.bat</b> in that folder, or from Windows <i>Installed apps</i>. It deletes the installation and the shortcuts, and offers to keep a copy of your exports in Documents. The game and your saves are not touched.</p>
+        <p>After installing you can delete the unzipped folder. Your desktop and Start menu get the shortcuts <b>MR2 Rancho de Kokemones</b> (to play), <b>MR2 Subir exportados</b> (upload exports), <b>MR2 Exportar grabacion</b> (export a save), <b>Kokedex</b> (this guide) and <b>Rivales Kokemon - Exportados</b>. The same ones are in the installation folder (the one you chose when installing; by default <code>%LOCALAPPDATA%\MR2-Rancho-de-Kokemones</code>), in case you delete them from the desktop.</p>
+        <p><b>Uninstall:</b> <b>Uninstaller.bat</b> in that folder, or from Windows <i>Installed apps</i>. It deletes the installation and the shortcuts, and offers to keep in Documents a copy of your exports and of your saves backup (the one from before installing and the slots the mods replaced). The game and your saves are not touched.</p>
         <p><b>Updates:</b> every time you open the game with the shortcut, it syncs with your league: rivals, tournaments, banners, competitions, rules, this guide and the Rancho version the league uses. It still starts without internet. Your saves are never touched.</p>
       </div>
     </div>
@@ -272,6 +274,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li>En los torneos de liga (E a S), <b>los rivales se sortean cada semana</b> de una lista por liga: los 50 originales más <b>monstruos de jugadores de tu liga</b>.</li>
         <li>El sorteo es <b>el mismo para todos</b> en la misma semana del juego.</li>
         <li data-si="Leagues.ExportOnSave"><b>Al empezar cada año, tu monstruo y los del congelador se exportan</b> (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo <code>1021-01-1 Gareth.json</code>.</li>
+        <li><b>Para exportar cuando quieras, "MR2 Exportar grabacion"</b>: elegís una o más ranuras (también de grabaciones de antes del Rancho) y exporta sus monstruos igual que al empezar el año. Si ya hay un exportado con los mismos monstruos, no lo repite.</li>
         <li data-si="Leagues.ExportOnSave,liga.repo"><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y le llegan al administrador de la liga, que puede sumarlos como rivales o a una competencia. La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas).</li>
         <li>FIMBA, los 4 grandes y los torneos especiales no cambian.</li>
       </ul>
@@ -279,6 +282,7 @@ html[data-idioma="es"] [lang="en"],html[data-idioma="en"] [lang="es"],[data-ocul
         <li>In league tournaments (E to S), <b>rivals are drawn every week</b> from a list per league: the 50 originals plus <b>monsters from players in your league</b>.</li>
         <li>The draw is <b>the same for everyone</b> in the same game week.</li>
         <li data-si="Leagues.ExportOnSave"><b>At the start of each year your monster and the ones in the freezer are exported</b> (along with the yearly copy) to a file named with the game date and your trainer, for example <code>1021-01-1 Gareth.json</code>.</li>
+        <li><b>To export whenever you want, "MR2 Exportar grabacion"</b>: pick one or more slots (also saves from before the Rancho) and it exports their monsters just like at the start of the year. If there is already an export with the same monsters, it doesn't repeat it.</li>
         <li data-si="Leagues.ExportOnSave,liga.repo"><b>To share them, use "MR2 Subir exportados"</b> (desktop shortcut): pick which exports to upload and they reach the league admin, who can add them as rivals or to a competition. The first time it asks for the key the admin sends you privately (it's personal: don't share it).</li>
         <li>FIMBA, the big 4 and the special tournaments don't change.</li>
       </ul>
@@ -663,30 +667,32 @@ const celda = (v, bueno) => `<td class="num ${clase(bueno, v)}">${v === 0 ? "0" 
 const cabeceraComida = cans => `<thead><tr><th>${L({es:"Si…",en:"If…"})}</th><th class="num">${L(PARAM[17][0])}</th><th class="num">${L(PARAM[19][0])}</th><th class="num">${L(PARAM[18][0])}</th><th class="num">${L(PARAM[20][0])}</th>${cans ? `<th class="num">${L(PARAM[15][0])}</th>` : ""}</tr></thead>`;
 
 // Comida del mes: la forma es igual para todos; estrés, miedo y mimo dependen del gusto.
+// Filas que cambia el Rancho (por comida del juego: le gusta, normal, no le gusta; null = la del juego).
+const COMIDA_RANCHO = {0: [[0,2,1], null, null], 4: [[-8,0,4], [-5,0,2], null], 5: [[-14,0,2], [-11,1,-1], [-9,1,-2]]};
 function fichaMensual(it){
   const f = it.id === 174 ? 4 : it.id, forma = it.fx[0][3];
   let filas = "";
   for (let g = 0; g < 3; g++){
-    const o = (f*3+g)*3, [st, mi, mo] = DATA.food.slice(o, o+3);
+    const o = (f*3+g)*3, [st, mi, mo] = COMIDA_RANCHO[f]?.[g] || DATA.food.slice(o, o+3);
     filas += `<tr><td>${L(GUSTOS[g])}</td>${celda(st,-1)}${celda(mi,0)}${celda(mo,0)}${celda(forma,0)}</tr>`;
   }
   return `<div class="tablewrap"><table>${cabeceraComida(false)}<tbody>${filas}</tbody></table></div>` +
+    (COMIDA_RANCHO[f] ? nota({es:"El Rancho cambia estos valores con respecto al juego original.",en:"The Rancho changes these values from the original game."}) : "") +
     (f === 3 ? nota({es:"En las etapas de vida 1 y 10 cuenta otro gusto (columna aparte en la tabla de preferencias).",en:"At life stages 1 and 10 a different like counts (separate column in the preferences table)."}) : "");
 }
 
 // ---------- Comidas del mes nuevas (del Rancho) ----------
-// Valores fijos (no dependen de la comida base del juego); el gusto les suma un ajuste.
+// Valores fijos según el gusto (le gusta, normal, no le gusta: estrés, miedo, mimo).
 const NUEVAS = [
-  {id:62, n:"Squash", modelo:"Mango", buy:500, est:0, mie:-2, mim:-2, forma:5, cans:-10, notas:[]},
-  {id:40, n:"Chicken", modelo:"Meat", buy:250, est:-2, mie:-2, mim:2, forma:2, cans:0, notas:[
+  {id:62, n:"Squash", modelo:"Mango", buy:500, gusto:[[-2,-2,0],[0,-2,-2],[3,3,-3]], forma:5, cans:-10, notas:[]},
+  {id:40, n:"Chicken", modelo:"Meat", buy:250, gusto:[[-4,0,4],[-2,1,2],[1,-1,-1]], forma:2, cans:0, notas:[
     {es:`Baja <b>1 punto</b> el acostumbramiento antifatiga. <a href="#modReglas">Reglas</a>.`,en:`Lowers the anti-fatigue habit by <b>1 point</b>. <a href="#modReglas">Rules</a>.`},
     {es:`Ayuda a la <a href="#reglaTe">racha del Green Tea</a>: si está en 2 o menos, ese mes no baja. Tira para desintoxicar con la racha que tenga.`,
      en:`Helps the <a href="#reglaTe">Green Tea streak</a>: if it is 2 or less, it doesn't drop that month. Rolls to detox with the current streak.`}]},
-  {id:66, n:"Green Tea", modelo:"Colart Tea", buy:800, est:-10, mie:-2, mim:0, forma:-2, cans:0, notas:[
+  {id:66, n:"Green Tea", modelo:"Colart Tea", buy:800, gusto:[[-12,-2,2],[-10,-2,0],[-7,-1,-3]], forma:-2, cans:0, notas:[
     {es:`Suma 1 a la <a href="#reglaTe">racha</a> (máximo 10) y tira para bajar <b>1 de intoxicación</b>: 15 % por punto de racha, hasta 75 %. Cada mes sin tomarlo, la racha baja 1.`,
      en:`Adds 1 to the <a href="#reglaTe">streak</a> (maximum 10) and rolls to remove <b>1 toxicity</b>: 15 % per streak point, up to 75 %. Each month without it, the streak drops 1.`}]},
 ];
-const AJUSTE_GUSTO = [[-2,0,2],[0,0,0],[3,1,-3]]; // le gusta, normal, no le gusta: estrés, miedo, mimo
 // Gustos de cada raza por Squash, Chicken y Green Tea: L le gusta, D no le gusta, - normal.
 const GUSTOS_NUEVAS = ["-DL","-LD","L--","--L","LD-","--D","LD-","L-D","-L-","DL-","L-D","DL-","LD-","LD-","L--","-DL",
   "-LD","-L-","--L","DL-","-DL","L-D","--L","L--","-LD","-DL","L-D","-L-","D-L","-DL","L--","-DL","LD-","-DL","---","L-D","L--","DL-"];
@@ -694,8 +700,8 @@ const GUSTOS_NUEVAS = ["-DL","-LD","L--","--L","LD-","--D","LD-","L-D","-L-","DL
 function fichaNueva(c){
   let filas = "";
   for (let g = 0; g < 3; g++){
-    const [a, b, d] = AJUSTE_GUSTO[g];
-    filas += `<tr><td>${L(GUSTOS[g])}</td>${celda(c.est+a,-1)}${celda(c.mie+b,0)}${celda(c.mim+d,0)}${celda(c.forma,0)}${c.cans ? celda(c.cans,-1) : ""}</tr>`;
+    const [a, b, d] = c.gusto[g];
+    filas += `<tr><td>${L(GUSTOS[g])}</td>${celda(a,-1)}${celda(b,0)}${celda(d,0)}${celda(c.forma,0)}${c.cans ? celda(c.cans,-1) : ""}</tr>`;
   }
   const tabla = `<div class="tablewrap"><table>${cabeceraComida(c.cans)}<tbody>${filas}</tbody></table></div>`;
   const notas = [{es:`Comida nueva del Rancho: se ofrece como las demás comidas del mes. Usa el modelo del objeto ${c.modelo}, con otra textura.`,

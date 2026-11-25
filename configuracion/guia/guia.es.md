@@ -11,6 +11,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
  - Te pregunta en qué carpeta instalarlo; con Enter usa la que propone.
  - Busca el juego solo; si no lo encuentra, te pide que elijas `MF2.exe`.
  - Si te falta algo que el juego necesita (.NET 9 o Visual C++), lo instala.
+ - Guarda una copia de tus grabaciones en la carpeta **Respaldo de grabaciones** de la instalación.
  - Baja Reloaded-II y los mods de la comunidad (unos 55 MB) de sus páginas oficiales.
  - Si Windows muestra *"Windows protegió su PC"*: **Más información** → **Ejecutar de todas formas**.
 
@@ -64,6 +65,7 @@ Es **Monster Rancher 2 DX** con varios mods. Este resumen explica todo lo que ca
 ## 👥 Rivales Kokemon
 - En los torneos de liga (E a S), **los rivales se sortean cada semana** de una lista por liga: los 50 originales más **monstruos de jugadores de la liga**. El sorteo es **el mismo para todos** en la misma semana.
 {{?Leagues.ExportOnSave}}- **Al empezar cada año, tu monstruo y los del congelador se exportan** en un archivo con la fecha del juego y tu entrenador, por ejemplo `1021-01-1 Gareth.json`.
+- **Para exportar cuando quieras, usá "MR2 Exportar grabacion"**: elegís las ranuras (también grabaciones de antes del Rancho) y exporta sus monstruos.
 {{?Leagues.ExportOnSave}}{{?liga.repo}}- **Para compartirlos, usá "MR2 Subir exportados"** (acceso directo en el escritorio). La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas).
 
 ---
