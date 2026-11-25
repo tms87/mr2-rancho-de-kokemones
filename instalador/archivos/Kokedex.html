@@ -117,6 +117,7 @@ html:not([data-admin]) .admin{display:none !important}
 details.sec.admin{border-color:var(--accent)}
 .guia ol.pasos li{margin:5px 0}
 .guia h3{font-size:15px;margin:16px 0 6px}
+code.link{display:inline-block;margin-top:4px;word-break:break-all;user-select:all}
 .guia code{background:var(--panel2);padding:0 4px;border-radius:4px;font-size:.92em}
 </style>
 <!-- Datos de la liga: los escribe el lanzador al generar la Kokedex de cada instalacion (sin ellos, valores por defecto). -->
@@ -171,7 +172,7 @@ details.sec.admin{border-color:var(--accent)}
           <li>Cloná el repositorio del Rancho de Kokemones (o tu fork).</li>
           <li>Ejecutá <b>Crear liga.bat</b> y respondé las preguntas: idioma, tipo, nombre, versión del Rancho, datos iniciales y configuración de los mods.</li>
           <li>Tipo <b>GitHub</b> (recomendado): crea el repositorio, la etiqueta <code>exportado</code> y publica el instalador. Tipo <b>local</b>: solo una carpeta para una PC, sin actualizaciones ni subida de exportados.</li>
-          <li>Pasales a los jugadores el link del instalador<span data-si="liga.repo"> (<a data-href="instalador" target="_blank" rel="noopener">la última versión de la liga</a>)</span> y la guía <code>GUIA.md</code>, que está en formato para Discord.</li>
+          <li>Pasales a los jugadores el link del instalador<span data-si="liga.repo">, que siempre baja la última versión: <code class="link" data-url="descarga"></code><br></span> y la guía <code>GUIA.md</code>, que está en formato para Discord.</li>
         </ol>
         <h3 data-si="liga.repo">Claves para subir exportados</h3>
         <p data-si="liga.repo">Cada jugador necesita una clave (un token de GitHub) para usar "MR2 Subir exportados". Creá una por jugador: así, si hace falta, revocás solo la de uno.</p>
@@ -214,7 +215,7 @@ details.sec.admin{border-color:var(--accent)}
           <li>Clone the Rancho de Kokemones repository (or your fork).</li>
           <li>Run <b>Crear liga.bat</b> and answer the questions: language, type, name, Rancho version, initial data and mods settings.</li>
           <li><b>GitHub</b> type (recommended): creates the repository, the <code>exportado</code> label and publishes the installer. <b>Local</b> type: just a folder for one PC, with no updates or export uploads.</li>
-          <li>Give your players the installer link<span data-si="liga.repo"> (<a data-href="instalador" target="_blank" rel="noopener">the league's latest release</a>)</span> and the <code>GUIA.md</code> guide, formatted for Discord.</li>
+          <li>Give your players the installer link<span data-si="liga.repo">, which always downloads the latest version: <code class="link" data-url="descarga"></code><br></span> and the <code>GUIA.md</code> guide, formatted for Discord.</li>
         </ol>
         <h3 data-si="liga.repo">Keys to upload exports</h3>
         <p data-si="liga.repo">Each player needs a key (a GitHub token) to use "MR2 Subir exportados". Create one per player: that way, if needed, you revoke just one.</p>
@@ -254,7 +255,8 @@ details.sec.admin{border-color:var(--accent)}
       <div lang="es">
         <ol>
           <li>Instalá <b>Monster Rancher 1 &amp; 2 DX</b> desde Steam.</li>
-          <li>Descargá el instalador de tu liga<span data-si="liga.repo"> desde <a data-href="instalador">la página de la liga</a></span> (te lo pasa el administrador).</li>
+          <li data-si="!liga.repo">Descargá el instalador de tu liga (te lo pasa el administrador).</li>
+          <li data-si="liga.repo">Descargá el instalador de tu liga: <a data-href="descarga"><b data-url="nombreSetup"></b></a>. Es siempre la última versión; para pasárselo a otro jugador, este es el link:<br><code class="link" data-url="descarga"></code></li>
           <li>Descomprimilo y hacé doble clic en <b>Setup.bat</b>.
             <ul>
               <li>Te pregunta en qué carpeta instalarlo; con Enter usa la que propone.</li>
@@ -274,7 +276,8 @@ details.sec.admin{border-color:var(--accent)}
       <div lang="en">
         <ol>
           <li>Install <b>Monster Rancher 1 &amp; 2 DX</b> from Steam.</li>
-          <li>Download your league's installer<span data-si="liga.repo"> from <a data-href="instalador">the league's page</a></span> (your admin will share it).</li>
+          <li data-si="!liga.repo">Download your league's installer (your admin will share it).</li>
+          <li data-si="liga.repo">Download your league's installer: <a data-href="descarga"><b data-url="nombreSetup"></b></a>. It is always the latest version; to share it with another player, this is the link:<br><code class="link" data-url="descarga"></code></li>
           <li>Unzip it and double-click <b>Setup.bat</b>.
             <ul>
               <li>It asks where to install it; Enter uses the suggested folder.</li>
@@ -617,8 +620,13 @@ function aplicarConfig(raiz){
   });
   if (window.LIGA?.repo){
     const base = `https://github.com/${LIGA.repo}`;
-    const rutas = {instalador:"/releases/latest", repo:"", exportados:"/issues?q=is%3Aissue+label%3Aexportado"};
+    // El instalador de cada liga es Setup-<repo>.zip en su última versión (herramientas\instalador.ps1).
+    const setup = `Setup-${LIGA.repo.split("/")[1]}.zip`;
+    const rutas = {instalador:"/releases/latest", repo:"", exportados:"/issues?q=is%3Aissue+label%3Aexportado",
+      descarga:`/releases/latest/download/${setup}`};
     raiz.querySelectorAll("[data-href]").forEach(a => { if (a.dataset.href in rutas) a.href = base + rutas[a.dataset.href]; });
+    const textos = {descarga: base + rutas.descarga, nombreSetup: setup};
+    raiz.querySelectorAll("[data-url]").forEach(e => { if (e.dataset.url in textos) e.textContent = textos[e.dataset.url]; });
   }
 }
 
