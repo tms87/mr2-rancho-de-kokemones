@@ -66,7 +66,7 @@ It's **Monster Rancher 2 DX** with several mods. This summary explains everythin
 - In league tournaments (E to S), **rivals are drawn every week** from a list per league: the 50 originals plus **monsters from the league's players**. The draw is **the same for everyone** in the same week.
 {{?Leagues.ExportOnSave}}- **At the start of each year your monster and the ones in the freezer are exported** to a file named with the game date and your trainer, for example `1021-01-1 Gareth.json`.
 - **To export whenever you want, use "MR2 Exportar grabacion"**: pick the slots (also saves from before the Rancho) and it exports their monsters.
-{{?Leagues.ExportOnSave}}{{?liga.repo}}- **To share them, use "MR2 Subir exportados"** (desktop shortcut). The first time it asks for the key the admin sends you privately (it's personal: don't share it).
+{{?Leagues.ExportOnSave}}{{?liga.repo}}- **To share them, use "MR2 Subir exportados"** (desktop shortcut). The first time it asks for the key the admin sends you privately (it's personal: don't share it). If the key expires or stops working, it tells you and lets you enter another one.
 
 ---
 

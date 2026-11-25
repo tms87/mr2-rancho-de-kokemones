@@ -34,11 +34,46 @@ if (-not (Test-Path $claveDat)) {
     Write-Host ''
 }
 if (-not (Test-Path $claveDat)) { Salir (T 'No hay clave configurada.' 'No key is set up.') 'Red' }
-try {
-    $seguro = ConvertTo-SecureString ((Get-Content $claveDat -Raw).Trim())
-    $clave = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro))
+. (Join-Path $PSScriptRoot 'clave-github.ps1')
+
+function Leer-Clave {
+    try {
+        $seguro = ConvertTo-SecureString ((Get-Content $claveDat -Raw).Trim())
+        return [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro))
+    }
+    catch { return $null }
 }
-catch { Salir (T 'No se pudo leer tu clave (puede que se haya configurado con otro usuario de Windows). Volve a configurarla con clave.ps1.' 'Could not read your key (it may have been set up with another Windows user). Set it up again with clave.ps1.') 'Red' }
+
+# Ofrece cambiar la clave (clave.ps1). Devuelve la nueva, o $null si no se cambio.
+function Cambiar-Clave {
+    if ((Read-Host (T 'Queres cambiar la clave ahora? (s/n)' 'Do you want to change the key now? (y/n)')) -notmatch '^(s|si|y|yes)$') { return $null }
+    Write-Host ''
+    & (Join-Path $PSScriptRoot 'clave.ps1') -Destino $Datos
+    Write-Host ''
+    if ($LASTEXITCODE -ne 0) { return $null }
+    return (Leer-Clave)
+}
+
+$clave = Leer-Clave
+if (-not $clave) {
+    Write-Host (T 'No se pudo leer tu clave (puede que se haya configurado con otro usuario de Windows).' 'Could not read your key (it may have been set up with another Windows user).') -ForegroundColor Red
+    $clave = Cambiar-Clave
+    if (-not $clave) { Salir (T 'No hay una clave que funcione.' 'There is no working key.') 'Red' }
+}
+
+# Se prueba antes de elegir (permiso, acceso al repositorio y vencimiento), sin subir nada.
+$prueba = Probar-Clave $repo $clave
+while ($prueba.Estado -in 'invalida', 'permiso', 'repo') {
+    Write-Host ''
+    Write-Host (Explicar-Clave $prueba.Estado $repo) -ForegroundColor Red
+    $clave = Cambiar-Clave
+    if (-not $clave) { Salir (T 'No se subio nada: la clave actual no sirve para subir exportados.' 'Nothing was uploaded: the current key cannot upload exports.') 'Red' }
+    $prueba = Probar-Clave $repo $clave
+}
+if ($prueba.Estado -eq 'red') { Write-Host (Explicar-Clave 'red' $repo) -ForegroundColor Yellow }
+if ($prueba.Vence -and $prueba.Vence -lt (Get-Date).AddDays(14)) {
+    Write-Host (T "Tu clave vence el $($prueba.Vence.ToString('dd/MM/yyyy')): pedile una nueva al administrador antes de esa fecha." "Your key expires on $($prueba.Vence.ToString('yyyy-MM-dd')): ask the admin for a new one before then.") -ForegroundColor Yellow
+}
 if (-not (Test-Path $exportados)) { Salir (T "Todavia no hay exportados (se crean al guardar en el juego al empezar cada anio, o con el acceso \"MR2 Exportar grabacion\"): $exportados" "No exports yet (they are created when saving in the game at the start of each year, or with the \"MR2 Exportar grabacion\" shortcut): $exportados") }
 
 $subidos = @()
@@ -83,12 +118,6 @@ catch {
 if ($elegidos.Count -eq 0) { Salir (T 'No elegiste ninguno.' 'You did not pick any.') }
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$encabezados = @{
-    Authorization          = "Bearer $clave"
-    Accept                 = 'application/vnd.github+json'
-    'X-GitHub-Api-Version' = '2022-11-28'
-    'User-Agent'           = 'MR2-Rancho-de-Kokemones'
-}
 $ok = 0
 foreach ($e in $elegidos) {
     $contenido = Get-Content $e.Ruta -Raw -Encoding UTF8
@@ -97,15 +126,27 @@ foreach ($e in $elegidos) {
               "Lo lee el Editor Kokemon; no hace falta hacer nada aca.`n`n" + '```json' + "`n" + $contenido.Trim() + "`n" + '```'
     $pedido = @{ title = "Exportado: $([IO.Path]::GetFileNameWithoutExtension($e.Archivo))"; body = $cuerpo; labels = @('exportado') } |
         ConvertTo-Json -Depth 3
-    try {
-        $r = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/issues" -Headers $encabezados `
-            -Body ([Text.Encoding]::UTF8.GetBytes($pedido)) -ContentType 'application/json; charset=utf-8'
-        Add-Content -Path $subidosTxt -Value $e.Archivo -Encoding UTF8
-        Write-Host (T "Subido: $($e.Archivo) (#$($r.number))" "Uploaded: $($e.Archivo) (#$($r.number))") -ForegroundColor Green
-        $ok++
-    }
-    catch {
-        Write-Host (T "$($e.Archivo): no se pudo subir ($($_.Exception.Message))." "$($e.Archivo): could not upload ($($_.Exception.Message)).") -ForegroundColor Red
+    # Si GitHub rechaza la clave (vencio, la revocaron o le falta permiso), se ofrece cambiarla y se reintenta.
+    while ($true) {
+        $encabezados = @{ Authorization = "Bearer $clave"; Accept = 'application/vnd.github+json'
+                          'X-GitHub-Api-Version' = '2022-11-28'; 'User-Agent' = 'MR2-Rancho-de-Kokemones' }
+        try {
+            $r = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/issues" -Headers $encabezados `
+                -Body ([Text.Encoding]::UTF8.GetBytes($pedido)) -ContentType 'application/json; charset=utf-8'
+            Add-Content -Path $subidosTxt -Value $e.Archivo -Encoding UTF8
+            Write-Host (T "Subido: $($e.Archivo) (#$($r.number))" "Uploaded: $($e.Archivo) (#$($r.number))") -ForegroundColor Green
+            $ok++
+            break
+        }
+        catch {
+            $estado = Estado-Error $_
+            Write-Host (T "$($e.Archivo): no se pudo subir ($($_.Exception.Message))." "$($e.Archivo): could not upload ($($_.Exception.Message)).") -ForegroundColor Red
+            if ($estado -eq 'otro') { break }
+            Write-Host (Explicar-Clave $estado $repo) -ForegroundColor Red
+            $nueva = Cambiar-Clave
+            if (-not $nueva) { Salir (T "Subidos $ok de $($elegidos.Count). Los demas no se subieron: la clave actual no sirve." "Uploaded $ok of $($elegidos.Count). The rest were not uploaded: the current key does not work.") 'Red' }
+            $clave = $nueva
+        }
     }
 }
 Salir (T "Listo: $ok de $($elegidos.Count) subidos." "Done: $ok of $($elegidos.Count) uploaded.") $(if ($ok -eq $elegidos.Count) { 'Green' } else { 'Yellow' })

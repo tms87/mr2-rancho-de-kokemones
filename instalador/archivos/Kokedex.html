@@ -181,7 +181,7 @@ details.sec.admin{border-color:var(--accent)}
           <li><b>Repository access:</b> <i>Only select repositories</i> → <code data-c="liga.repo"></code>.</li>
           <li><b>Permissions</b> → <b>Repository permissions</b> → <b>Issues:</b> <i>Read and write</i>. Ningún otro permiso.</li>
           <li><b>Generate token</b> y copiala: GitHub la muestra una sola vez.</li>
-          <li>Pasásela al jugador por privado. "MR2 Subir exportados" se la pide la primera vez; para cambiarla, el jugador corre <code>clave.ps1</code> desde su carpeta de instalación.</li>
+          <li>Pasásela al jugador por privado. "MR2 Subir exportados" se la pide la primera vez y la prueba antes de subir: si GitHub la rechaza (vencida, revocada o sin permiso), le avisa qué pasa y le ofrece cargar otra. Cuando le falta poco para vencer, también le avisa.</li>
         </ol>
         <p data-si="liga.repo">Las claves se ven y se revocan en <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>. Nunca la publiques en un canal compartido.</p>
         <h3>Editor Kokemon</h3>
@@ -224,7 +224,7 @@ details.sec.admin{border-color:var(--accent)}
           <li><b>Repository access:</b> <i>Only select repositories</i> → <code data-c="liga.repo"></code>.</li>
           <li><b>Permissions</b> → <b>Repository permissions</b> → <b>Issues:</b> <i>Read and write</i>. No other permission.</li>
           <li><b>Generate token</b> and copy it: GitHub shows it only once.</li>
-          <li>Send it to the player privately. "MR2 Subir exportados" asks for it the first time; to change it, the player runs <code>clave.ps1</code> from their installation folder.</li>
+          <li>Send it to the player privately. "MR2 Subir exportados" asks for it the first time and checks it before uploading: if GitHub rejects it (expired, revoked or missing permission), it says what is wrong and offers to enter another one. It also warns when the key is about to expire.</li>
         </ol>
         <p data-si="liga.repo">You can see and revoke keys at <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>. Never post one in a shared channel.</p>
         <h3>Kokemon Editor</h3>
@@ -382,7 +382,7 @@ details.sec.admin{border-color:var(--accent)}
         <li>El sorteo es <b>el mismo para todos</b> en la misma semana del juego.</li>
         <li data-si="Leagues.ExportOnSave"><b>Al empezar cada año, tu monstruo y los del congelador se exportan</b> (junto con la copia anual) en un archivo con la fecha del juego y tu entrenador, por ejemplo <code>1021-01-1 Gareth.json</code>.</li>
         <li><b>Para exportar cuando quieras, "MR2 Exportar grabacion"</b>: elegís una o más ranuras (también de grabaciones de antes del Rancho) y exporta sus monstruos igual que al empezar el año. Si ya hay un exportado con los mismos monstruos, no lo repite.</li>
-        <li data-si="Leagues.ExportOnSave,liga.repo"><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y le llegan al administrador de la liga, que puede sumarlos como rivales o a una competencia. La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas).</li>
+        <li data-si="Leagues.ExportOnSave,liga.repo"><b>Para compartirlos, usá "MR2 Subir exportados"</b> (acceso directo en el escritorio): elegís qué exportados subir y le llegan al administrador de la liga, que puede sumarlos como rivales o a una competencia. La primera vez te pide la clave que te pasa el administrador por privado (es personal: no la compartas). Si la clave vence o no sirve, te avisa y te deja cargar otra.</li>
         <li class="admin" data-si="liga.repo"><span class="tag-admin">Admin</span>Cada jugador necesita su clave (ver <a href="#administrar">Administrar la liga</a>). Lo que suben te llega como issues con la etiqueta <code>exportado</code>; en la pestaña <b>Rivales</b> del Editor Kokemon, con <i>Recibidos (GitHub)</i>, elegís cuáles sumar a la lista de cada liga.</li>
         <li>FIMBA, los 4 grandes y los torneos especiales no cambian.</li>
       </ul>
@@ -391,7 +391,7 @@ details.sec.admin{border-color:var(--accent)}
         <li>The draw is <b>the same for everyone</b> in the same game week.</li>
         <li data-si="Leagues.ExportOnSave"><b>At the start of each year your monster and the ones in the freezer are exported</b> (along with the yearly copy) to a file named with the game date and your trainer, for example <code>1021-01-1 Gareth.json</code>.</li>
         <li><b>To export whenever you want, "MR2 Exportar grabacion"</b>: pick one or more slots (also saves from before the Rancho) and it exports their monsters just like at the start of the year. If there is already an export with the same monsters, it doesn't repeat it.</li>
-        <li data-si="Leagues.ExportOnSave,liga.repo"><b>To share them, use "MR2 Subir exportados"</b> (desktop shortcut): pick which exports to upload and they reach the league admin, who can add them as rivals or to a competition. The first time it asks for the key the admin sends you privately (it's personal: don't share it).</li>
+        <li data-si="Leagues.ExportOnSave,liga.repo"><b>To share them, use "MR2 Subir exportados"</b> (desktop shortcut): pick which exports to upload and they reach the league admin, who can add them as rivals or to a competition. The first time it asks for the key the admin sends you privately (it's personal: don't share it). If the key expires or stops working, it tells you and lets you enter another one.</li>
         <li class="admin" data-si="liga.repo"><span class="tag-admin">Admin</span>Each player needs their own key (see <a href="#administrar">Running the league</a>). Their uploads reach you as issues labeled <code>exportado</code>; in the Kokemon Editor's <b>Rivals</b> tab, with <i>Received (GitHub)</i>, you pick which ones join each league's list.</li>
         <li>FIMBA, the big 4 and the special tournaments don't change.</li>
       </ul>

@@ -184,7 +184,7 @@ function Copiar($desde, $hacia, [string[]]$extra) {
 }
 
 # Scripts, configuracion del Rancho y plantillas.
-foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-config.ps1', 'subir.ps1', 'clave.ps1',
+foreach ($f in 'jugar.ps1', 'sincronizar.ps1', 'dependencias.ps1', 'aplicar-config.ps1', 'subir.ps1', 'clave.ps1', 'clave-github.ps1',
                'icono.ico', 'kokedex.ico', 'rancho.json', 'desinstalar.ps1', 'Uninstaller.bat') {
     Copy-Item (Join-Path $origen $f) $Destino -Force
 }
