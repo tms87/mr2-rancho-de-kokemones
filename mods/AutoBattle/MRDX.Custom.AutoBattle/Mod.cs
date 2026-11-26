@@ -192,10 +192,21 @@ public class Mod : ModBase
     // ------------------------------------------------------------------
     private sealed record Patch(string Name, uint Va, byte[] Expected, int Offset, byte NewValue);
 
+    private static readonly byte[] PreguntaFimba =
+    [
+        0x83, 0xE8, 0x00, 0x74, 0x0F,       // sub eax,0 ; je opcion0
+        0x83, 0xE8, 0x01, 0x75, 0xDB,       // sub eax,1 ; jne seguir esperando
+        0xC6, 0x47, 0x05, 0x12,             // opcion1: mov byte [edi+5],0x12
+        0x5F, 0x5E, 0x8B, 0xE5, 0x5D, 0xC3, //          pop edi ; pop esi ; mov esp,ebp ; pop ebp ; ret
+        0xC6, 0x47, 0x05, 0x11              // opcion0: mov byte [edi+5],0x11   <- 0x12
+    ];
+
     private static readonly Patch[] Patches =
     [
         // Torneos y batallas del juego: función 0x4A3A20 (mensaje 0x7E1).
         //   opción 0 (controlar) -> [esi+5] = 0x0D ; opción 1 (automático) -> [esi+5] = 0x0E
+        //   (estado 0x0D = 0x4A3CC0, mensaje 0x7E2, byte +0x63 = 1: control manual;
+        //    estado 0x0E = 0x4A3D10, mensaje 0x7E3, byte +0x63 = 0: automático)
         new("torneos", 0x4A3A85,
         [
             0x83, 0xE8, 0x00, 0x74, 0x0D,   // sub eax,0 ; je opcion0
@@ -203,7 +214,14 @@ public class Mod : ModBase
             0x5F, 0xC6, 0x46, 0x05, 0x0E,   // opcion1: pop edi ; mov byte [esi+5],0x0E
             0x5E, 0x5D, 0xC3,               //          pop esi ; pop ebp ; ret
             0x5F, 0xC6, 0x46, 0x05, 0x0D    // opcion0: pop edi ; mov byte [esi+5],0x0D   <- 0x0E
-        ], 22, 0x0E)
+        ], 22, 0x0E),
+
+        // IMa-FIMBA: otra máquina de estados (mensajes 0x812 a 0x81D), con dos preguntas de control
+        // (mensajes 0x816 y 0x81B), iguales a la de los torneos:
+        //   opción 0 -> [edi+5] = 0x11 (0x4A2470, mensaje 0x7E2, control manual)
+        //   opción 1 -> [edi+5] = 0x12 (0x4A2560, mensaje 0x7E3, automático)
+        new("IMa-FIMBA", 0x4A1DFD, PreguntaFimba, 23, 0x12),
+        new("IMa-FIMBA (segunda pregunta)", 0x4A244D, PreguntaFimba, 23, 0x12)
 
         // OJO: 0x51DA30 (modo VS) NO es la pregunta de control: es la confirmación de la elección de monstruo.
     ];
