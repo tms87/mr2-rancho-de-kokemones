@@ -452,7 +452,7 @@ public unsafe partial class Mod
             for (var i = 0; i < ComidasJuego.Length; i++)
                 if (original[i] != ComidasJuego[i]) return original; // otra lista: no se toca
 
-            // Cada vez: si el juego vuelve a cargar la tabla, se pierden los cambios (repetirlos no cambia nada).
+            // Cada vez: si el juego vuelve a cargar la tabla, se pierden los cambios (repetirlos da lo mismo).
             if (!PrepararTabla()) return original;
 
             var n = 0;
@@ -489,15 +489,16 @@ public unsafe partial class Mod
         var efectos = tabla + DeTablaAEfectos;
         uint Registro(uint id) => *(uint*)(efectos + tabla[id * 8 + 6] * 4);
 
-        // Varios objetos pueden compartir un registro (el del #66 es el de #64 a #68): solo se vacían los que usa
-        // nada más que la comida nueva; las demás pasan a usar uno de esos.
+        // Varios objetos pueden compartir un registro (el del #66 es el de #64 a #68): solo se vacían los que no usa
+        // ningún otro objeto del juego; las demás comidas nuevas pasan a usar uno de esos. Se repite cada vez que se
+        // abre el menú, así que un registro que ya comparten solo comidas nuevas sigue contando como propio.
         byte? vacio = null;
         var compartidas = new List<Comida>();
         foreach (var c in ComidasNuevas)
         {
             var reg = Registro(c.Id);
-            var usan = Enumerable.Range(0, Vacio).Count(i => Registro((uint)i) == reg);
-            if (usan > 1)
+            var otros = Enumerable.Range(0, Vacio).Count(i => ComidaDe((uint)i) == null && Registro((uint)i) == reg);
+            if (otros > 0)
             {
                 compartidas.Add(c);
                 continue;
