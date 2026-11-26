@@ -48,6 +48,11 @@ public partial class Mod : ModBase
     private readonly Stopwatch _sinceItem = new(); // medición: tiempo desde el último objeto dado
     private readonly Stopwatch _devolverReloj = new(); // diagnóstico: devolver el baúl un rato después de cargar
     private long _week = -1;
+
+    // Al terminar un torneo el juego pone la semana anterior y enseguida vuelve a la actual: esa vuelta no es una
+    // semana nueva (ni un mes nuevo). Se recuerda a qué semana tiene que volver y desde cuándo.
+    private uint _vueltaA = uint.MaxValue;
+    private readonly Stopwatch _vueltaReloj = new();
     private Change? _recent;
 
     private sealed class Pending
@@ -488,6 +493,21 @@ public partial class Mod : ModBase
         _pending = null;
         _recent = null;
 
+        // Retroceso de una semana (fin de torneo): si en unos segundos vuelve a la misma, no pasó ninguna semana.
+        var volvio = change.NewWeek == _vueltaA && _vueltaReloj.ElapsedMilliseconds < 5000;
+        _vueltaA = uint.MaxValue;
+        if (change.OldWeek != uint.MaxValue && change.OldWeek > 0 && change.NewWeek == change.OldWeek - 1)
+        {
+            _vueltaA = change.OldWeek;
+            _vueltaReloj.Restart();
+        }
+
+        if (volvio)
+        {
+            if (_config.VerboseLog) Log($"  Semana {change.NewWeek} de nuevo tras el torneo: no es una semana nueva.");
+            return;
+        }
+
         // Ignora saltos raros (carga de partida, inicio): solo avances de 1 a 12 semanas.
         if (change.OldWeek == uint.MaxValue || change.NewWeek <= change.OldWeek) return;
         var weeks = (int)(change.NewWeek - change.OldWeek);
@@ -534,6 +554,7 @@ public partial class Mod : ModBase
             _slot = file.Slot;
             _data = SlotData.Load(FileFor(_slot));
             _pending = null;
+            _vueltaA = uint.MaxValue;
             Log($"Datos cargados para la ranura {_slot}.");
             if (_config.DevolverBaul) _devolverReloj.Restart(); // cuando el juego ya puso el inventario en memoria
             if (_config.PruebaObjetos && EsRanuraCompetencia) _pruebaReloj.Restart();
